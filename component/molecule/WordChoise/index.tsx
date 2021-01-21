@@ -1,9 +1,6 @@
-import React from 'react';
-import { View, StyleSheet, Dimensions } from 'react-native';
-import Animated, {
-    useAnimatedGestureHandler,
-    useSharedValue
-  } from 'react-native-reanimated';
+import React, { useState } from 'react';
+import { View, StyleSheet } from 'react-native';
+import { useSharedValue } from 'react-native-reanimated';
 import Lines from '../../atoms/Lines';
 import Pills from '../../atoms/Pills';
 
@@ -30,7 +27,6 @@ const WordChoise: React.FC = () => {
         originalY: useSharedValue(0)
     }));
 
-
     return(
         <View style={styles.container}>
             <Lines/>
@@ -41,7 +37,7 @@ const WordChoise: React.FC = () => {
                                 id={item.id} 
                                 index={index} 
                                 text={item.word}
-                                position={positionChildren}
+                                positions={positionChildren}
                             />
                 })}
             </View>
@@ -60,7 +56,14 @@ const styles = StyleSheet.create({
         width: '100%',
         alignItems: 'center',
         justifyContent: 'space-between'
-    }
+    },
+    row: {
+        flex: 1,
+        flexDirection: "row",
+        flexWrap: "wrap",
+        justifyContent: "center",
+        opacity: 0,
+    },
 })
 
 export default WordChoise;

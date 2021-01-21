@@ -1,52 +1,101 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import React from 'react';
+import { View, StyleSheet, Text, Dimensions } from 'react-native';
 import Animated, 
-    { useAnimatedGestureHandler, useDerivedValue } from 'react-native-reanimated';
+    { useAnimatedGestureHandler, useDerivedValue,
+    useAnimatedStyle, withSpring, useSharedValue } from 'react-native-reanimated';
 import { PanGestureHandler, PanGestureHandlerGestureEvent } from "react-native-gesture-handler";
-import { useVector } from 'react-native-redash';
+import { useVector, between, move } from 'react-native-redash';
 
+interface Position {
+    height: { value: number },
+    order: { value: number },
+    originalX: { value: number },
+    originalY: { value: number },
+    width: { value: number },
+    x: { value: number },
+    y: { value: number }
+}
 
 interface ListItemProps {
     text: string
     id: number
     index: number
-    position: any
+    positions: Position[]
 }
 
-const Pills: React.FC<ListItemProps> = ({ text, id, index, position }: ListItemProps) => {
-    const currentPosition = position[index];
+const containerWidth = Dimensions.get("window").width - 10 * 2;
+
+const Pills: React.FC<ListItemProps> = ({ text, id, index, positions }: ListItemProps) => {
+    const currentPosition: Position = positions[index];
+    //TODO: Узнать почему с useState вылетает ошибка
     const inLines = useDerivedValue(() => currentPosition.order.value === -1);
     const transition = useVector();
+    const isTouch = useSharedValue(false);
 
-    const _onPanGestureEvent = useAnimatedGestureHandler<PanGestureHandlerGestureEvent,{ x: number; y: number }>({
+    const translateX = useDerivedValue(() => {
+        if(isTouch.value) {
+            return transition.x.value
+        }
+        return withSpring(currentPosition.originalX.value);
+    })
+
+    const translateY = useDerivedValue(() => {
+        if (isTouch.value) {
+            return transition.y.value;
+        }
+        return withSpring(currentPosition.originalY.value);
+    })
+
+    const onPanGestureEvent = useAnimatedGestureHandler<PanGestureHandlerGestureEvent,{ x: number; y: number }>({
         onStart: (_, event) => {
             if(inLines.value){
-                console.log('true')
+                transition.x.value = currentPosition.originalX.value;
+                transition.y.value = currentPosition.originalY.value;
             } else {
                 transition.x.value = currentPosition.x.value;
                 transition.y.value = currentPosition.y.value;
             }
             event.x = transition.x.value;
             event.y = transition.y.value;
+            isTouch.value = true;
         },
-        onActive: (event) => {
-
+        onActive: (translation, event) => {
+            transition.x.value = event.x + translation.translationX;
+            transition.y.value = event.y + translation.translationY;
         },
         onEnd: () => {
-
+            isTouch.value = false;
         }
     });
-    
+
+    const animStyle = useAnimatedStyle(() => {
+        return {
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            zIndex: 0,
+            width: currentPosition.width.value,
+            height: 55,
+            transform: [
+                { translateX: translateX.value },
+                { translateY: translateY.value }
+            ],
+        }
+    })
     return(
-        <PanGestureHandler onGestureEvent={_onPanGestureEvent}>
-            <Animated.View>
-                <View style={styles.root}>
-                    <View style={styles.shadow}>
-                        <Text>{text}</Text>
-                    </View>
-                </View>
+        <View>
+            <Animated.View style={animStyle}>
+                <PanGestureHandler onGestureEvent={onPanGestureEvent}>
+                    <Animated.View>
+                        <View style={styles.root}>
+                            <View style={styles.shadow}>
+                                <Text>{text}</Text>
+                            </View>
+                        </View>
+                    </Animated.View>
+                </PanGestureHandler>
             </Animated.View>
-        </PanGestureHandler>
+        </View>
     )
 }
 
