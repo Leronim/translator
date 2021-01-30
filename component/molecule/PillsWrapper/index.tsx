@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Dimensions } from 'react-native';
 import Animated, 
     { useAnimatedGestureHandler, useDerivedValue,
-    useAnimatedStyle, withSpring, useSharedValue } from 'react-native-reanimated';
+    useAnimatedStyle, withSpring, useSharedValue, not } from 'react-native-reanimated';
 import { PanGestureHandler, PanGestureHandlerGestureEvent } from "react-native-gesture-handler";
 import { useVector } from 'react-native-redash';
 import Background from '../../atoms/Background';
@@ -30,37 +30,37 @@ const PillsWrapper: React.FC<ListItemProps> = ({ index, positions, children }: L
         if (isTouch.value) {
           return transition.x.value;
         }
-        // let pos;
-        // if(inLines.value && notLineLength.value === 9) {
-        //     pos = currentPosition.originalX.value;
-        // } else {
-        //     pos = currentPosition.x.value;
-        // }
-        // return withSpring(pos);
-        return withSpring(
-          inLines.value ? currentPosition.originalX.value : currentPosition.x.value
-        );
+        let pos;
+        if(inLines.value && notLineLength.value === 9) {
+            pos = currentPosition.originalX.value;
+        } else {
+            pos = currentPosition.x.value;
+        }
+        return withSpring(pos);
+        // return withSpring(
+        //   inLines.value ? currentPosition.originalX.value : currentPosition.x.value
+        // );
     });
 
     const translateY = useDerivedValue(() => {
         if (isTouch.value) {
           return transition.y.value;
         }
-        // let pos;
-        // if(inLines.value && notLineLength.value === 9) {
-        //     pos = currentPosition.originalY.value;
-        // } else {
-        //     pos = currentPosition.y.value;
-        // }
-        // return withSpring(pos);
-        return withSpring(
-          inLines.value ? currentPosition.originalY.value : currentPosition.y.value
-        );
+        let pos;
+        if(inLines.value && notLineLength.value === 9) {
+            pos = currentPosition.originalY.value;
+        } else {
+            pos = currentPosition.y.value;
+        }
+        return withSpring(pos);
+        // return withSpring(
+        //   inLines.value ? currentPosition.originalY.value : currentPosition.y.value
+        // );
     });
 
     const onPanGestureEvent = useAnimatedGestureHandler<PanGestureHandlerGestureEvent,{ x: number; y: number }>({
         onStart: (_, ctx) => {
-            if (inLines.value) {
+            if (inLines.value && notLineLength.value === 9) {
                 transition.x.value = currentPosition.originalX.value;
                 transition.y.value = currentPosition.originalY.value;
               } else {
@@ -91,6 +91,7 @@ const PillsWrapper: React.FC<ListItemProps> = ({ index, positions, children }: L
         onEnd: () => {
             isTouch.value = false;
             // calculatingInLinePos(positions, containerWidth);
+            calculatingWithoutLinePos(positions, containerWidth, index)
             transition.x.value = withSpring(currentPosition.x.value);
             transition.y.value = withSpring(currentPosition.y.value);
         }
