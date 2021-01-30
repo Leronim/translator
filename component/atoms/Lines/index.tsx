@@ -13,7 +13,7 @@ const Lines = () => {
                             width: '100%',
                             height: 1,
                             backgroundColor: '#4B4B4B',
-                            top: index * 30 - 2,
+                            top: index * 55,
                          }}
                     />
                 )

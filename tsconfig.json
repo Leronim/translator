@@ -16,5 +16,8 @@
     "babel.config.js",
     "metro.config.js",
     "jest.config.js"
-  ]
+  ],
+  "paths": {
+    "*": ["types/*.d.ts"]
+  }
 }

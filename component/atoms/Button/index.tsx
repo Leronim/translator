@@ -9,18 +9,20 @@ interface Props {
 const CheckButton: React.FC<Props> = (props: Props) => {
     const [ swap, setSwap ] = useState<boolean>(false);
 
-    const pressButton = () => () => {
-        setSwap(!swap)
-    }
-
     return (
         <Neomorph
+            inner={swap}
             darkShadowColor='#000'
             lightShadowColor='#fff'
             style={styles.neomorph}
         >
-            <Pressable style={styles.screenContainer} onPress={pressButton()}>
-                <Text style={styles.text}>{props.text} {`${swap}`}</Text>
+            <Pressable 
+                onPressIn={() => setSwap(true)} 
+                onPressOut={() => setSwap(false)}
+                style={styles.screenContainer} 
+                onPress={() => {}}
+            >
+                <Text style={styles.text}>{props.text}</Text>
             </Pressable>
         </Neomorph>
     )
@@ -34,7 +36,11 @@ const styles = StyleSheet.create({
     },
     neomorph: {
         shadowOpacity: 0.2,
-        shadowRadius: 15,
+        shadowRadius: 8,
+        shadowOffset: {
+            width: 2,
+            height: 4
+        },
         borderRadius: 88,
         backgroundColor: '#F2F2F2',
         height: 68,

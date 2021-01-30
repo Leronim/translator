@@ -11,14 +11,16 @@
     "clean": "rm -rf ios/build; rm -rf ios/build; rm -rf android/build; rm -rf android/app/build; rm -rf $TMPDIR/react* ; rm -f ios/main.jsbundle; rm -rf node_modules; rm yarn.lock || true; npm cache clean; yarn cache clean"
   },
   "dependencies": {
-    "@react-native-community/art": "^1.2.0",
+    "@react-native-community/art": "git+https://gitlab-delpoy-appcenter:nioVMDY9kwG2sD7z2CbA@gitlab.i-link.pro/front-common/art.git",
     "react": "16.13.1",
     "react-devtools": "^4.10.1",
     "react-native": "0.63.4",
+    "react-native-dash": "^0.0.11",
     "react-native-gesture-handler": "^1.9.0",
     "react-native-neomorph-shadows": "^1.1.2",
     "react-native-reanimated": "file:react-native-reanimated-2.0.0-rc.2.tgz",
-    "react-native-redash": "^16.0.8"
+    "react-native-redash": "^16.0.8",
+    "react-native-svg": "^12.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",

@@ -13,17 +13,40 @@ import WordChoise from './component/molecule/WordChoise';
 import Row from './component/atoms/Row';
 import Lines from './component/atoms/Lines';
 import Pills from './component/atoms/Pills';
+import Logo from './component/atoms/Logo';
+import Svg from './component/atoms/Svg';
+import Message from './component/atoms/Message';
+
+const words = [
+  { id: 1, word: "Er" },
+  { id: 8, word: "hungrig" },
+  { id: 2, word: "isst" },
+  { id: 7, word: "er" },
+  { id: 6, word: "weil" },
+  { id: 9, word: "ist" },
+  { id: 5, word: "," },
+  { id: 3, word: "einen" },
+  { id: 4, word: "Apfel" },
+];
 
 const App: React.FC = () => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <Text style={styles.title}>Translate this sentence</Text>
-      <Row style={{ marginTop: 50 }}>
-        <WordChoise/>
-      </Row>
-      {/* <Row style={{ marginTop: 80 }}>
+      <View style={{ flex: 1, height: 300, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }}>
+        <Svg/>
+        <Message/>
+      </View>
+      <WordChoise>
+        {words.map((item, index) => {
+          return (
+            <Pills key={index} text={item.word} id={item.id} index={index}/>
+          )
+        })}
+      </WordChoise>
+      <Row style={{ marginTop: 80 }}>
         <Button text="Check"/>
-      </Row> */}
+      </Row>
     </SafeAreaView>
   );
 };
@@ -31,10 +54,6 @@ const App: React.FC = () => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: 'flex-start',
-    padding: 20
-
   },
   title: {
     fontSize: 32,
