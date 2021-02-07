@@ -2,12 +2,13 @@ import React from 'react';
 import { StyleSheet, Dimensions } from 'react-native';
 import Animated, 
     { useAnimatedGestureHandler, useDerivedValue,
-    useAnimatedStyle, withSpring, useSharedValue } from 'react-native-reanimated';
+    useAnimatedStyle, withSpring, useSharedValue, runOnJS } from 'react-native-reanimated';
 import { PanGestureHandler, PanGestureHandlerGestureEvent } from "react-native-gesture-handler";
 import { useVector } from 'react-native-redash';
 import Background from '../../atoms/Background';
 import { calculatingInLinePos, checkOrder, removePills,
-        sortPills, calculatingWithoutLinePos } from '../../../utils/animationUtils';
+        sortPills } from '../../../utils/animationUtils';
+import { setWordInBoard } from '../../../store/words';
 
 
 interface ListItemProps {
@@ -22,7 +23,6 @@ const PillsWrapper: React.FC<ListItemProps> = ({ index, positions, children }: L
     const currentPosition: Position = positions[index];
     //TODO: Узнать почему с useState вылетает ошибка
     const inLines = useDerivedValue(() => currentPosition.order.value === -1);
-    const notLineLength = useDerivedValue(() => positions.filter(item => item.order.value === -1).length);
     const transition = useVector();
     const isTouch = useSharedValue(false);
     
@@ -30,13 +30,6 @@ const PillsWrapper: React.FC<ListItemProps> = ({ index, positions, children }: L
         if (isTouch.value) {
           return transition.x.value;
         }
-        // let pos;
-        // if(inLines.value && notLineLength.value === 9) {
-        //     pos = currentPosition.originalX.value;
-        // } else {
-        //     pos = currentPosition.x.value;
-        // }
-        // return withSpring(pos);
         return withSpring(
           inLines.value ? currentPosition.originalX.value : currentPosition.x.value
         );
@@ -46,13 +39,6 @@ const PillsWrapper: React.FC<ListItemProps> = ({ index, positions, children }: L
         if (isTouch.value) {
           return transition.y.value;
         }
-        // let pos;
-        // if(inLines.value && notLineLength.value === 9) {
-        //     pos = currentPosition.originalY.value;
-        // } else {
-        //     pos = currentPosition.y.value;
-        // }
-        // return withSpring(pos);
         return withSpring(
           inLines.value ? currentPosition.originalY.value : currentPosition.y.value
         );
@@ -80,7 +66,6 @@ const PillsWrapper: React.FC<ListItemProps> = ({ index, positions, children }: L
                 currentPosition.order.value = positions.filter(checkOrder).length;
                 // Расчет положения pills на линии
                 calculatingInLinePos(positions, containerWidth);
-                // calculatingWithoutLinePos(positions, containerWidth, index)
             } else if(!inLines.value && transition.y.value > -15) {
                 currentPosition.order.value = -1;
                 removePills(positions, index);
@@ -90,9 +75,11 @@ const PillsWrapper: React.FC<ListItemProps> = ({ index, positions, children }: L
         },
         onEnd: () => {
             isTouch.value = false;
-            // calculatingInLinePos(positions, containerWidth);
-            transition.x.value = withSpring(currentPosition.x.value);
-            transition.y.value = withSpring(currentPosition.y.value);
+            const wordArray: string[] = positions
+                .filter(checkOrder)
+                .sort((a: Position, b: Position) => a.order.value > b.order.value ? 1 : -1)
+                .map((item: Position) => item.text)
+            runOnJS(setWordInBoard)(wordArray)
         }
     });
 
@@ -111,7 +98,7 @@ const PillsWrapper: React.FC<ListItemProps> = ({ index, positions, children }: L
         }
     })
     return(
-        <>
+        <React.Fragment>
             <Background position={currentPosition}/>
             <Animated.View style={animStyle}>
                 <PanGestureHandler onGestureEvent={onPanGestureEvent}>
@@ -120,7 +107,7 @@ const PillsWrapper: React.FC<ListItemProps> = ({ index, positions, children }: L
                     </Animated.View>
                 </PanGestureHandler>
             </Animated.View>
-        </>
+        </React.Fragment>
     )
 }
 

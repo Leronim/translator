@@ -1,10 +1,12 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 
 interface Props {
     children: React.ReactNode,
     style?: {
-        marginTop: number | undefined
+        marginTop?: number | undefined,
+        height?: number | string | undefined,
+        justifyContent?: "flex-end" | "flex-start" | "center" | "space-between" | "space-around" | "space-evenly" | undefined
     }
 }
 
@@ -23,7 +25,7 @@ const styles = StyleSheet.create({
         width: "100%",
         paddingRight: 20, 
         paddingLeft: 20,
-        flex: 1
+        flex: 1,
     }
 })
 

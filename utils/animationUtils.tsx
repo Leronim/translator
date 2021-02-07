@@ -1,5 +1,3 @@
-import { min } from "react-native-reanimated";
-
 // Проверка заходит ли pills между двумя на линии
 export const isBetweenPills = (
     value: number,
@@ -61,24 +59,24 @@ export const calculatingInLinePos = (position: Position[], containerWidth: numbe
     });
 };
 
-const move = (input: any, current: number, future: number) => {
+const movePills = (input: Position[], from: number, to: number) => {
     "worklet";
     const offsets = input.slice();
-    while (current < 0) {
-      current += offsets.length;
+    while (from < 0) {
+        from += offsets.length;
     }
-    while (future < 0) {
-      future += offsets.length;
+    while (to < 0) {
+        to += offsets.length;
     }
-    if (future >= offsets.length) {
-      let k = future - offsets.length;
-      while (k-- + 1) {
-        offsets.push();
-      }
+    if (to >= offsets.length) {
+        let k = to - offsets.length;
+        while (k-- + 1) {
+            offsets.push();
+        }
     }
-    offsets.splice(future, 0, offsets.splice(current, 1)[0]);
+    offsets.splice(to, 0, offsets.splice(from, 1)[0]);
     return offsets;
-  };
+};
 
 //Перестроить положение pills если между двумя из них заходит новый
 const reBuildPosition = (
@@ -91,7 +89,7 @@ const reBuildPosition = (
         .filter(checkOrder)
         .sort((a: Position, b: Position) => a.order.value > b.order.value ? 1 : -1);
 
-    const newPosition = move(position, current, future);
+    const newPosition = movePills(position, current, future);
     newPosition.map((position: Position, index: number) => (position.order.value = index));
 }
 
@@ -104,56 +102,19 @@ export const sortPills = (
     currentPosition: Position
 ) => {
     "worklet";
-    positions.some((item: Position) => {
-        const xSide = isBetweenPills(transition.x.value, item.x.value, item.x.value + item.width.value);
-        const ySide = isBetweenPills(transition.y.value, item.y.value, item.y.value + 55);
-        if(xSide && ySide) {
-            reBuildPosition(positions, currentPosition.order.value, item.order.value)
-            calculatingInLinePos(positions, containerWidth)
-            return false;
+
+    positions.some((item: Position, id: number) => {
+        if(id === index && item.order.value !== -1) {
+            return true;
         }
-        
-    })
-}
-
-export const calculatingWithoutLinePos = (
-    positions: Position[],
-    containerWidth: number,
-    index: number
-) => {
-    "worklet";
-
-    let inLine: Position[] = positions.filter(item => item.order.value === -1)
-        .sort((a: Position, b:Position) => a.order.value > b.order.value ? 1 : -1);
-    let line = 2;
-    let minusLine = 0;
-    positions.forEach((position: Position, id: number) => {
-        const currentWidth: number = positions
-            .slice(minusLine, id)
-            .reduce((acc: number, item: Position) => acc + item.width.value, 0);
-        if(position.order.value === -1) {
-            if(id > index) {
-                if((currentWidth + position.width.value) > containerWidth) {
-                    position.y.value = 0;
-                    position.x.value = containerWidth - 80 - 16;
-                    minusLine = id;
-                    if(currentWidth === 400) {
-                        position.x.value -= 80;
-                    }
-                } else {
-                    if(inLine.length < 8){
-                        position.x.value -= 80;
-                    } else {
-                        position.x.value = position.originalX.value - 80;
-                        position.y.value = position.originalY.value;
-                    }
-                }
-                console.log(currentWidth, position.x.value)
-            } else {
-                position.x.value = position.originalX.value
-                position.y.value = position.originalY.value
+        if(item.y.value < 0) {
+            const xSide = isBetweenPills(transition.x.value, item.x.value, item.x.value + item.width.value);
+            const ySide = isBetweenPills(transition.y.value, item.y.value, item.y.value + 55);
+            if(xSide && ySide) {
+                reBuildPosition(positions, currentPosition.order.value, item.order.value)
+                calculatingInLinePos(positions, containerWidth)
+                return false;
             }
         }
     })
-    console.log('-------')
 }

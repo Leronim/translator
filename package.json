@@ -12,11 +12,12 @@
   },
   "dependencies": {
     "@react-native-community/art": "git+https://gitlab-delpoy-appcenter:nioVMDY9kwG2sD7z2CbA@gitlab.i-link.pro/front-common/art.git",
+    "@react-native-community/async-storage": "^1.12.1",
     "react": "16.13.1",
     "react-devtools": "^4.10.1",
     "react-native": "0.63.4",
-    "react-native-dash": "^0.0.11",
     "react-native-gesture-handler": "^1.9.0",
+    "react-native-mmkv-storage": "^0.4.3",
     "react-native-neomorph-shadows": "^1.1.2",
     "react-native-reanimated": "file:react-native-reanimated-2.0.0-rc.2.tgz",
     "react-native-redash": "^16.0.8",
@@ -34,6 +35,7 @@
     "eslint": "^7.18.0",
     "jest": "^26.6.3",
     "metro-react-native-babel-preset": "^0.64.0",
+    "react-native-svg-transformer": "^0.14.3",
     "react-native-typescript-transformer": "^1.2.13",
     "react-test-renderer": "16.13.1",
     "typescript": "^4.1.3"

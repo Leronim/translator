@@ -10,6 +10,8 @@ target 'Translator' do
 
   pod 'ReactNativeART', :path => '../node_modules/@react-native-community/art'
 
+  pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
+
   target 'TranslatorTests' do
     inherit! :complete
     # Pods for testing

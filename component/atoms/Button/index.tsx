@@ -3,10 +3,11 @@ import { Pressable, StyleSheet, Text, Dimensions } from 'react-native';
 import { Neomorph } from 'react-native-neomorph-shadows';
 
 interface Props {
-    text: string
+    text: string,
+    onPress: () => void
 }
 
-const CheckButton: React.FC<Props> = (props: Props) => {
+const CheckButton: React.FC<Props> = ({ text, onPress }) => {
     const [ swap, setSwap ] = useState<boolean>(false);
 
     return (
@@ -20,9 +21,9 @@ const CheckButton: React.FC<Props> = (props: Props) => {
                 onPressIn={() => setSwap(true)} 
                 onPressOut={() => setSwap(false)}
                 style={styles.screenContainer} 
-                onPress={() => {}}
+                onPress={() => onPress()}
             >
-                <Text style={styles.text}>{props.text}</Text>
+                <Text style={styles.text}>{text}</Text>
             </Pressable>
         </Neomorph>
     )
