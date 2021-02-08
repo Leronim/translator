@@ -25,7 +25,10 @@ export const checkOrder = (position: Position) => {
 }
 
 // Расчет новой позиции (на линии, ушел с линии)
-export const calculatingInLinePos = (position: Position[], containerWidth: number) => {
+export const calculatingInLinePos = (
+    position: Position[], 
+    containerWidth: number
+) => {
     "worklet";
 
     let lineCount: number = 1;
@@ -104,17 +107,17 @@ export const sortPills = (
     "worklet";
 
     positions.some((item: Position, id: number) => {
-        if(id === index && item.order.value !== -1) {
+        if(id === index) {
             return true;
+        } else if(item.order.value === -1) {
+            return false
         }
-        if(item.y.value < 0) {
-            const xSide = isBetweenPills(transition.x.value, item.x.value, item.x.value + item.width.value);
-            const ySide = isBetweenPills(transition.y.value, item.y.value, item.y.value + 55);
-            if(xSide && ySide) {
-                reBuildPosition(positions, currentPosition.order.value, item.order.value)
-                calculatingInLinePos(positions, containerWidth)
-                return false;
-            }
+        const xSide = isBetweenPills(transition.x.value, item.x.value, item.x.value + item.width.value);
+        const ySide = isBetweenPills(transition.y.value, item.y.value, item.y.value + 55);
+        if(xSide && ySide) {
+            reBuildPosition(positions, currentPosition.order.value, item.order.value)
+            calculatingInLinePos(positions, containerWidth)
+            return false;
         }
     })
 }

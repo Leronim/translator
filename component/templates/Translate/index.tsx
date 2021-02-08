@@ -9,6 +9,8 @@ import { setInitialWord, checkBoard } from '../../../store/words';
 
 const Translate: React.FC = () => {
     const [isError, setIsError] = useState<boolean>(true);
+    const [isRight, setIsRight] = useState<boolean>(false);
+    const [message, setMessage] = useState<string>('Something wrong!');
 
     useEffect(() => {
         setInitialWord()
@@ -16,7 +18,9 @@ const Translate: React.FC = () => {
 
     const handleButtonCheckPress = async () => {
         const result: boolean = await checkBoard();
-        setIsError(result)
+        setIsError(result);
+        setIsRight(result);
+        result ? setMessage('Right!') : setMessage('Something wrong!')
     }
 
     return (
@@ -25,7 +29,8 @@ const Translate: React.FC = () => {
             <Task/>
             <Board/>
             <Row style={{ marginTop: 50, justifyContent: 'flex-end' }}>
-                {!isError && <Error/>}
+                {!isError && <Error message={'Something wrong!'} color="#FF0000"/>}
+                {isRight && <Error message={'Right!'} color="#00ff00"/> }
                 <Button text="Check" onPress={handleButtonCheckPress}/>
             </Row>
         </React.Fragment>

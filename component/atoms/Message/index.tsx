@@ -4,7 +4,6 @@ import { View, Text, StyleSheet } from 'react-native';
 const message = [
     'Реакт',
     'Нейтив',
-    'иногда',
     'доставляет',
     'проблем',
     'моей',

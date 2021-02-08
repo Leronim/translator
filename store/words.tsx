@@ -5,7 +5,6 @@ const MMKV = new MMKVStorage.Loader().initialize();
 const initialStore = [
     'React',
     'Native',
-    'sometimes',
     'supplies',
     'problems',
     'my',
@@ -54,7 +53,7 @@ export const checkBoard = async () => {
 
     const initial: string[] | undefined = await getInitialWord();
     const current: string[] | undefined = await getWordInBoader();
-    if(initial && current) {
+    if(initial && typeof current === 'object' && current!.length > 0) {
         const result = difference(initial, current);
         return result;
     } else {
