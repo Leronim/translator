@@ -1,0 +1,57 @@
+d48da0de54e502178c7b35a47d745afa
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime/helpers/possibleConstructorReturn"));var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/getPrototypeOf"));
+var _react = _interopRequireDefault(require("react"));
+var _types = require("./types");
+var _art = require("@react-native-community/art");
+var _helpers = require("./helpers");var _jsxFileName = "/Users/leronim/Project/translator/node_modules/react-native-neomorph-shadows/src/InnerShadowART.js";function _createSuper(Derived) {var hasNativeReflectConstruct = _isNativeReflectConstruct();return function _createSuperInternal() {var Super = (0, _getPrototypeOf2.default)(Derived),result;if (hasNativeReflectConstruct) {var NewTarget = (0, _getPrototypeOf2.default)(this).constructor;result = Reflect.construct(Super, arguments, NewTarget);} else {result = Super.apply(this, arguments);}return (0, _possibleConstructorReturn2.default)(this, result);};}function _isNativeReflectConstruct() {if (typeof Reflect === "undefined" || !Reflect.construct) return false;if (Reflect.construct.sham) return false;if (typeof Proxy === "function") return true;try {Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));return true;} catch (e) {return false;}}var
+
+InnerShadowART = function (_React$PureComponent) {(0, _inherits2.default)(InnerShadowART, _React$PureComponent);var _super = _createSuper(InnerShadowART);function InnerShadowART() {(0, _classCallCheck2.default)(this, InnerShadowART);return _super.apply(this, arguments);}(0, _createClass2.default)(InnerShadowART, [{ key: "render", value: function render()
+    {var _this$props =
+
+
+
+
+
+
+
+
+
+      this.props,_this$props$width = _this$props.width,width = _this$props$width === void 0 ? 0 : _this$props$width,_this$props$height = _this$props.height,height = _this$props$height === void 0 ? 0 : _this$props$height,borderRadius = _this$props.borderRadius,shadowRadius = _this$props.shadowRadius,shadowOffset = _this$props.shadowOffset,shadowOpacity = _this$props.shadowOpacity,shadowColor = _this$props.shadowColor,backgroundColor = _this$props.backgroundColor;
+
+      var shadowProps = (0, _helpers.transformShadowPropsForAndroid)({
+        shadowOpacity: shadowOpacity,
+        shadowOffset: shadowOffset,
+        shadowRadius: shadowRadius,
+        shadowColor: shadowColor });
+
+
+      var absOffsetX = Math.abs(shadowOffset.x);
+      var absOffsetY = Math.abs(shadowOffset.y);
+      var stroke = 30;
+      if (absOffsetX >= absOffsetY) {
+        stroke += absOffsetX;
+      } else {
+        stroke += absOffsetY;
+      }
+      var path = (0, _helpers.getPathWithRadius)(
+      width + stroke + 2,
+      height + stroke + 2,
+      borderRadius + stroke / 2);
+
+
+      return (
+        _react.default.createElement(_art.Surface, { height: height, width: width, style: { position: 'absolute' }, __self: this, __source: { fileName: _jsxFileName, lineNumber: 42, columnNumber: 7 } },
+        _react.default.createElement(_art.Group, { x: -stroke / 2 - 1, y: -stroke / 2 - 1, __self: this, __source: { fileName: _jsxFileName, lineNumber: 43, columnNumber: 9 } },
+        _react.default.createElement(_art.Shape, (0, _extends2.default)({
+          d: path,
+          strokeWidth: stroke,
+          stroke: backgroundColor || 'white' },
+        shadowProps, { __self: this, __source: { fileName: _jsxFileName, lineNumber: 44, columnNumber: 11 } })))));
+
+
+
+
+    } }]);return InnerShadowART;}(_react.default.PureComponent);exports.default = InnerShadowART;
+
+
+InnerShadowART.propTypes = _types.ShadowARTType;

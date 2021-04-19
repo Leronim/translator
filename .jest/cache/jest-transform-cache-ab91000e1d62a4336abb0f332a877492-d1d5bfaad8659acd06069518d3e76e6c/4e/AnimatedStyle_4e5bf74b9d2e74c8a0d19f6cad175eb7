@@ -1,0 +1,78 @@
+7a344b5af347f1d9d17c85ed8a671566
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports, "__esModule", { value: true });exports.createOrReuseStyleNode = createOrReuseStyleNode;exports.default = void 0;var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime/helpers/possibleConstructorReturn"));var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/getPrototypeOf"));var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));var _reactNative = require("react-native");
+
+var _AnimatedNode2 = _interopRequireDefault(require("./AnimatedNode"));
+var _AnimatedTransform = require("./AnimatedTransform");
+
+var _areEqual = _interopRequireDefault(require("fbjs/lib/areEqual"));function _createSuper(Derived) {var hasNativeReflectConstruct = _isNativeReflectConstruct();return function _createSuperInternal() {var Super = (0, _getPrototypeOf2.default)(Derived),result;if (hasNativeReflectConstruct) {var NewTarget = (0, _getPrototypeOf2.default)(this).constructor;result = Reflect.construct(Super, arguments, NewTarget);} else {result = Super.apply(this, arguments);}return (0, _possibleConstructorReturn2.default)(this, result);};}function _isNativeReflectConstruct() {if (typeof Reflect === "undefined" || !Reflect.construct) return false;if (Reflect.construct.sham) return false;if (typeof Proxy === "function") return true;try {Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));return true;} catch (e) {return false;}}function ownKeys(object, enumerableOnly) {var keys = Object.keys(object);if (Object.getOwnPropertySymbols) {var symbols = Object.getOwnPropertySymbols(object);if (enumerableOnly) symbols = symbols.filter(function (sym) {return Object.getOwnPropertyDescriptor(object, sym).enumerable;});keys.push.apply(keys, symbols);}return keys;}function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};if (i % 2) {ownKeys(Object(source), true).forEach(function (key) {(0, _defineProperty2.default)(target, key, source[key]);});} else if (Object.getOwnPropertyDescriptors) {Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));} else {ownKeys(Object(source)).forEach(function (key) {Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));});}}return target;}
+
+function sanitizeStyle(inputStyle) {
+  var style;
+  for (var key in inputStyle) {
+    var value = inputStyle[key];
+    if (value instanceof _AnimatedNode2.default) {
+      if (style === undefined) {
+        style = {};
+      }
+      style[key] = value.__nodeID;
+    }
+  }
+  return style;
+}
+
+function createOrReuseStyleNode(style, oldNode) {
+  style = _reactNative.StyleSheet.flatten(style) || {};
+  if (style.transform) {
+    var transform = (0, _AnimatedTransform.createOrReuseTransformNode)(
+    style.transform,
+    oldNode && oldNode._style.transform);
+
+    if (transform) {
+      style = _objectSpread(_objectSpread({},
+      style), {}, {
+        transform: transform });
+
+    }
+  }
+  var config = sanitizeStyle(style);
+  if (config === undefined) {
+    return undefined;
+  }
+  if (oldNode && (0, _areEqual.default)(config, oldNode._config)) {
+    return oldNode;
+  }
+  return new AnimatedStyle(style, config);
+}var
+
+
+
+
+
+AnimatedStyle = function (_AnimatedNode) {(0, _inherits2.default)(AnimatedStyle, _AnimatedNode);var _super = _createSuper(AnimatedStyle);
+  function AnimatedStyle(style, config) {var _this;(0, _classCallCheck2.default)(this, AnimatedStyle);
+    _this = _super.call(this, { type: 'style', style: config }, Object.values(style));
+    _this._config = config;
+    _this._style = style;return _this;
+  }(0, _createClass2.default)(AnimatedStyle, [{ key: "toString", value: function toString()
+
+    {
+      return "AnimatedStyle, id: " + this.__nodeID;
+    } }, { key: "_walkStyleAndGetAnimatedValues", value: function _walkStyleAndGetAnimatedValues(
+
+    style) {
+      var updatedStyle = {};
+      for (var key in style) {
+        var value = style[key];
+        if (value instanceof _AnimatedNode2.default) {
+          updatedStyle[key] = value.__getValue();
+        } else if (value && !Array.isArray(value) && typeof value === 'object') {
+
+          updatedStyle[key] = this._walkStyleAndGetAnimatedValues(value);
+        }
+      }
+      return updatedStyle;
+    } }, { key: "__onEvaluate", value: function __onEvaluate()
+
+    {
+      return this._walkStyleAndGetAnimatedValues(this._style);
+    } }]);return AnimatedStyle;}(_AnimatedNode2.default);exports.default = AnimatedStyle;

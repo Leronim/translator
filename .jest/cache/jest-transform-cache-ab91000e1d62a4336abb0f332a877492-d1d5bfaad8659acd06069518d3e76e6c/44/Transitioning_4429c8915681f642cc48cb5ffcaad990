@@ -1,0 +1,156 @@
+7f7eccfc7e5d30db6360a87e8de94fec
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports, "__esModule", { value: true });exports.createTransitioningComponent = createTransitioningComponent;exports.Transition = exports.Transitioning = void 0;var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime/helpers/possibleConstructorReturn"));var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/getPrototypeOf"));var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));var _react = _interopRequireDefault(require("react"));
+var _reactNative = require("react-native");
+var _ReanimatedModule = _interopRequireDefault(require("./ReanimatedModule"));var _jsxFileName = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/Transitioning.js";function _createSuper(Derived) {var hasNativeReflectConstruct = _isNativeReflectConstruct();return function _createSuperInternal() {var Super = (0, _getPrototypeOf2.default)(Derived),result;if (hasNativeReflectConstruct) {var NewTarget = (0, _getPrototypeOf2.default)(this).constructor;result = Reflect.construct(Super, arguments, NewTarget);} else {result = Super.apply(this, arguments);}return (0, _possibleConstructorReturn2.default)(this, result);};}function _isNativeReflectConstruct() {if (typeof Reflect === "undefined" || !Reflect.construct) return false;if (Reflect.construct.sham) return false;if (typeof Proxy === "function") return true;try {Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));return true;} catch (e) {return false;}}
+
+var TransitioningContext = _react.default.createContext();
+
+function configFromProps(type, props) {
+  var config = { type: type };
+  if ('durationMs' in props) {
+    config.durationMs = props.durationMs;
+  }
+  if ('interpolation' in props) {
+    config.interpolation = props.interpolation;
+  }
+  if ('type' in props) {
+    config.animation = props.type;
+  }
+  if ('delayMs' in props) {
+    config.delayMs = props.delayMs;
+  }
+  if ('propagation' in props) {
+    config.propagation = props.propagation;
+  }
+  return config;
+}
+
+
+
+
+
+
+
+function wrapTransitioningContext(Comp) {var _this = this;
+  return function (props) {
+    return (
+      _react.default.createElement(TransitioningContext.Consumer, { __self: _this, __self: _this, __source: { fileName: _jsxFileName, lineNumber: 36, columnNumber: 7 } },
+      function (context) {return _react.default.createElement(Comp, (0, _extends2.default)({ context: context }, props, { __self: _this, __self: _this, __source: { fileName: _jsxFileName, lineNumber: 37, columnNumber: 23 } }));}));
+
+
+  };
+}var
+
+In = function (_React$Component) {(0, _inherits2.default)(In, _React$Component);var _super = _createSuper(In);function In() {(0, _classCallCheck2.default)(this, In);return _super.apply(this, arguments);}(0, _createClass2.default)(In, [{ key: "componentDidMount", value: function componentDidMount()
+    {
+      this.props.context.push(configFromProps('in', this.props));
+    } }, { key: "render", value: function render()
+
+    {
+      return this.props.children || null;
+    } }]);return In;}(_react.default.Component);var
+
+
+Change = function (_React$Component2) {(0, _inherits2.default)(Change, _React$Component2);var _super2 = _createSuper(Change);function Change() {(0, _classCallCheck2.default)(this, Change);return _super2.apply(this, arguments);}(0, _createClass2.default)(Change, [{ key: "componentDidMount", value: function componentDidMount()
+    {
+      this.props.context.push(configFromProps('change', this.props));
+    } }, { key: "render", value: function render()
+
+    {
+      return this.props.children || null;
+    } }]);return Change;}(_react.default.Component);var
+
+
+Out = function (_React$Component3) {(0, _inherits2.default)(Out, _React$Component3);var _super3 = _createSuper(Out);function Out() {(0, _classCallCheck2.default)(this, Out);return _super3.apply(this, arguments);}(0, _createClass2.default)(Out, [{ key: "componentDidMount", value: function componentDidMount()
+    {
+      this.props.context.push(configFromProps('out', this.props));
+    } }, { key: "render", value: function render()
+
+    {
+      return this.props.children || null;
+    } }]);return Out;}(_react.default.Component);var
+
+
+Together = function (_React$Component4) {(0, _inherits2.default)(Together, _React$Component4);var _super4 = _createSuper(Together);function Together() {var _this2;(0, _classCallCheck2.default)(this, Together);for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {args[_key] = arguments[_key];}_this2 = _super4.call.apply(_super4, [this].concat(args));_this2.
+    transitions = [];return _this2;}(0, _createClass2.default)(Together, [{ key: "componentDidMount", value: function componentDidMount()
+    {
+      var config = configFromProps('group', this.props);
+      config.transitions = this.transitions;
+      this.props.context.push(config);
+    } }, { key: "render", value: function render()
+
+    {
+      return (
+        _react.default.createElement(TransitioningContext.Provider, { value: this.transitions, __self: this, __self: this, __source: { fileName: _jsxFileName, lineNumber: 83, columnNumber: 7 } },
+        this.props.children));
+
+
+    } }]);return Together;}(_react.default.Component);var
+
+
+Sequence = function (_React$Component5) {(0, _inherits2.default)(Sequence, _React$Component5);var _super5 = _createSuper(Sequence);function Sequence() {var _this3;(0, _classCallCheck2.default)(this, Sequence);for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {args[_key2] = arguments[_key2];}_this3 = _super5.call.apply(_super5, [this].concat(args));_this3.
+    transitions = [];return _this3;}(0, _createClass2.default)(Sequence, [{ key: "componentDidMount", value: function componentDidMount()
+    {
+      var config = configFromProps('group', this.props);
+      config.sequence = true;
+      config.transitions = this.transitions;
+      this.props.context.push(config);
+    } }, { key: "render", value: function render()
+
+    {
+      return (
+        _react.default.createElement(TransitioningContext.Provider, { value: this.transitions, __self: this, __self: this, __source: { fileName: _jsxFileName, lineNumber: 101, columnNumber: 7 } },
+        this.props.children));
+
+
+    } }]);return Sequence;}(_react.default.Component);
+
+
+function createTransitioningComponent(Component) {var
+  Wrapped = function (_React$Component6) {(0, _inherits2.default)(Wrapped, _React$Component6);var _super6 = _createSuper(Wrapped);function Wrapped() {var _this4;(0, _classCallCheck2.default)(this, Wrapped);for (var _len3 = arguments.length, args = new Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {args[_key3] = arguments[_key3];}_this4 = _super6.call.apply(_super6, [this].concat(args));_this4.
+      propTypes = Component.propTypes;_this4.
+      transitions = [];_this4.
+      viewRef = _react.default.createRef();return _this4;}(0, _createClass2.default)(Wrapped, [{ key: "componentDidMount", value: function componentDidMount()
+
+      {
+        if (this.props.animateMount) {
+          this.animateNextTransition();
+        }
+      } }, { key: "setNativeProps", value: function setNativeProps(
+
+      props) {
+        this.viewRef.current.setNativeProps(props);
+      } }, { key: "animateNextTransition", value: function animateNextTransition()
+
+      {
+        var viewTag = (0, _reactNative.findNodeHandle)(this.viewRef.current);
+        _ReanimatedModule.default.animateNextTransition(viewTag, {
+          transitions: this.transitions });
+
+      } }, { key: "render", value: function render()
+
+      {var _this$props =
+        this.props,transition = _this$props.transition,rest = (0, _objectWithoutProperties2.default)(_this$props, ["transition"]);
+        return (
+          _react.default.createElement(_react.default.Fragment, { __self: this, __self: this, __source: { fileName: _jsxFileName, lineNumber: 134, columnNumber: 9 } },
+          _react.default.createElement(TransitioningContext.Provider, { value: this.transitions, __self: this, __self: this, __source: { fileName: _jsxFileName, lineNumber: 135, columnNumber: 11 } },
+          transition),
+
+          _react.default.createElement(Component, (0, _extends2.default)({}, rest, { ref: this.viewRef, collapsable: false, __self: this, __self: this, __source: { fileName: _jsxFileName, lineNumber: 138, columnNumber: 11 } }))));
+
+
+      } }]);return Wrapped;}(_react.default.Component);
+
+  return Wrapped;
+}
+
+var Transitioning = {
+  View: createTransitioningComponent(_reactNative.View) };exports.Transitioning = Transitioning;
+
+
+var Transition = {
+  Sequence: wrapTransitioningContext(Sequence),
+  Together: wrapTransitioningContext(Together),
+  In: wrapTransitioningContext(In),
+  Out: wrapTransitioningContext(Out),
+  Change: wrapTransitioningContext(Change) };exports.Transition = Transition;

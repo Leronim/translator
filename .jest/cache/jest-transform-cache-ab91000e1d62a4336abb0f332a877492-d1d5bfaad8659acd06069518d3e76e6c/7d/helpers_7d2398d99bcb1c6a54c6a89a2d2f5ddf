@@ -1,0 +1,167 @@
+7efc2f97bb58e28286a9ebf348d268bc
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports, "__esModule", { value: true });exports.getPathWithRadius = getPathWithRadius;exports.transformShadowPropsForAndroid = transformShadowPropsForAndroid;exports.transformStyleProps = transformStyleProps;exports.brightness = brightness;exports.brightnessToOpacity = brightnessToOpacity;exports.calcOpacityFromRange = calcOpacityFromRange;var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
+var _reactNative = require("react-native");function ownKeys(object, enumerableOnly) {var keys = Object.keys(object);if (Object.getOwnPropertySymbols) {var symbols = Object.getOwnPropertySymbols(object);if (enumerableOnly) symbols = symbols.filter(function (sym) {return Object.getOwnPropertyDescriptor(object, sym).enumerable;});keys.push.apply(keys, symbols);}return keys;}function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};if (i % 2) {ownKeys(Object(source), true).forEach(function (key) {(0, _defineProperty2.default)(target, key, source[key]);});} else if (Object.getOwnPropertyDescriptors) {Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));} else {ownKeys(Object(source)).forEach(function (key) {Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));});}}return target;}
+
+function getPathWithRadius(width, height, borderRadius) {
+  if (borderRadius) {
+    var APrefix = "A " + borderRadius + ", " + borderRadius + ", 0 0 1";
+    var ATopLeft = APrefix + " " + borderRadius + ",0";
+    var ATopRight = APrefix + " " + width + "," + borderRadius;
+    var ABottomRight = APrefix + " " + (width - borderRadius) + "," + height;
+    var ABottomLeft = APrefix + " 0," + (height - borderRadius);
+    return "M 0," + borderRadius + " " + ATopLeft + " H " + (
+    width - borderRadius) + " " +
+    ATopRight + " V " + (
+    height - borderRadius) + " " +
+    ABottomRight + " H " + borderRadius + " " + ABottomLeft + " Z";
+  } else {
+    return "M 0,0 H " + width + " V " + height + " H 0 Z";
+  }
+}
+
+function transformShadowPropsForAndroid(props) {
+  var shadowProps = _objectSpread({}, props);
+  if (_reactNative.Platform.OS === 'android') {
+    shadowProps.shadowRadius = props.shadowRadius * 2;
+    shadowProps.shadowOffset.x = props.shadowOffset.x * 3;
+    shadowProps.shadowOffset.y = props.shadowOffset.y * 3;
+  }
+  return shadowProps;
+}
+
+function transformStyleProps(styleProps, neomorph) {var _ref =
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  styleProps instanceof Array ? _reactNative.StyleSheet.flatten(styleProps) : styleProps,width = _ref.width,height = _ref.height,_ref$borderRadius = _ref.borderRadius,borderRadius = _ref$borderRadius === void 0 ? 0 : _ref$borderRadius,backgroundColor = _ref.backgroundColor,_ref$shadowOpacity = _ref.shadowOpacity,shadowOpacity = _ref$shadowOpacity === void 0 ? neomorph ? 0 : 1 : _ref$shadowOpacity,_ref$shadowOffset = _ref.shadowOffset,shadowOffset = _ref$shadowOffset === void 0 ? { width: 0, height: 0 } : _ref$shadowOffset,shadowRadius = _ref.shadowRadius,shadowColor = _ref.shadowColor,bottom = _ref.bottom,direction = _ref.direction,display = _ref.display,end = _ref.end,left = _ref.left,margin = _ref.margin,marginBottom = _ref.marginBottom,marginEnd = _ref.marginEnd,marginHorizontal = _ref.marginHorizontal,marginLeft = _ref.marginLeft,marginRight = _ref.marginRight,marginStart = _ref.marginStart,marginTop = _ref.marginTop,marginVertical = _ref.marginVertical,position = _ref.position,right = _ref.right,start = _ref.start,top = _ref.top,zIndex = _ref.zIndex,backfaceVisibility = _ref.backfaceVisibility,opacity = _ref.opacity,transform = _ref.transform,alignSelf = _ref.alignSelf,borderBottomEndRadius = _ref.borderBottomEndRadius,borderBottomLeftRadius = _ref.borderBottomLeftRadius,borderBottomRightRadius = _ref.borderBottomRightRadius,borderBottomStartRadius = _ref.borderBottomStartRadius,borderTopEndRadius = _ref.borderTopEndRadius,borderTopLeftRadius = _ref.borderTopLeftRadius,borderTopRightRadius = _ref.borderTopRightRadius,borderTopStartRadius = _ref.borderTopStartRadius,flex = _ref.flex,flexBasis = _ref.flexBasis,flexGrow = _ref.flexGrow,flexShrink = _ref.flexShrink,maxHeight = _ref.maxHeight,maxWidth = _ref.maxWidth,minHeight = _ref.minHeight,minWidth = _ref.minWidth,elevation = _ref.elevation,insideViewStyle = (0, _objectWithoutProperties2.default)(_ref, ["width", "height", "borderRadius", "backgroundColor", "shadowOpacity", "shadowOffset", "shadowRadius", "shadowColor", "bottom", "direction", "display", "end", "left", "margin", "marginBottom", "marginEnd", "marginHorizontal", "marginLeft", "marginRight", "marginStart", "marginTop", "marginVertical", "position", "right", "start", "top", "zIndex", "backfaceVisibility", "opacity", "transform", "alignSelf", "borderBottomEndRadius", "borderBottomLeftRadius", "borderBottomRightRadius", "borderBottomStartRadius", "borderTopEndRadius", "borderTopLeftRadius", "borderTopRightRadius", "borderTopStartRadius", "flex", "flexBasis", "flexGrow", "flexShrink", "maxHeight", "maxWidth", "minHeight", "minWidth", "elevation"]);
+  var outsideViewStyle = {
+    bottom: bottom,
+    direction: direction,
+    display: display,
+    end: end,
+    left: left,
+    margin: margin,
+    marginBottom: marginBottom,
+    marginEnd: marginEnd,
+    marginHorizontal: marginHorizontal,
+    marginLeft: marginLeft,
+    marginRight: marginRight,
+    marginStart: marginStart,
+    marginTop: marginTop,
+    marginVertical: marginVertical,
+    position: position,
+    right: right,
+    start: start,
+    top: top,
+    zIndex: zIndex,
+    backfaceVisibility: backfaceVisibility,
+    opacity: opacity,
+    transform: transform };
+
+  if (borderRadius > width / 2) {
+    borderRadius = width / 2;
+  }
+  if (borderRadius > height / 2) {
+    borderRadius = height / 2;
+  }
+  return {
+    outsideViewStyle: outsideViewStyle,
+    insideViewStyle: insideViewStyle,
+    allShadowProps: {
+      width: width,
+      height: height,
+      borderRadius: borderRadius < 0 ? 0 : borderRadius,
+      backgroundColor:
+      backgroundColor === 'transparent' ? '#00000000' : backgroundColor,
+      shadowOpacity: shadowOpacity,
+      shadowOffset: { x: shadowOffset.width, y: shadowOffset.height },
+      shadowRadius: shadowRadius ? shadowRadius * 2 : 0.1,
+      shadowColor: shadowColor } };
+
+
+}
+
+
+function brightness(color) {
+  var r, g, b, hsp;
+  if (color.match(/^rgb/)) {
+    color = color.match(
+    /^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)$/);
+
+    r = color[1];
+    g = color[2];
+    b = color[3];
+  } else {
+    color = +('0x' + color.slice(1).replace(color.length < 5 && /./g, '$&$&'));
+    r = color >> 16;
+    g = color >> 8 & 255;
+    b = color & 255;
+  }
+  hsp = Math.sqrt(0.299 * (r * r) + 0.587 * (g * g) + 0.114 * (b * b));
+  return hsp;
+}
+
+
+function brightnessToOpacity(val) {
+  var ratio = 50;
+  var ratioBraghtness = val * (1 / 255);
+  var opacity = Math.pow(ratio, ratioBraghtness) / ratio - 1 / ratio;
+  return opacity;
+}
+
+
+function calcOpacityFromRange(val, min, max) {
+  return min + (max - min) * val;
+}

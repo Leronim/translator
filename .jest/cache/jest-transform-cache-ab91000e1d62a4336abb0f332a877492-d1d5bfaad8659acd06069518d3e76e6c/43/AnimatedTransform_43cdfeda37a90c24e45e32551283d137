@@ -1,0 +1,78 @@
+f1b6ff99d186ef74ee80fca56cb8e144
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports, "__esModule", { value: true });exports.createOrReuseTransformNode = createOrReuseTransformNode;var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime/helpers/possibleConstructorReturn"));var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/getPrototypeOf"));var _AnimatedNode2 = _interopRequireDefault(require("./AnimatedNode"));
+
+var _areEqual = _interopRequireDefault(require("fbjs/lib/areEqual"));function _createSuper(Derived) {var hasNativeReflectConstruct = _isNativeReflectConstruct();return function _createSuperInternal() {var Super = (0, _getPrototypeOf2.default)(Derived),result;if (hasNativeReflectConstruct) {var NewTarget = (0, _getPrototypeOf2.default)(this).constructor;result = Reflect.construct(Super, arguments, NewTarget);} else {result = Super.apply(this, arguments);}return (0, _possibleConstructorReturn2.default)(this, result);};}function _isNativeReflectConstruct() {if (typeof Reflect === "undefined" || !Reflect.construct) return false;if (Reflect.construct.sham) return false;if (typeof Proxy === "function") return true;try {Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));return true;} catch (e) {return false;}}
+
+function sanitizeTransform(inputTransform) {
+  var outputTransform = [];
+  var hasAnimatedTransform = false;
+  inputTransform.forEach(function (transform) {
+    for (var key in transform) {
+      var value = transform[key];
+      if (value instanceof _AnimatedNode2.default) {
+        hasAnimatedTransform = true;
+        outputTransform.push({
+          property: key,
+          nodeID: value.__nodeID });
+
+      } else {
+        outputTransform.push({
+          property: key,
+          value: value });
+
+      }
+    }
+  });
+  return hasAnimatedTransform ? outputTransform : undefined;
+}
+
+function extractAnimatedParentNodes(transform) {
+  var parents = [];
+  transform.forEach(function (transform) {
+    for (var key in transform) {
+      var value = transform[key];
+      if (value instanceof _AnimatedNode2.default) {
+        parents.push(value);
+      }
+    }
+  });
+  return parents;
+}
+
+function createOrReuseTransformNode(transform, oldNode) {
+  var config = sanitizeTransform(transform);
+  if (config === undefined) {
+    return undefined;
+  }
+  if (oldNode && (0, _areEqual.default)(config, oldNode._config)) {
+    return oldNode;
+  }
+  return new AnimatedTransform(transform, config);
+}var
+
+AnimatedTransform = function (_AnimatedNode) {(0, _inherits2.default)(AnimatedTransform, _AnimatedNode);var _super = _createSuper(AnimatedTransform);
+  function AnimatedTransform(transform, config) {var _this;(0, _classCallCheck2.default)(this, AnimatedTransform);
+    _this = _super.call(this,
+    { type: 'transform', transform: config },
+    extractAnimatedParentNodes(transform));
+
+    _this._config = config;
+    _this._transform = transform;return _this;
+  }(0, _createClass2.default)(AnimatedTransform, [{ key: "toString", value: function toString()
+
+    {
+      return "AnimatedTransform, id: " + this.__nodeID;
+    } }, { key: "__onEvaluate", value: function __onEvaluate()
+
+    {
+      return this._transform.map(function (transform) {
+        var result = {};
+        for (var key in transform) {
+          var value = transform[key];
+          if (value instanceof _AnimatedNode2.default) {
+            result[key] = value.__getValue();
+          }
+        }
+        return result;
+      });
+    } }]);return AnimatedTransform;}(_AnimatedNode2.default);

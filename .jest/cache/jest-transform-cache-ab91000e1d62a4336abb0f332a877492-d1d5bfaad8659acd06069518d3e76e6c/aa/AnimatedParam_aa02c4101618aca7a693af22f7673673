@@ -1,0 +1,89 @@
+df24adb80b694c52bb7ea37e707bb6ea
+"use strict";var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports, "__esModule", { value: true });exports.createAnimatedParam = createAnimatedParam;exports.AnimatedParam = void 0;var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime/helpers/possibleConstructorReturn"));var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/getPrototypeOf"));var _invariant = _interopRequireDefault(require("fbjs/lib/invariant"));
+var _AnimatedNode2 = _interopRequireWildcard(require("./AnimatedNode"));
+var _AnimatedClock = _interopRequireDefault(require("./AnimatedClock"));
+var _val = require("../val");function _createSuper(Derived) {var hasNativeReflectConstruct = _isNativeReflectConstruct();return function _createSuperInternal() {var Super = (0, _getPrototypeOf2.default)(Derived),result;if (hasNativeReflectConstruct) {var NewTarget = (0, _getPrototypeOf2.default)(this).constructor;result = Reflect.construct(Super, arguments, NewTarget);} else {result = Super.apply(this, arguments);}return (0, _possibleConstructorReturn2.default)(this, result);};}function _isNativeReflectConstruct() {if (typeof Reflect === "undefined" || !Reflect.construct) return false;if (Reflect.construct.sham) return false;if (typeof Proxy === "function") return true;try {Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));return true;} catch (e) {return false;}}var
+
+AnimatedParam = function (_AnimatedNode) {(0, _inherits2.default)(AnimatedParam, _AnimatedNode);var _super = _createSuper(AnimatedParam);
+
+
+
+  function AnimatedParam() {var _this;(0, _classCallCheck2.default)(this, AnimatedParam);
+    _this = _super.call(this, { type: 'param' }, []);_this.argsStack = [];
+    _this.__attach();return _this;
+  }(0, _createClass2.default)(AnimatedParam, [{ key: "beginContext", value: function beginContext(
+
+    ref, prevCallID) {
+      this._prevCallID = prevCallID;
+      this.argsStack.push(ref);
+    } }, { key: "endContext", value: function endContext()
+
+    {
+      this.argsStack.pop();
+    } }, { key: "_getTopNode", value: function _getTopNode()
+
+    {
+      if (this.argsStack.length === 0)
+      throw new Error("param: Invocation failed because argsStack is empty");
+      var top = this.argsStack[this.argsStack.length - 1];
+      return top;
+    } }, { key: "setValue", value: function setValue(
+
+    value) {
+      var top = this._getTopNode();
+      if (top.setValue) {
+        var callID = (0, _AnimatedNode2.getCallID)();
+        (0, _AnimatedNode2.setCallID)(this._prevCallID);
+        top.setValue(value);
+        (0, _AnimatedNode2.setCallID)(callID);
+      } else {
+        throw new Error("param: setValue(" +
+        value + ") failed because the top element has no known method for updating it's current value.");
+
+      }
+    } }, { key: "__onEvaluate", value: function __onEvaluate()
+
+    {
+      var callID = (0, _AnimatedNode2.getCallID)();
+      (0, _AnimatedNode2.setCallID)(this._prevCallID);
+      var top = this._getTopNode();
+      var value = (0, _val.val)(top);
+      (0, _AnimatedNode2.setCallID)(callID);
+      return value;
+    } }, { key: "start", value: function start()
+
+    {
+      var node = this._getTopNode();
+      (0, _invariant.default)(
+      node instanceof _AnimatedClock.default || node instanceof AnimatedParam, "param: top node should be of type AnimatedClock but got " +
+      node);
+
+      node.start();
+    } }, { key: "stop", value: function stop()
+
+    {
+      var node = this._getTopNode();
+      (0, _invariant.default)(
+      node instanceof _AnimatedClock.default || node instanceof AnimatedParam, "param: top node should be of type AnimatedClock but got " +
+      node);
+
+      node.stop();
+    } }, { key: "isRunning", value: function isRunning()
+
+    {
+      var node = this._getTopNode();
+
+      if (node instanceof AnimatedParam) {
+        return node.isRunning();
+      }
+      (0, _invariant.default)(
+      node instanceof _AnimatedClock.default, "param: top node should be of type AnimatedClock but got " +
+      node);
+
+      return node.isStarted();
+    } }]);return AnimatedParam;}(_AnimatedNode2.default);exports.AnimatedParam = AnimatedParam;
+
+
+function createAnimatedParam() {
+  return new AnimatedParam();
+}

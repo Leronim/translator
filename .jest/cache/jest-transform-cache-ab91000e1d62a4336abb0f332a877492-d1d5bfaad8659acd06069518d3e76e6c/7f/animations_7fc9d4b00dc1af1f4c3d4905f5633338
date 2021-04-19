@@ -1,0 +1,637 @@
+327bdf0a141e3b48ceef79f9ec7977c3
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports, "__esModule", { value: true });exports.initialUpdaterRun = initialUpdaterRun;exports.sequence = exports.loop = exports.repeat = exports.delay = exports.withRepeat = exports.withSequence = exports.withDelay = exports.withDecay = exports.withSpring = exports.withTiming = exports.cancelAnimation = exports.defineAnimation = exports.decorateAnimation = exports.transformAnimation = exports.transform = void 0;var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
+var _Easing = require("./Easing");
+var _Colors = require("./Colors");
+var _NativeReanimated = _interopRequireDefault(require("./NativeReanimated"));
+
+var IN_STYLE_UPDATER = false;
+
+function initialUpdaterRun(updater) {
+  IN_STYLE_UPDATER = true;
+  var result = updater();
+  IN_STYLE_UPDATER = false;
+  return result;
+}var
+
+transform = function () {var _f = function _f(value, handler) {
+
+    if (value === undefined) {
+      return undefined;
+    }
+
+    if (typeof value === 'string') {
+
+
+      var match = value.match(/([A-Za-z]*)(-?\d*\.?\d*)([A-Za-z%]*)/);
+      var prefix = match[1];
+      var suffix = match[3];
+      var number = match[2];
+      handler.__prefix = prefix;
+      handler.__suffix = suffix;
+      return parseFloat(number);
+    }
+
+
+    if (handler.__prefix === undefined) {
+      return value;
+    }
+
+    return handler.__prefix + value + handler.__suffix;
+  };_f._closure = {};_f.asString = "function transform(value,handler){if(value===undefined){return undefined;}if(typeof value==='string'){var match=value.match(/([A-Za-z]*)(-?\\d*\\.?\\d*)([A-Za-z%]*)/);var prefix=match[1];var suffix=match[3];var number=match[2];handler.__prefix=prefix;handler.__suffix=suffix;return parseFloat(number);}if(handler.__prefix===undefined){return value;}return handler.__prefix+value+handler.__suffix;}";_f.__workletHash = 10262225681634;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/animations.js (15:7)";global.__reanimatedWorkletInit(_f);return _f;}();exports.transform = transform;var
+
+transformAnimation = function () {var _f = function _f(animation) {
+
+    if (!animation) {
+      return;
+    }
+    animation.toValue = transform(animation.toValue, animation);
+    animation.current = transform(animation.current, animation);
+    animation.startValue = transform(animation.startValue, animation);
+  };_f._closure = { transform: transform };_f.asString = "function transformAnimation(animation){const{transform}=jsThis._closure;{if(!animation){return;}animation.toValue=transform(animation.toValue,animation);animation.current=transform(animation.current,animation);animation.startValue=transform(animation.startValue,animation);}}";_f.__workletHash = 6788872195137;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/animations.js (41:7)";global.__reanimatedWorkletInit(_f);return _f;}();exports.transformAnimation = transformAnimation;var
+
+decorateAnimation = function () {var _f = function _f(animation) {
+
+    if (animation.isHigherOrder) {
+      return;
+    }
+    var baseOnStart = animation.onStart;
+    var baseOnFrame = animation.onFrame;
+    var animationCopy = (0, _extends2.default)({}, animation);
+    delete animationCopy.callback;
+
+    var prefNumberSuffOnStart = function prefNumberSuffOnStart(
+    animation,
+    value,
+    timestamp,
+    previousAnimation)
+    {
+      var val = transform(value, animation);
+      transformAnimation(animation);
+      if (previousAnimation !== animation) transformAnimation(previousAnimation);
+
+      baseOnStart(animation, val, timestamp, previousAnimation);
+
+      transformAnimation(animation);
+      if (previousAnimation !== animation) transformAnimation(previousAnimation);
+    };
+    var prefNumberSuffOnFrame = function prefNumberSuffOnFrame(animation, timestamp) {
+      transformAnimation(animation);
+
+      var res = baseOnFrame(animation, timestamp);
+
+      transformAnimation(animation);
+      return res;
+    };
+
+    var tab = ['H', 'S', 'V', 'A'];
+    var colorOnStart = function colorOnStart(animation, value, timestamp, previousAnimation) {
+      var HSVAValue;
+      var HSVACurrent;
+      var HSVAToValue;
+      var res = [];
+      if ((0, _Colors.isColor)(value)) {
+        HSVACurrent = (0, _Colors.convertToHSVA)(animation.current);
+        HSVAValue = (0, _Colors.convertToHSVA)(value);
+        if (animation.toValue) {
+          HSVAToValue = (0, _Colors.convertToHSVA)(animation.toValue);
+        }
+      }
+      tab.forEach(function (i, index) {
+        animation[i] = (0, _extends2.default)({}, animationCopy);
+        animation[i].current = HSVACurrent[index];
+        animation[i].toValue = HSVAToValue ? HSVAToValue[index] : undefined;
+        animation[i].onStart(
+        animation[i],
+        HSVAValue[index],
+        timestamp,
+        previousAnimation ? previousAnimation[i] : undefined);
+
+        res.push(animation[i].current);
+      });
+
+      animation.current = (0, _Colors.toRGBA)(res);
+    };
+
+    var colorOnFrame = function colorOnFrame(animation, timestamp) {
+      var HSVACurrent = (0, _Colors.convertToHSVA)(animation.current);
+      var res = [];
+      var finished = true;
+      tab.forEach(function (i, index) {
+        animation[i].current = HSVACurrent[index];
+        finished &= animation[i].onFrame(animation[i], timestamp);
+        res.push(animation[i].current);
+      });
+
+      animation.current = (0, _Colors.toRGBA)(res);
+      return finished;
+    };
+
+    animation.onStart = function (animation, value, timestamp, previousAnimation) {
+      if ((0, _Colors.isColor)(value)) {
+        colorOnStart(animation, value, timestamp, previousAnimation);
+        animation.onFrame = colorOnFrame;
+        return;
+      } else if (typeof value === 'string') {
+        prefNumberSuffOnStart(animation, value, timestamp, previousAnimation);
+        animation.onFrame = prefNumberSuffOnFrame;
+        return;
+      }
+      baseOnStart(animation, value, timestamp, previousAnimation);
+    };
+  };_f._closure = { _extends: _extends2.default, transform: transform, transformAnimation: transformAnimation, isColor: _Colors.isColor, convertToHSVA: _Colors.convertToHSVA, toRGBA: _Colors.toRGBA };_f.asString = "function decorateAnimation(animation){const{_extends,transform,transformAnimation,isColor,convertToHSVA,toRGBA}=jsThis._closure;{if(animation.isHigherOrder){return;}var baseOnStart=animation.onStart;var baseOnFrame=animation.onFrame;var animationCopy=_extends({},animation);delete animationCopy.callback;var prefNumberSuffOnStart=function prefNumberSuffOnStart(animation,value,timestamp,previousAnimation){var val=transform(value,animation);transformAnimation(animation);if(previousAnimation!==animation)transformAnimation(previousAnimation);baseOnStart(animation,val,timestamp,previousAnimation);transformAnimation(animation);if(previousAnimation!==animation)transformAnimation(previousAnimation);};var prefNumberSuffOnFrame=function prefNumberSuffOnFrame(animation,timestamp){transformAnimation(animation);var res=baseOnFrame(animation,timestamp);transformAnimation(animation);return res;};var tab=['H','S','V','A'];var colorOnStart=function colorOnStart(animation,value,timestamp,previousAnimation){var HSVAValue;var HSVACurrent;var HSVAToValue;var res=[];if(isColor(value)){HSVACurrent=convertToHSVA(animation.current);HSVAValue=convertToHSVA(value);if(animation.toValue){HSVAToValue=convertToHSVA(animation.toValue);}}tab.forEach(function(i,index){animation[i]=_extends({},animationCopy);animation[i].current=HSVACurrent[index];animation[i].toValue=HSVAToValue?HSVAToValue[index]:undefined;animation[i].onStart(animation[i],HSVAValue[index],timestamp,previousAnimation?previousAnimation[i]:undefined);res.push(animation[i].current);});animation.current=toRGBA(res);};var colorOnFrame=function colorOnFrame(animation,timestamp){var HSVACurrent=convertToHSVA(animation.current);var res=[];var finished=true;tab.forEach(function(i,index){animation[i].current=HSVACurrent[index];finished&=animation[i].onFrame(animation[i],timestamp);res.push(animation[i].current);});animation.current=toRGBA(res);return finished;};animation.onStart=function(animation,value,timestamp,previousAnimation){if(isColor(value)){colorOnStart(animation,value,timestamp,previousAnimation);animation.onFrame=colorOnFrame;return;}else if(typeof value==='string'){prefNumberSuffOnStart(animation,value,timestamp,previousAnimation);animation.onFrame=prefNumberSuffOnFrame;return;}baseOnStart(animation,value,timestamp,previousAnimation);};}}";_f.__workletHash = 812220294160;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/animations.js (51:7)";global.__reanimatedWorkletInit(_f);return _f;}();exports.decorateAnimation = decorateAnimation;var
+
+defineAnimation = function () {var _f = function _f(starting, factory) {
+
+    if (IN_STYLE_UPDATER) {
+      return starting;
+    }
+    var create = function () {var _f = function _f() {
+
+        var animation = factory();
+        decorateAnimation(animation);
+        return animation;
+      };_f._closure = { factory: factory, decorateAnimation: decorateAnimation };_f.asString = "function _f(){const{factory,decorateAnimation}=jsThis._closure;{var animation=factory();decorateAnimation(animation);return animation;}}";_f.__workletHash = 14637555751476;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/animations.js (147:17)";global.__reanimatedWorkletInit(_f);return _f;}();
+
+    if (_WORKLET || !_NativeReanimated.default.native) {
+      return create();
+    }
+    return create;
+  };_f._closure = { IN_STYLE_UPDATER: IN_STYLE_UPDATER, decorateAnimation: decorateAnimation, NativeReanimated: { native: _NativeReanimated.default.native } };_f.asString = "function defineAnimation(starting,factory){const{IN_STYLE_UPDATER,decorateAnimation,NativeReanimated}=jsThis._closure;{if(IN_STYLE_UPDATER){return starting;}var create=function(){var _f=function _f(){var animation=factory();decorateAnimation(animation);return animation;};_f._closure={factory:factory,decorateAnimation:decorateAnimation};_f.asString=\"function _f(){const{factory,decorateAnimation}=jsThis._closure;{var animation=factory();decorateAnimation(animation);return animation;}}\";_f.__workletHash=14637555751476;_f.__location=\"/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/animations.js (147:17)\";global.__reanimatedWorkletInit(_f);return _f;}();if(_WORKLET||!NativeReanimated.native){return create();}return create;}}";_f.__workletHash = 5299579849954;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/animations.js (142:7)";global.__reanimatedWorkletInit(_f);return _f;}();exports.defineAnimation = defineAnimation;var
+
+cancelAnimation = function () {var _f = function _f(sharedValue) {
+
+
+    sharedValue.value = sharedValue.value;
+  };_f._closure = {};_f.asString = "function cancelAnimation(sharedValue){sharedValue.value=sharedValue.value;}";_f.__workletHash = 15056882569526;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/animations.js (160:7)";global.__reanimatedWorkletInit(_f);return _f;}();exports.cancelAnimation = cancelAnimation;var
+
+withTiming = function () {var _f = function _f(toValue, userConfig, callback) {
+
+
+    return defineAnimation(toValue, function () {var _f = function _f() {
+
+        var config = {
+          duration: 300,
+          easing: _Easing.Easing.inOut(_Easing.Easing.quad) };
+
+        if (userConfig) {
+          Object.keys(userConfig).forEach(function (key) {return config[key] = userConfig[key];});
+        }
+
+        function timing(animation, now) {var
+          toValue = animation.toValue,progress = animation.progress,startTime = animation.startTime,current = animation.current;
+
+          var runtime = now - startTime;
+
+          if (runtime >= config.duration) {
+
+            animation.startTime = 0;
+            animation.current = toValue;
+            return true;
+          }
+
+          var newProgress = config.easing(runtime / config.duration);
+
+          var dist =
+          (toValue - current) * (newProgress - progress) / (1 - progress);
+          animation.current += dist;
+          animation.progress = newProgress;
+          return false;
+        }
+
+        function onStart(animation, value, now, previousAnimation) {
+          if (
+          previousAnimation &&
+          previousAnimation.type === 'timing' &&
+          previousAnimation.toValue === toValue &&
+          previousAnimation.startTime)
+          {
+
+
+
+            animation.startTime = previousAnimation.startTime;
+            animation.progress = previousAnimation.progress;
+          } else {
+            animation.startTime = now;
+            animation.progress = 0;
+          }
+          animation.current = value;
+        }
+
+        return {
+          type: 'timing',
+          onFrame: timing,
+          onStart: onStart,
+          progress: 0,
+          toValue: toValue,
+          current: toValue,
+          callback: callback };
+
+      };_f._closure = { Easing: { inOut: _Easing.Easing.inOut, quad: _Easing.Easing.quad }, userConfig: userConfig, toValue: toValue, callback: callback };_f.asString = "function _f(){const{Easing,userConfig,toValue,callback}=jsThis._closure;{var config={duration:300,easing:Easing.inOut(Easing.quad)};if(userConfig){Object.keys(userConfig).forEach(function(key){return config[key]=userConfig[key];});}function timing(animation,now){var toValue=animation.toValue,progress=animation.progress,startTime=animation.startTime,current=animation.current;var runtime=now-startTime;if(runtime>=config.duration){animation.startTime=0;animation.current=toValue;return true;}var newProgress=config.easing(runtime/config.duration);var dist=(toValue-current)*(newProgress-progress)/(1-progress);animation.current+=dist;animation.progress=newProgress;return false;}function onStart(animation,value,now,previousAnimation){if(previousAnimation&&previousAnimation.type==='timing'&&previousAnimation.toValue===toValue&&previousAnimation.startTime){animation.startTime=previousAnimation.startTime;animation.progress=previousAnimation.progress;}else{animation.startTime=now;animation.progress=0;}animation.current=value;}return{type:'timing',onFrame:timing,onStart:onStart,progress:0,toValue:toValue,current:toValue,callback:callback};}}";_f.__workletHash = 15603994719482;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/animations.js (169:34)";global.__reanimatedWorkletInit(_f);return _f;}());
+  };_f._closure = { defineAnimation: defineAnimation, Easing: { inOut: _Easing.Easing.inOut, quad: _Easing.Easing.quad } };_f.asString = "function withTiming(toValue,userConfig,callback){const{defineAnimation,Easing}=jsThis._closure;{return defineAnimation(toValue,function(){var _f=function _f(){var config={duration:300,easing:Easing.inOut(Easing.quad)};if(userConfig){Object.keys(userConfig).forEach(function(key){return config[key]=userConfig[key];});}function timing(animation,now){var toValue=animation.toValue,progress=animation.progress,startTime=animation.startTime,current=animation.current;var runtime=now-startTime;if(runtime>=config.duration){animation.startTime=0;animation.current=toValue;return true;}var newProgress=config.easing(runtime/config.duration);var dist=(toValue-current)*(newProgress-progress)/(1-progress);animation.current+=dist;animation.progress=newProgress;return false;}function onStart(animation,value,now,previousAnimation){if(previousAnimation&&previousAnimation.type==='timing'&&previousAnimation.toValue===toValue&&previousAnimation.startTime){animation.startTime=previousAnimation.startTime;animation.progress=previousAnimation.progress;}else{animation.startTime=now;animation.progress=0;}animation.current=value;}return{type:'timing',onFrame:timing,onStart:onStart,progress:0,toValue:toValue,current:toValue,callback:callback};};_f._closure={Easing:{inOut:Easing.inOut,quad:Easing.quad},userConfig:userConfig,toValue:toValue,callback:callback};_f.asString=\"function _f(){const{Easing,userConfig,toValue,callback}=jsThis._closure;{var config={duration:300,easing:Easing.inOut(Easing.quad)};if(userConfig){Object.keys(userConfig).forEach(function(key){return config[key]=userConfig[key];});}function timing(animation,now){var toValue=animation.toValue,progress=animation.progress,startTime=animation.startTime,current=animation.current;var runtime=now-startTime;if(runtime>=config.duration){animation.startTime=0;animation.current=toValue;return true;}var newProgress=config.easing(runtime/config.duration);var dist=(toValue-current)*(newProgress-progress)/(1-progress);animation.current+=dist;animation.progress=newProgress;return false;}function onStart(animation,value,now,previousAnimation){if(previousAnimation&&previousAnimation.type==='timing'&&previousAnimation.toValue===toValue&&previousAnimation.startTime){animation.startTime=previousAnimation.startTime;animation.progress=previousAnimation.progress;}else{animation.startTime=now;animation.progress=0;}animation.current=value;}return{type:'timing',onFrame:timing,onStart:onStart,progress:0,toValue:toValue,current:toValue,callback:callback};}}\";_f.__workletHash=15603994719482;_f.__location=\"/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/animations.js (169:34)\";global.__reanimatedWorkletInit(_f);return _f;}());}}";_f.__workletHash = 12411762656133;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/animations.js (166:7)";global.__reanimatedWorkletInit(_f);return _f;}();exports.withTiming = withTiming;var
+
+withSpring = function () {var _f = function _f(toValue, userConfig, callback) {
+
+
+    return defineAnimation(toValue, function () {var _f = function _f() {
+
+
+
+
+
+        var config = {
+          damping: 10,
+          mass: 1,
+          stiffness: 100,
+          overshootClamping: false,
+          restDisplacementThreshold: 0.01,
+          restSpeedThreshold: 2 };
+
+        if (userConfig) {
+          Object.keys(userConfig).forEach(function (key) {return config[key] = userConfig[key];});
+        }
+
+        function spring(animation, now) {var
+          toValue = animation.toValue,lastTimestamp = animation.lastTimestamp,current = animation.current,velocity = animation.velocity;
+
+          var deltaTime = Math.min(now - lastTimestamp, 64);
+          animation.lastTimestamp = now;
+
+          var c = config.damping;
+          var m = config.mass;
+          var k = config.stiffness;
+
+          var v0 = -velocity;
+          var x0 = toValue - current;
+
+          var zeta = c / (2 * Math.sqrt(k * m));
+          var omega0 = Math.sqrt(k / m);
+          var omega1 = omega0 * Math.sqrt(1 - Math.pow(zeta, 2));
+
+          var t = deltaTime / 1000;
+
+          var sin1 = Math.sin(omega1 * t);
+          var cos1 = Math.cos(omega1 * t);
+
+
+          var underDampedEnvelope = Math.exp(-zeta * omega0 * t);
+          var underDampedFrag1 =
+          underDampedEnvelope * (
+          sin1 * ((v0 + zeta * omega0 * x0) / omega1) + x0 * cos1);
+
+          var underDampedPosition = toValue - underDampedFrag1;
+
+          var underDampedVelocity =
+          zeta * omega0 * underDampedFrag1 -
+          underDampedEnvelope * (
+          cos1 * (v0 + zeta * omega0 * x0) - omega1 * x0 * sin1);
+
+
+          var criticallyDampedEnvelope = Math.exp(-omega0 * t);
+          var criticallyDampedPosition =
+          toValue - criticallyDampedEnvelope * (x0 + (v0 + omega0 * x0) * t);
+
+          var criticallyDampedVelocity =
+          criticallyDampedEnvelope * (
+          v0 * (t * omega0 - 1) + t * x0 * omega0 * omega0);
+
+          var isOvershooting = function isOvershooting() {
+            if (config.overshootClamping && config.stiffness !== 0) {
+              return current < toValue ?
+              animation.current > toValue :
+              animation.current < toValue;
+            } else {
+              return false;
+            }
+          };
+
+          var isVelocity = Math.abs(velocity) < config.restSpeedThreshold;
+          var isDisplacement =
+          config.stiffness === 0 ||
+          Math.abs(toValue - current) < config.restDisplacementThreshold;
+
+          if (zeta < 1) {
+            animation.current = underDampedPosition;
+            animation.velocity = underDampedVelocity;
+          } else {
+            animation.current = criticallyDampedPosition;
+            animation.velocity = criticallyDampedVelocity;
+          }
+
+          if (isOvershooting() || isVelocity && isDisplacement) {
+            if (config.stiffness !== 0) {
+              animation.velocity = 0;
+              animation.current = toValue;
+            }
+            return true;
+          }
+        }
+
+        function onStart(animation, value, now, previousAnimation) {
+          animation.current = value;
+          if (previousAnimation) {
+            animation.velocity =
+            previousAnimation.velocity || animation.velocity || 0;
+            animation.lastTimestamp = previousAnimation.lastTimestamp || now;
+          } else {
+            animation.lastTimestamp = now;
+          }
+        }
+
+        return {
+          onFrame: spring,
+          onStart: onStart,
+          toValue: toValue,
+          velocity: config.velocity || 0,
+          current: toValue,
+          callback: callback };
+
+      };_f._closure = { userConfig: userConfig, toValue: toValue, callback: callback };_f.asString = "function _f(){const{userConfig,toValue,callback}=jsThis._closure;{var config={damping:10,mass:1,stiffness:100,overshootClamping:false,restDisplacementThreshold:0.01,restSpeedThreshold:2};if(userConfig){Object.keys(userConfig).forEach(function(key){return config[key]=userConfig[key];});}function spring(animation,now){var toValue=animation.toValue,lastTimestamp=animation.lastTimestamp,current=animation.current,velocity=animation.velocity;var deltaTime=Math.min(now-lastTimestamp,64);animation.lastTimestamp=now;var c=config.damping;var m=config.mass;var k=config.stiffness;var v0=-velocity;var x0=toValue-current;var zeta=c/(2*Math.sqrt(k*m));var omega0=Math.sqrt(k/m);var omega1=omega0*Math.sqrt(1-Math.pow(zeta,2));var t=deltaTime/1000;var sin1=Math.sin(omega1*t);var cos1=Math.cos(omega1*t);var underDampedEnvelope=Math.exp(-zeta*omega0*t);var underDampedFrag1=underDampedEnvelope*(sin1*((v0+zeta*omega0*x0)/omega1)+x0*cos1);var underDampedPosition=toValue-underDampedFrag1;var underDampedVelocity=zeta*omega0*underDampedFrag1-underDampedEnvelope*(cos1*(v0+zeta*omega0*x0)-omega1*x0*sin1);var criticallyDampedEnvelope=Math.exp(-omega0*t);var criticallyDampedPosition=toValue-criticallyDampedEnvelope*(x0+(v0+omega0*x0)*t);var criticallyDampedVelocity=criticallyDampedEnvelope*(v0*(t*omega0-1)+t*x0*omega0*omega0);var isOvershooting=function isOvershooting(){if(config.overshootClamping&&config.stiffness!==0){return current<toValue?animation.current>toValue:animation.current<toValue;}else{return false;}};var isVelocity=Math.abs(velocity)<config.restSpeedThreshold;var isDisplacement=config.stiffness===0||Math.abs(toValue-current)<config.restDisplacementThreshold;if(zeta<1){animation.current=underDampedPosition;animation.velocity=underDampedVelocity;}else{animation.current=criticallyDampedPosition;animation.velocity=criticallyDampedVelocity;}if(isOvershooting()||isVelocity&&isDisplacement){if(config.stiffness!==0){animation.velocity=0;animation.current=toValue;}return true;}}function onStart(animation,value,now,previousAnimation){animation.current=value;if(previousAnimation){animation.velocity=previousAnimation.velocity||animation.velocity||0;animation.lastTimestamp=previousAnimation.lastTimestamp||now;}else{animation.lastTimestamp=now;}}return{onFrame:spring,onStart:onStart,toValue:toValue,velocity:config.velocity||0,current:toValue,callback:callback};}}";_f.__workletHash = 5879857267303;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/animations.js (234:34)";global.__reanimatedWorkletInit(_f);return _f;}());
+  };_f._closure = { defineAnimation: defineAnimation };_f.asString = "function withSpring(toValue,userConfig,callback){const{defineAnimation}=jsThis._closure;{return defineAnimation(toValue,function(){var _f=function _f(){var config={damping:10,mass:1,stiffness:100,overshootClamping:false,restDisplacementThreshold:0.01,restSpeedThreshold:2};if(userConfig){Object.keys(userConfig).forEach(function(key){return config[key]=userConfig[key];});}function spring(animation,now){var toValue=animation.toValue,lastTimestamp=animation.lastTimestamp,current=animation.current,velocity=animation.velocity;var deltaTime=Math.min(now-lastTimestamp,64);animation.lastTimestamp=now;var c=config.damping;var m=config.mass;var k=config.stiffness;var v0=-velocity;var x0=toValue-current;var zeta=c/(2*Math.sqrt(k*m));var omega0=Math.sqrt(k/m);var omega1=omega0*Math.sqrt(1-Math.pow(zeta,2));var t=deltaTime/1000;var sin1=Math.sin(omega1*t);var cos1=Math.cos(omega1*t);var underDampedEnvelope=Math.exp(-zeta*omega0*t);var underDampedFrag1=underDampedEnvelope*(sin1*((v0+zeta*omega0*x0)/omega1)+x0*cos1);var underDampedPosition=toValue-underDampedFrag1;var underDampedVelocity=zeta*omega0*underDampedFrag1-underDampedEnvelope*(cos1*(v0+zeta*omega0*x0)-omega1*x0*sin1);var criticallyDampedEnvelope=Math.exp(-omega0*t);var criticallyDampedPosition=toValue-criticallyDampedEnvelope*(x0+(v0+omega0*x0)*t);var criticallyDampedVelocity=criticallyDampedEnvelope*(v0*(t*omega0-1)+t*x0*omega0*omega0);var isOvershooting=function isOvershooting(){if(config.overshootClamping&&config.stiffness!==0){return current<toValue?animation.current>toValue:animation.current<toValue;}else{return false;}};var isVelocity=Math.abs(velocity)<config.restSpeedThreshold;var isDisplacement=config.stiffness===0||Math.abs(toValue-current)<config.restDisplacementThreshold;if(zeta<1){animation.current=underDampedPosition;animation.velocity=underDampedVelocity;}else{animation.current=criticallyDampedPosition;animation.velocity=criticallyDampedVelocity;}if(isOvershooting()||isVelocity&&isDisplacement){if(config.stiffness!==0){animation.velocity=0;animation.current=toValue;}return true;}}function onStart(animation,value,now,previousAnimation){animation.current=value;if(previousAnimation){animation.velocity=previousAnimation.velocity||animation.velocity||0;animation.lastTimestamp=previousAnimation.lastTimestamp||now;}else{animation.lastTimestamp=now;}}return{onFrame:spring,onStart:onStart,toValue:toValue,velocity:config.velocity||0,current:toValue,callback:callback};};_f._closure={userConfig:userConfig,toValue:toValue,callback:callback};_f.asString=\"function _f(){const{userConfig,toValue,callback}=jsThis._closure;{var config={damping:10,mass:1,stiffness:100,overshootClamping:false,restDisplacementThreshold:0.01,restSpeedThreshold:2};if(userConfig){Object.keys(userConfig).forEach(function(key){return config[key]=userConfig[key];});}function spring(animation,now){var toValue=animation.toValue,lastTimestamp=animation.lastTimestamp,current=animation.current,velocity=animation.velocity;var deltaTime=Math.min(now-lastTimestamp,64);animation.lastTimestamp=now;var c=config.damping;var m=config.mass;var k=config.stiffness;var v0=-velocity;var x0=toValue-current;var zeta=c/(2*Math.sqrt(k*m));var omega0=Math.sqrt(k/m);var omega1=omega0*Math.sqrt(1-Math.pow(zeta,2));var t=deltaTime/1000;var sin1=Math.sin(omega1*t);var cos1=Math.cos(omega1*t);var underDampedEnvelope=Math.exp(-zeta*omega0*t);var underDampedFrag1=underDampedEnvelope*(sin1*((v0+zeta*omega0*x0)/omega1)+x0*cos1);var underDampedPosition=toValue-underDampedFrag1;var underDampedVelocity=zeta*omega0*underDampedFrag1-underDampedEnvelope*(cos1*(v0+zeta*omega0*x0)-omega1*x0*sin1);var criticallyDampedEnvelope=Math.exp(-omega0*t);var criticallyDampedPosition=toValue-criticallyDampedEnvelope*(x0+(v0+omega0*x0)*t);var criticallyDampedVelocity=criticallyDampedEnvelope*(v0*(t*omega0-1)+t*x0*omega0*omega0);var isOvershooting=function isOvershooting(){if(config.overshootClamping&&config.stiffness!==0){return current<toValue?animation.current>toValue:animation.current<toValue;}else{return false;}};var isVelocity=Math.abs(velocity)<config.restSpeedThreshold;var isDisplacement=config.stiffness===0||Math.abs(toValue-current)<config.restDisplacementThreshold;if(zeta<1){animation.current=underDampedPosition;animation.velocity=underDampedVelocity;}else{animation.current=criticallyDampedPosition;animation.velocity=criticallyDampedVelocity;}if(isOvershooting()||isVelocity&&isDisplacement){if(config.stiffness!==0){animation.velocity=0;animation.current=toValue;}return true;}}function onStart(animation,value,now,previousAnimation){animation.current=value;if(previousAnimation){animation.velocity=previousAnimation.velocity||animation.velocity||0;animation.lastTimestamp=previousAnimation.lastTimestamp||now;}else{animation.lastTimestamp=now;}}return{onFrame:spring,onStart:onStart,toValue:toValue,velocity:config.velocity||0,current:toValue,callback:callback};}}\";_f.__workletHash=5879857267303;_f.__location=\"/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/animations.js (234:34)\";global.__reanimatedWorkletInit(_f);return _f;}());}}";_f.__workletHash = 8315692108378;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/animations.js (231:7)";global.__reanimatedWorkletInit(_f);return _f;}();exports.withSpring = withSpring;var
+
+withDecay = function () {var _f = function _f(userConfig, callback) {
+
+
+    return defineAnimation(0, function () {var _f = function _f() {
+
+        var config = {
+          deceleration: 0.998 };
+
+        if (userConfig) {
+          Object.keys(userConfig).forEach(function (key) {return config[key] = userConfig[key];});
+        }
+
+        var VELOCITY_EPS = 5;
+
+        function decay(animation, now) {var
+          lastTimestamp = animation.lastTimestamp,initialVelocity = animation.initialVelocity,current = animation.current,velocity = animation.velocity;
+
+          var deltaTime = Math.min(now - lastTimestamp, 64);
+          animation.lastTimestamp = now;
+
+          var kv = Math.pow(config.deceleration, deltaTime);
+          var kx = config.deceleration * (1 - kv) / (1 - config.deceleration);
+
+          var v0 = velocity / 1000;
+          var v = v0 * kv * 1000;
+          var x = current + v0 * kx;
+
+          animation.current = x;
+          animation.velocity = v;
+
+          var toValueIsReached = null;
+
+          if (Array.isArray(config.clamp)) {
+            if (initialVelocity < 0 && animation.current <= config.clamp[0]) {
+              toValueIsReached = config.clamp[0];
+            } else if (
+            initialVelocity > 0 &&
+            animation.current >= config.clamp[1])
+            {
+              toValueIsReached = config.clamp[1];
+            }
+          }
+
+          if (Math.abs(v) < VELOCITY_EPS || toValueIsReached !== null) {
+            if (toValueIsReached !== null) {
+              animation.current = toValueIsReached;
+            }
+
+            return true;
+          }
+        }
+
+        function onStart(animation, value, now) {
+          animation.current = value;
+          animation.lastTimestamp = now;
+          animation.initialVelocity = config.velocity;
+        }
+
+        return {
+          onFrame: decay,
+          onStart: onStart,
+          velocity: config.velocity || 0,
+          callback: callback };
+
+      };_f._closure = { userConfig: userConfig, callback: callback };_f.asString = "function _f(){const{userConfig,callback}=jsThis._closure;{var config={deceleration:0.998};if(userConfig){Object.keys(userConfig).forEach(function(key){return config[key]=userConfig[key];});}var VELOCITY_EPS=5;function decay(animation,now){var lastTimestamp=animation.lastTimestamp,initialVelocity=animation.initialVelocity,current=animation.current,velocity=animation.velocity;var deltaTime=Math.min(now-lastTimestamp,64);animation.lastTimestamp=now;var kv=Math.pow(config.deceleration,deltaTime);var kx=config.deceleration*(1-kv)/(1-config.deceleration);var v0=velocity/1000;var v=v0*kv*1000;var x=current+v0*kx;animation.current=x;animation.velocity=v;var toValueIsReached=null;if(Array.isArray(config.clamp)){if(initialVelocity<0&&animation.current<=config.clamp[0]){toValueIsReached=config.clamp[0];}else if(initialVelocity>0&&animation.current>=config.clamp[1]){toValueIsReached=config.clamp[1];}}if(Math.abs(v)<VELOCITY_EPS||toValueIsReached!==null){if(toValueIsReached!==null){animation.current=toValueIsReached;}return true;}}function onStart(animation,value,now){animation.current=value;animation.lastTimestamp=now;animation.initialVelocity=config.velocity;}return{onFrame:decay,onStart:onStart,velocity:config.velocity||0,callback:callback};}}";_f.__workletHash = 2267837729705;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/animations.js (353:28)";global.__reanimatedWorkletInit(_f);return _f;}());
+  };_f._closure = { defineAnimation: defineAnimation };_f.asString = "function withDecay(userConfig,callback){const{defineAnimation}=jsThis._closure;{return defineAnimation(0,function(){var _f=function _f(){var config={deceleration:0.998};if(userConfig){Object.keys(userConfig).forEach(function(key){return config[key]=userConfig[key];});}var VELOCITY_EPS=5;function decay(animation,now){var lastTimestamp=animation.lastTimestamp,initialVelocity=animation.initialVelocity,current=animation.current,velocity=animation.velocity;var deltaTime=Math.min(now-lastTimestamp,64);animation.lastTimestamp=now;var kv=Math.pow(config.deceleration,deltaTime);var kx=config.deceleration*(1-kv)/(1-config.deceleration);var v0=velocity/1000;var v=v0*kv*1000;var x=current+v0*kx;animation.current=x;animation.velocity=v;var toValueIsReached=null;if(Array.isArray(config.clamp)){if(initialVelocity<0&&animation.current<=config.clamp[0]){toValueIsReached=config.clamp[0];}else if(initialVelocity>0&&animation.current>=config.clamp[1]){toValueIsReached=config.clamp[1];}}if(Math.abs(v)<VELOCITY_EPS||toValueIsReached!==null){if(toValueIsReached!==null){animation.current=toValueIsReached;}return true;}}function onStart(animation,value,now){animation.current=value;animation.lastTimestamp=now;animation.initialVelocity=config.velocity;}return{onFrame:decay,onStart:onStart,velocity:config.velocity||0,callback:callback};};_f._closure={userConfig:userConfig,callback:callback};_f.asString=\"function _f(){const{userConfig,callback}=jsThis._closure;{var config={deceleration:0.998};if(userConfig){Object.keys(userConfig).forEach(function(key){return config[key]=userConfig[key];});}var VELOCITY_EPS=5;function decay(animation,now){var lastTimestamp=animation.lastTimestamp,initialVelocity=animation.initialVelocity,current=animation.current,velocity=animation.velocity;var deltaTime=Math.min(now-lastTimestamp,64);animation.lastTimestamp=now;var kv=Math.pow(config.deceleration,deltaTime);var kx=config.deceleration*(1-kv)/(1-config.deceleration);var v0=velocity/1000;var v=v0*kv*1000;var x=current+v0*kx;animation.current=x;animation.velocity=v;var toValueIsReached=null;if(Array.isArray(config.clamp)){if(initialVelocity<0&&animation.current<=config.clamp[0]){toValueIsReached=config.clamp[0];}else if(initialVelocity>0&&animation.current>=config.clamp[1]){toValueIsReached=config.clamp[1];}}if(Math.abs(v)<VELOCITY_EPS||toValueIsReached!==null){if(toValueIsReached!==null){animation.current=toValueIsReached;}return true;}}function onStart(animation,value,now){animation.current=value;animation.lastTimestamp=now;animation.initialVelocity=config.velocity;}return{onFrame:decay,onStart:onStart,velocity:config.velocity||0,callback:callback};}}\";_f.__workletHash=2267837729705;_f.__location=\"/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/animations.js (353:28)\";global.__reanimatedWorkletInit(_f);return _f;}());}}";_f.__workletHash = 16574914050467;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/animations.js (350:7)";global.__reanimatedWorkletInit(_f);return _f;}();exports.withDecay = withDecay;var
+
+withDelay = function () {var _f = function _f(delayMs, _nextAnimation) {
+
+    return defineAnimation(_nextAnimation, function () {var _f = function _f() {
+
+        var nextAnimation =
+        typeof _nextAnimation === 'function' ? _nextAnimation() : _nextAnimation;
+
+        function delay(animation, now) {var
+          startTime = animation.startTime,started = animation.started,previousAnimation = animation.previousAnimation;
+
+          if (now - startTime > delayMs) {
+            if (!started) {
+              nextAnimation.onStart(
+              nextAnimation,
+              animation.current,
+              now,
+              previousAnimation);
+
+              animation.previousAnimation = null;
+              animation.started = true;
+            }
+            var finished = nextAnimation.onFrame(nextAnimation, now);
+            animation.current = nextAnimation.current;
+            return finished;
+          } else if (previousAnimation) {
+            var _finished = previousAnimation.onFrame(previousAnimation, now);
+            animation.current = previousAnimation.current;
+            if (_finished) {
+              animation.previousAnimation = null;
+            }
+          }
+          return false;
+        }
+
+        function onStart(animation, value, now, previousAnimation) {
+          animation.startTime = now;
+          animation.started = false;
+          animation.current = value;
+          animation.previousAnimation = previousAnimation;
+        }
+
+        var callback = function callback(finished) {
+          if (nextAnimation.callback) {
+            nextAnimation.callback(finished);
+          }
+        };
+
+        return {
+          isHigherOrder: true,
+          onFrame: delay,
+          onStart: onStart,
+          current: nextAnimation.current,
+          callback: callback };
+
+      };_f._closure = { _nextAnimation: _nextAnimation, delayMs: delayMs };_f.asString = "function _f(){const{_nextAnimation,delayMs}=jsThis._closure;{var nextAnimation=typeof _nextAnimation==='function'?_nextAnimation():_nextAnimation;function delay(animation,now){var startTime=animation.startTime,started=animation.started,previousAnimation=animation.previousAnimation;if(now-startTime>delayMs){if(!started){nextAnimation.onStart(nextAnimation,animation.current,now,previousAnimation);animation.previousAnimation=null;animation.started=true;}var finished=nextAnimation.onFrame(nextAnimation,now);animation.current=nextAnimation.current;return finished;}else if(previousAnimation){var _finished=previousAnimation.onFrame(previousAnimation,now);animation.current=previousAnimation.current;if(_finished){animation.previousAnimation=null;}}return false;}function onStart(animation,value,now,previousAnimation){animation.startTime=now;animation.started=false;animation.current=value;animation.previousAnimation=previousAnimation;}var callback=function callback(finished){if(nextAnimation.callback){nextAnimation.callback(finished);}};return{isHigherOrder:true,onFrame:delay,onStart:onStart,current:nextAnimation.current,callback:callback};}}";_f.__workletHash = 5674842055498;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/animations.js (419:41)";global.__reanimatedWorkletInit(_f);return _f;}());
+  };_f._closure = { defineAnimation: defineAnimation };_f.asString = "function withDelay(delayMs,_nextAnimation){const{defineAnimation}=jsThis._closure;{return defineAnimation(_nextAnimation,function(){var _f=function _f(){var nextAnimation=typeof _nextAnimation==='function'?_nextAnimation():_nextAnimation;function delay(animation,now){var startTime=animation.startTime,started=animation.started,previousAnimation=animation.previousAnimation;if(now-startTime>delayMs){if(!started){nextAnimation.onStart(nextAnimation,animation.current,now,previousAnimation);animation.previousAnimation=null;animation.started=true;}var finished=nextAnimation.onFrame(nextAnimation,now);animation.current=nextAnimation.current;return finished;}else if(previousAnimation){var _finished=previousAnimation.onFrame(previousAnimation,now);animation.current=previousAnimation.current;if(_finished){animation.previousAnimation=null;}}return false;}function onStart(animation,value,now,previousAnimation){animation.startTime=now;animation.started=false;animation.current=value;animation.previousAnimation=previousAnimation;}var callback=function callback(finished){if(nextAnimation.callback){nextAnimation.callback(finished);}};return{isHigherOrder:true,onFrame:delay,onStart:onStart,current:nextAnimation.current,callback:callback};};_f._closure={_nextAnimation:_nextAnimation,delayMs:delayMs};_f.asString=\"function _f(){const{_nextAnimation,delayMs}=jsThis._closure;{var nextAnimation=typeof _nextAnimation==='function'?_nextAnimation():_nextAnimation;function delay(animation,now){var startTime=animation.startTime,started=animation.started,previousAnimation=animation.previousAnimation;if(now-startTime>delayMs){if(!started){nextAnimation.onStart(nextAnimation,animation.current,now,previousAnimation);animation.previousAnimation=null;animation.started=true;}var finished=nextAnimation.onFrame(nextAnimation,now);animation.current=nextAnimation.current;return finished;}else if(previousAnimation){var _finished=previousAnimation.onFrame(previousAnimation,now);animation.current=previousAnimation.current;if(_finished){animation.previousAnimation=null;}}return false;}function onStart(animation,value,now,previousAnimation){animation.startTime=now;animation.started=false;animation.current=value;animation.previousAnimation=previousAnimation;}var callback=function callback(finished){if(nextAnimation.callback){nextAnimation.callback(finished);}};return{isHigherOrder:true,onFrame:delay,onStart:onStart,current:nextAnimation.current,callback:callback};}}\";_f.__workletHash=5674842055498;_f.__location=\"/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/animations.js (419:41)\";global.__reanimatedWorkletInit(_f);return _f;}());}}";_f.__workletHash = 16244986236764;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/animations.js (417:7)";global.__reanimatedWorkletInit(_f);return _f;}();exports.withDelay = withDelay;var
+
+withSequence = function () {var _f = function _f() {for (var _len = arguments.length, _animations = new Array(_len), _key = 0; _key < _len; _key++) {_animations[_key] = arguments[_key];}
+
+    return defineAnimation(_animations[0], function () {var _f = function _f() {
+
+        var animations = _animations.map(function (a) {
+          var result = typeof a === 'function' ? a() : a;
+          result.finished = false;
+          return result;
+        });
+        var firstAnimation = animations[0];
+
+        var callback = function callback(finished) {
+          if (finished) {
+
+
+            return;
+          }
+
+          animations.forEach(function (animation) {
+            if (typeof animation.callback === 'function' && !animation.finished) {
+              animation.callback(finished);
+            }
+          });
+        };
+
+        function sequence(animation, now) {
+          var currentAnim = animations[animation.animationIndex];
+          var finished = currentAnim.onFrame(currentAnim, now);
+          animation.current = currentAnim.current;
+          if (finished) {
+
+            if (currentAnim.callback) {
+              currentAnim.callback(true);
+            }
+            currentAnim.finished = true;
+            animation.animationIndex += 1;
+            if (animation.animationIndex < animations.length) {
+              var nextAnim = animations[animation.animationIndex];
+              nextAnim.onStart(nextAnim, currentAnim.current, now, currentAnim);
+              return false;
+            }
+            return true;
+          }
+          return false;
+        }
+
+        function onStart(animation, value, now, previousAnimation) {
+          animation.animationIndex = 0;
+          firstAnimation.onStart(firstAnimation, value, now, previousAnimation);
+        }
+
+        return {
+          isHigherOrder: true,
+          onFrame: sequence,
+          onStart: onStart,
+          animationIndex: 0,
+          current: firstAnimation.current,
+          callback: callback };
+
+      };_f._closure = { _animations: _animations };_f.asString = "function _f(){const{_animations}=jsThis._closure;{var animations=_animations.map(function(a){var result=typeof a==='function'?a():a;result.finished=false;return result;});var firstAnimation=animations[0];var callback=function callback(finished){if(finished){return;}animations.forEach(function(animation){if(typeof animation.callback==='function'&&!animation.finished){animation.callback(finished);}});};function sequence(animation,now){var currentAnim=animations[animation.animationIndex];var finished=currentAnim.onFrame(currentAnim,now);animation.current=currentAnim.current;if(finished){if(currentAnim.callback){currentAnim.callback(true);}currentAnim.finished=true;animation.animationIndex+=1;if(animation.animationIndex<animations.length){var nextAnim=animations[animation.animationIndex];nextAnim.onStart(nextAnim,currentAnim.current,now,currentAnim);return false;}return true;}return false;}function onStart(animation,value,now,previousAnimation){animation.animationIndex=0;firstAnimation.onStart(firstAnimation,value,now,previousAnimation);}return{isHigherOrder:true,onFrame:sequence,onStart:onStart,animationIndex:0,current:firstAnimation.current,callback:callback};}}";_f.__workletHash = 8434178035867;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/animations.js (476:41)";global.__reanimatedWorkletInit(_f);return _f;}());
+  };_f._closure = { defineAnimation: defineAnimation };_f.asString = "function withSequence(){const{defineAnimation}=jsThis._closure;{for(var _len=arguments.length,_animations=new Array(_len),_key=0;_key<_len;_key++){_animations[_key]=arguments[_key];}return defineAnimation(_animations[0],function(){var _f=function _f(){var animations=_animations.map(function(a){var result=typeof a==='function'?a():a;result.finished=false;return result;});var firstAnimation=animations[0];var callback=function callback(finished){if(finished){return;}animations.forEach(function(animation){if(typeof animation.callback==='function'&&!animation.finished){animation.callback(finished);}});};function sequence(animation,now){var currentAnim=animations[animation.animationIndex];var finished=currentAnim.onFrame(currentAnim,now);animation.current=currentAnim.current;if(finished){if(currentAnim.callback){currentAnim.callback(true);}currentAnim.finished=true;animation.animationIndex+=1;if(animation.animationIndex<animations.length){var nextAnim=animations[animation.animationIndex];nextAnim.onStart(nextAnim,currentAnim.current,now,currentAnim);return false;}return true;}return false;}function onStart(animation,value,now,previousAnimation){animation.animationIndex=0;firstAnimation.onStart(firstAnimation,value,now,previousAnimation);}return{isHigherOrder:true,onFrame:sequence,onStart:onStart,animationIndex:0,current:firstAnimation.current,callback:callback};};_f._closure={_animations:_animations};_f.asString=\"function _f(){const{_animations}=jsThis._closure;{var animations=_animations.map(function(a){var result=typeof a==='function'?a():a;result.finished=false;return result;});var firstAnimation=animations[0];var callback=function callback(finished){if(finished){return;}animations.forEach(function(animation){if(typeof animation.callback==='function'&&!animation.finished){animation.callback(finished);}});};function sequence(animation,now){var currentAnim=animations[animation.animationIndex];var finished=currentAnim.onFrame(currentAnim,now);animation.current=currentAnim.current;if(finished){if(currentAnim.callback){currentAnim.callback(true);}currentAnim.finished=true;animation.animationIndex+=1;if(animation.animationIndex<animations.length){var nextAnim=animations[animation.animationIndex];nextAnim.onStart(nextAnim,currentAnim.current,now,currentAnim);return false;}return true;}return false;}function onStart(animation,value,now,previousAnimation){animation.animationIndex=0;firstAnimation.onStart(firstAnimation,value,now,previousAnimation);}return{isHigherOrder:true,onFrame:sequence,onStart:onStart,animationIndex:0,current:firstAnimation.current,callback:callback};}}\";_f.__workletHash=8434178035867;_f.__location=\"/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/animations.js (476:41)\";global.__reanimatedWorkletInit(_f);return _f;}());}}";_f.__workletHash = 15237488906616;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/animations.js (474:7)";global.__reanimatedWorkletInit(_f);return _f;}();exports.withSequence = withSequence;var
+
+withRepeat = function () {var _f = function _f(
+  _nextAnimation)
+
+
+
+  {var numberOfReps = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 2;var reverse = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;var callback = arguments.length > 3 ? arguments[3] : undefined;
+
+
+    return defineAnimation(_nextAnimation, function () {var _f = function _f() {
+
+
+        var nextAnimation =
+        typeof _nextAnimation === 'function' ? _nextAnimation() : _nextAnimation;
+
+        function repeat(animation, now) {
+          var finished = nextAnimation.onFrame(nextAnimation, now);
+          animation.current = nextAnimation.current;
+          if (finished) {
+            animation.reps += 1;
+
+
+            if (nextAnimation.callback) {
+              nextAnimation.callback(true, animation.current);
+            }
+            if (numberOfReps > 0 && animation.reps >= numberOfReps) {
+              return true;
+            }
+
+            var startValue = reverse ?
+            nextAnimation.current :
+            animation.startValue;
+            if (reverse) {
+              nextAnimation.toValue = animation.startValue;
+              animation.startValue = startValue;
+            }
+            nextAnimation.onStart(nextAnimation, startValue, now, nextAnimation);
+            return false;
+          }
+          return false;
+        }
+
+        var repCallback = function repCallback(finished) {
+          if (callback) {
+            callback(finished);
+          }
+
+          if (!finished && nextAnimation.callback) {
+            nextAnimation.callback(false);
+          }
+        };
+
+        function onStart(animation, value, now, previousAnimation) {
+          animation.startValue = value;
+          animation.reps = 0;
+          nextAnimation.onStart(nextAnimation, value, now, previousAnimation);
+        }
+
+        return {
+          isHigherOrder: true,
+          onFrame: repeat,
+          onStart: onStart,
+          reps: 0,
+          current: nextAnimation.current,
+          callback: repCallback };
+
+      };_f._closure = { _nextAnimation: _nextAnimation, numberOfReps: numberOfReps, reverse: reverse, callback: callback };_f.asString = "function _f(){const{_nextAnimation,numberOfReps,reverse,callback}=jsThis._closure;{var nextAnimation=typeof _nextAnimation==='function'?_nextAnimation():_nextAnimation;function repeat(animation,now){var finished=nextAnimation.onFrame(nextAnimation,now);animation.current=nextAnimation.current;if(finished){animation.reps+=1;if(nextAnimation.callback){nextAnimation.callback(true,animation.current);}if(numberOfReps>0&&animation.reps>=numberOfReps){return true;}var startValue=reverse?nextAnimation.current:animation.startValue;if(reverse){nextAnimation.toValue=animation.startValue;animation.startValue=startValue;}nextAnimation.onStart(nextAnimation,startValue,now,nextAnimation);return false;}return false;}var repCallback=function repCallback(finished){if(callback){callback(finished);}if(!finished&&nextAnimation.callback){nextAnimation.callback(false);}};function onStart(animation,value,now,previousAnimation){animation.startValue=value;animation.reps=0;nextAnimation.onStart(nextAnimation,value,now,previousAnimation);}return{isHigherOrder:true,onFrame:repeat,onStart:onStart,reps:0,current:nextAnimation.current,callback:repCallback};}}";_f.__workletHash = 4167791307347;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/animations.js (544:41)";global.__reanimatedWorkletInit(_f);return _f;}());
+  };_f._closure = { defineAnimation: defineAnimation };_f.asString = "function withRepeat(_nextAnimation){const{defineAnimation}=jsThis._closure;{var numberOfReps=arguments.length>1&&arguments[1]!==undefined?arguments[1]:2;var reverse=arguments.length>2&&arguments[2]!==undefined?arguments[2]:false;var callback=arguments.length>3?arguments[3]:undefined;return defineAnimation(_nextAnimation,function(){var _f=function _f(){var nextAnimation=typeof _nextAnimation==='function'?_nextAnimation():_nextAnimation;function repeat(animation,now){var finished=nextAnimation.onFrame(nextAnimation,now);animation.current=nextAnimation.current;if(finished){animation.reps+=1;if(nextAnimation.callback){nextAnimation.callback(true,animation.current);}if(numberOfReps>0&&animation.reps>=numberOfReps){return true;}var startValue=reverse?nextAnimation.current:animation.startValue;if(reverse){nextAnimation.toValue=animation.startValue;animation.startValue=startValue;}nextAnimation.onStart(nextAnimation,startValue,now,nextAnimation);return false;}return false;}var repCallback=function repCallback(finished){if(callback){callback(finished);}if(!finished&&nextAnimation.callback){nextAnimation.callback(false);}};function onStart(animation,value,now,previousAnimation){animation.startValue=value;animation.reps=0;nextAnimation.onStart(nextAnimation,value,now,previousAnimation);}return{isHigherOrder:true,onFrame:repeat,onStart:onStart,reps:0,current:nextAnimation.current,callback:repCallback};};_f._closure={_nextAnimation:_nextAnimation,numberOfReps:numberOfReps,reverse:reverse,callback:callback};_f.asString=\"function _f(){const{_nextAnimation,numberOfReps,reverse,callback}=jsThis._closure;{var nextAnimation=typeof _nextAnimation==='function'?_nextAnimation():_nextAnimation;function repeat(animation,now){var finished=nextAnimation.onFrame(nextAnimation,now);animation.current=nextAnimation.current;if(finished){animation.reps+=1;if(nextAnimation.callback){nextAnimation.callback(true,animation.current);}if(numberOfReps>0&&animation.reps>=numberOfReps){return true;}var startValue=reverse?nextAnimation.current:animation.startValue;if(reverse){nextAnimation.toValue=animation.startValue;animation.startValue=startValue;}nextAnimation.onStart(nextAnimation,startValue,now,nextAnimation);return false;}return false;}var repCallback=function repCallback(finished){if(callback){callback(finished);}if(!finished&&nextAnimation.callback){nextAnimation.callback(false);}};function onStart(animation,value,now,previousAnimation){animation.startValue=value;animation.reps=0;nextAnimation.onStart(nextAnimation,value,now,previousAnimation);}return{isHigherOrder:true,onFrame:repeat,onStart:onStart,reps:0,current:nextAnimation.current,callback:repCallback};}}\";_f.__workletHash=4167791307347;_f.__location=\"/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/animations.js (544:41)\";global.__reanimatedWorkletInit(_f);return _f;}());}}";_f.__workletHash = 16616010355621;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/animations.js (536:7)";global.__reanimatedWorkletInit(_f);return _f;}();exports.withRepeat = withRepeat;var
+
+
+delay = function () {var _f = function _f(delayMs, _nextAnimation) {
+
+    console.warn('Method `delay` is deprecated. Please use `withDelay` instead');
+    return withDelay(delayMs, _nextAnimation);
+  };_f._closure = { withDelay: withDelay };_f.asString = "function delay(delayMs,_nextAnimation){const{withDelay}=jsThis._closure;{console.warn('Method `delay` is deprecated. Please use `withDelay` instead');return withDelay(delayMs,_nextAnimation);}}";_f.__workletHash = 7037261769063;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/animations.js (605:7)";global.__reanimatedWorkletInit(_f);return _f;}();exports.delay = delay;var
+
+repeat = function () {var _f = function _f(
+  _nextAnimation)
+
+
+
+  {var numberOfReps = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 2;var reverse = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;var callback = arguments.length > 3 ? arguments[3] : undefined;
+
+    console.warn(
+    'Method `repeat` is deprecated. Please use `withRepeat` instead');
+
+    return withRepeat(_nextAnimation, numberOfReps, reverse, callback);
+  };_f._closure = { withRepeat: withRepeat };_f.asString = "function repeat(_nextAnimation){const{withRepeat}=jsThis._closure;{var numberOfReps=arguments.length>1&&arguments[1]!==undefined?arguments[1]:2;var reverse=arguments.length>2&&arguments[2]!==undefined?arguments[2]:false;var callback=arguments.length>3?arguments[3]:undefined;console.warn('Method `repeat` is deprecated. Please use `withRepeat` instead');return withRepeat(_nextAnimation,numberOfReps,reverse,callback);}}";_f.__workletHash = 8082370036915;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/animations.js (611:7)";global.__reanimatedWorkletInit(_f);return _f;}();exports.repeat = repeat;var
+
+loop = function () {var _f = function _f(nextAnimation) {var numberOfLoops = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
+
+    console.warn('Method `loop` is deprecated. Please use `withRepeat` instead');
+    return repeat(nextAnimation, Math.round(numberOfLoops * 2), true);
+  };_f._closure = { repeat: repeat };_f.asString = "function loop(nextAnimation){const{repeat}=jsThis._closure;{var numberOfLoops=arguments.length>1&&arguments[1]!==undefined?arguments[1]:1;console.warn('Method `loop` is deprecated. Please use `withRepeat` instead');return repeat(nextAnimation,Math.round(numberOfLoops*2),true);}}";_f.__workletHash = 9676077242567;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/animations.js (624:7)";global.__reanimatedWorkletInit(_f);return _f;}();exports.loop = loop;var
+
+sequence = function () {var _f = function _f() {
+
+    console.warn(
+    'Method `sequence` is deprecated. Please use `withSequence` instead');
+
+    return withSequence.apply(void 0, arguments);
+  };_f._closure = { withSequence: withSequence };_f.asString = "function sequence(){const{withSequence}=jsThis._closure;{console.warn('Method `sequence` is deprecated. Please use `withSequence` instead');return withSequence.apply(void 0,arguments);}}";_f.__workletHash = 9405250110463;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/animations.js (630:7)";global.__reanimatedWorkletInit(_f);return _f;}();exports.sequence = sequence;

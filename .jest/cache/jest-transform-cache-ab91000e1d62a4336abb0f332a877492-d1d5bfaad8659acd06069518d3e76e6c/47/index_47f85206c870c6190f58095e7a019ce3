@@ -1,0 +1,78 @@
+f8f917787e812a664ca5dddd8f47e62d
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
+
+var _react = _interopRequireWildcard(require("react"));
+
+var _reactNative = require("react-native");
+
+var _reactNativeNeomorphShadows = require("react-native-neomorph-shadows");
+
+var CheckButton = function CheckButton(_ref) {
+  var text = _ref.text,
+      _onPress = _ref.onPress;
+
+  var _useState = (0, _react.useState)(false),
+      _useState2 = (0, _slicedToArray2.default)(_useState, 2),
+      swap = _useState2[0],
+      setSwap = _useState2[1];
+
+  return _react.default.createElement(_reactNativeNeomorphShadows.Neomorph, {
+    inner: swap,
+    darkShadowColor: '#000',
+    lightShadowColor: '#fff',
+    style: styles.neomorph
+  }, _react.default.createElement(_reactNative.Pressable, {
+    onPressIn: function onPressIn() {
+      return setSwap(true);
+    },
+    onPressOut: function onPressOut() {
+      return setSwap(false);
+    },
+    style: styles.screenContainer,
+    onPress: function onPress() {
+      return _onPress();
+    }
+  }, _react.default.createElement(_reactNative.Text, {
+    style: styles.text
+  }, text)));
+};
+
+var styles = _reactNative.StyleSheet.create({
+  screenContainer: {
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  neomorph: {
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    shadowOffset: {
+      width: 2,
+      height: 4
+    },
+    borderRadius: 88,
+    backgroundColor: '#F2F2F2',
+    height: 68,
+    width: _reactNative.Dimensions.get('window').width - 40
+  },
+  text: {
+    fontStyle: 'normal',
+    fontWeight: 'bold',
+    fontSize: 18,
+    lineHeight: 21,
+    color: "#000"
+  }
+});
+
+var _default = CheckButton;
+exports.default = _default;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy9sZXJvbmltL1Byb2plY3QvdHJhbnNsYXRvci9jb21wb25lbnQvYXRvbXMvQnV0dG9uL2luZGV4LnRzeCJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiOzs7Ozs7Ozs7OztBQUFBOztBQUNBOztBQUNBOztBQU9BLElBQU0sV0FBVyxHQUFvQixTQUEvQixXQUErQixPQUFzQjtBQUFBLE1BQW5CLElBQW1CLFFBQW5CLElBQW1CO0FBQUEsTUFBYixRQUFhLFFBQWIsT0FBYTs7QUFBQSxrQkFDN0IscUJBQWtCLEtBQWxCLENBRDZCO0FBQUE7QUFBQSxNQUMvQyxJQUQrQztBQUFBLE1BQ3pDLE9BRHlDOztBQUd2RCxTQUNJLGVBQUEsYUFBQSxDQUFDLG9DQUFELEVBQVM7QUFDTCxJQUFBLEtBQUssRUFBRSxJQURGO0FBRUwsSUFBQSxlQUFlLEVBQUMsTUFGWDtBQUdMLElBQUEsZ0JBQWdCLEVBQUMsTUFIWjtBQUlMLElBQUEsS0FBSyxFQUFFLE1BQU0sQ0FBQztBQUpULEdBQVQsRUFNSSxlQUFBLGFBQUEsQ0FBQyxzQkFBRCxFQUFVO0FBQ04sSUFBQSxTQUFTLEVBQUU7QUFBQSxhQUFNLE9BQU8sQ0FBQyxJQUFELENBQWI7QUFBQSxLQURMO0FBRU4sSUFBQSxVQUFVLEVBQUU7QUFBQSxhQUFNLE9BQU8sQ0FBQyxLQUFELENBQWI7QUFBQSxLQUZOO0FBR04sSUFBQSxLQUFLLEVBQUUsTUFBTSxDQUFDLGVBSFI7QUFJTixJQUFBLE9BQU8sRUFBRTtBQUFBLGFBQU0sUUFBTyxFQUFiO0FBQUE7QUFKSCxHQUFWLEVBTUksZUFBQSxhQUFBLENBQUMsaUJBQUQsRUFBSztBQUFDLElBQUEsS0FBSyxFQUFFLE1BQU0sQ0FBQztBQUFmLEdBQUwsRUFBMkIsSUFBM0IsQ0FOSixDQU5KLENBREo7QUFpQkgsQ0FwQkQ7O0FBc0JBLElBQU0sTUFBTSxHQUFHLHdCQUFXLE1BQVgsQ0FBa0I7QUFDN0IsRUFBQSxlQUFlLEVBQUU7QUFDYixJQUFBLE1BQU0sRUFBRSxNQURLO0FBRWIsSUFBQSxjQUFjLEVBQUUsUUFGSDtBQUdiLElBQUEsVUFBVSxFQUFFO0FBSEMsR0FEWTtBQU03QixFQUFBLFFBQVEsRUFBRTtBQUNOLElBQUEsYUFBYSxFQUFFLEdBRFQ7QUFFTixJQUFBLFlBQVksRUFBRSxDQUZSO0FBR04sSUFBQSxZQUFZLEVBQUU7QUFDVixNQUFBLEtBQUssRUFBRSxDQURHO0FBRVYsTUFBQSxNQUFNLEVBQUU7QUFGRSxLQUhSO0FBT04sSUFBQSxZQUFZLEVBQUUsRUFQUjtBQVFOLElBQUEsZUFBZSxFQUFFLFNBUlg7QUFTTixJQUFBLE1BQU0sRUFBRSxFQVRGO0FBVU4sSUFBQSxLQUFLLEVBQUUsd0JBQVcsR0FBWCxDQUFlLFFBQWYsRUFBeUIsS0FBekIsR0FBaUM7QUFWbEMsR0FObUI7QUFrQjdCLEVBQUEsSUFBSSxFQUFFO0FBQ0YsSUFBQSxTQUFTLEVBQUUsUUFEVDtBQUVGLElBQUEsVUFBVSxFQUFFLE1BRlY7QUFHRixJQUFBLFFBQVEsRUFBRSxFQUhSO0FBSUYsSUFBQSxVQUFVLEVBQUUsRUFKVjtBQUtGLElBQUEsS0FBSyxFQUFFO0FBTEw7QUFsQnVCLENBQWxCLENBQWY7O2VBMkJlLFciLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgUmVhY3QsIHsgdXNlU3RhdGUgfSBmcm9tICdyZWFjdCc7XG5pbXBvcnQgeyBQcmVzc2FibGUsIFN0eWxlU2hlZXQsIFRleHQsIERpbWVuc2lvbnMgfSBmcm9tICdyZWFjdC1uYXRpdmUnO1xuaW1wb3J0IHsgTmVvbW9ycGggfSBmcm9tICdyZWFjdC1uYXRpdmUtbmVvbW9ycGgtc2hhZG93cyc7XG5cbmludGVyZmFjZSBQcm9wcyB7XG4gICAgdGV4dDogc3RyaW5nLFxuICAgIG9uUHJlc3M6ICgpID0+IHZvaWRcbn1cblxuY29uc3QgQ2hlY2tCdXR0b246IFJlYWN0LkZDPFByb3BzPiA9ICh7IHRleHQsIG9uUHJlc3MgfSkgPT4ge1xuICAgIGNvbnN0IFsgc3dhcCwgc2V0U3dhcCBdID0gdXNlU3RhdGU8Ym9vbGVhbj4oZmFsc2UpO1xuXG4gICAgcmV0dXJuIChcbiAgICAgICAgPE5lb21vcnBoXG4gICAgICAgICAgICBpbm5lcj17c3dhcH1cbiAgICAgICAgICAgIGRhcmtTaGFkb3dDb2xvcj0nIzAwMCdcbiAgICAgICAgICAgIGxpZ2h0U2hhZG93Q29sb3I9JyNmZmYnXG4gICAgICAgICAgICBzdHlsZT17c3R5bGVzLm5lb21vcnBofVxuICAgICAgICA+XG4gICAgICAgICAgICA8UHJlc3NhYmxlIFxuICAgICAgICAgICAgICAgIG9uUHJlc3NJbj17KCkgPT4gc2V0U3dhcCh0cnVlKX0gXG4gICAgICAgICAgICAgICAgb25QcmVzc091dD17KCkgPT4gc2V0U3dhcChmYWxzZSl9XG4gICAgICAgICAgICAgICAgc3R5bGU9e3N0eWxlcy5zY3JlZW5Db250YWluZXJ9IFxuICAgICAgICAgICAgICAgIG9uUHJlc3M9eygpID0+IG9uUHJlc3MoKX1cbiAgICAgICAgICAgID5cbiAgICAgICAgICAgICAgICA8VGV4dCBzdHlsZT17c3R5bGVzLnRleHR9Pnt0ZXh0fTwvVGV4dD5cbiAgICAgICAgICAgIDwvUHJlc3NhYmxlPlxuICAgICAgICA8L05lb21vcnBoPlxuICAgIClcbn1cblxuY29uc3Qgc3R5bGVzID0gU3R5bGVTaGVldC5jcmVhdGUoe1xuICAgIHNjcmVlbkNvbnRhaW5lcjoge1xuICAgICAgICBoZWlnaHQ6ICcxMDAlJyxcbiAgICAgICAganVzdGlmeUNvbnRlbnQ6ICdjZW50ZXInLFxuICAgICAgICBhbGlnbkl0ZW1zOiAnY2VudGVyJ1xuICAgIH0sXG4gICAgbmVvbW9ycGg6IHtcbiAgICAgICAgc2hhZG93T3BhY2l0eTogMC4yLFxuICAgICAgICBzaGFkb3dSYWRpdXM6IDgsXG4gICAgICAgIHNoYWRvd09mZnNldDoge1xuICAgICAgICAgICAgd2lkdGg6IDIsXG4gICAgICAgICAgICBoZWlnaHQ6IDRcbiAgICAgICAgfSxcbiAgICAgICAgYm9yZGVyUmFkaXVzOiA4OCxcbiAgICAgICAgYmFja2dyb3VuZENvbG9yOiAnI0YyRjJGMicsXG4gICAgICAgIGhlaWdodDogNjgsXG4gICAgICAgIHdpZHRoOiBEaW1lbnNpb25zLmdldCgnd2luZG93Jykud2lkdGggLSA0MFxuICAgIH0sXG4gICAgdGV4dDoge1xuICAgICAgICBmb250U3R5bGU6ICdub3JtYWwnLFxuICAgICAgICBmb250V2VpZ2h0OiAnYm9sZCcsXG4gICAgICAgIGZvbnRTaXplOiAxOCxcbiAgICAgICAgbGluZUhlaWdodDogMjEsXG4gICAgICAgIGNvbG9yOiBcIiMwMDBcIlxuICAgIH1cbn0pXG5cbmV4cG9ydCBkZWZhdWx0IENoZWNrQnV0dG9uOyJdfQ==

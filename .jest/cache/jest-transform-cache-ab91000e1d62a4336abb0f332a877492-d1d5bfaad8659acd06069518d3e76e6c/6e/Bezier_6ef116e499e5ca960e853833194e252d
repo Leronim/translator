@@ -1,0 +1,157 @@
+ce6f2fd00f71a0aafe26f55e99a5e8ab
+"use strict";Object.defineProperty(exports, "__esModule", { value: true });exports.Bezier = void 0;var
+
+
+
+
+
+
+
+Bezier = function () {var _f = function _f(mX1, mY1, mX2, mY2) {
+
+
+    var NEWTON_ITERATIONS = 4;
+    var NEWTON_MIN_SLOPE = 0.001;
+    var SUBDIVISION_PRECISION = 0.0000001;
+    var SUBDIVISION_MAX_ITERATIONS = 10;
+
+    var kSplineTableSize = 11;
+    var kSampleStepSize = 1.0 / (kSplineTableSize - 1.0);var
+
+    A = function () {var _f = function _f(aA1, aA2) {
+
+        return 1.0 - 3.0 * aA2 + 3.0 * aA1;
+      };_f._closure = {};_f.asString = "function A(aA1,aA2){return 1.0-3.0*aA2+3.0*aA1;}";_f.__workletHash = 7696928702327;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/Bezier.js (20:2)";global.__reanimatedWorkletInit(_f);return _f;}();var
+    B = function () {var _f = function _f(aA1, aA2) {
+
+        return 3.0 * aA2 - 6.0 * aA1;
+      };_f._closure = {};_f.asString = "function B(aA1,aA2){return 3.0*aA2-6.0*aA1;}";_f.__workletHash = 3169786778773;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/Bezier.js (24:2)";global.__reanimatedWorkletInit(_f);return _f;}();var
+    C = function () {var _f = function _f(aA1) {
+
+        return 3.0 * aA1;
+      };_f._closure = {};_f.asString = "function C(aA1){return 3.0*aA1;}";_f.__workletHash = 6399610653367;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/Bezier.js (28:2)";global.__reanimatedWorkletInit(_f);return _f;}();var
+
+
+    calcBezier = function () {var _f = function _f(aT, aA1, aA2) {
+
+        return ((A(aA1, aA2) * aT + B(aA1, aA2)) * aT + C(aA1)) * aT;
+      };_f._closure = { A: A, B: B, C: C };_f.asString = "function calcBezier(aT,aA1,aA2){const{A,B,C}=jsThis._closure;{return((A(aA1,aA2)*aT+B(aA1,aA2))*aT+C(aA1))*aT;}}";_f.__workletHash = 3153137150968;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/Bezier.js (34:2)";global.__reanimatedWorkletInit(_f);return _f;}();var
+
+
+    getSlope = function () {var _f = function _f(aT, aA1, aA2) {
+
+        return 3.0 * A(aA1, aA2) * aT * aT + 2.0 * B(aA1, aA2) * aT + C(aA1);
+      };_f._closure = { A: A, B: B, C: C };_f.asString = "function getSlope(aT,aA1,aA2){const{A,B,C}=jsThis._closure;{return 3.0*A(aA1,aA2)*aT*aT+2.0*B(aA1,aA2)*aT+C(aA1);}}";_f.__workletHash = 17050227570308;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/Bezier.js (40:2)";global.__reanimatedWorkletInit(_f);return _f;}();var
+
+    binarySubdivide = function () {var _f = function _f(aX, aA, aB, mX1, mX2) {
+
+        var currentX;
+        var currentT;
+        var i = 0;
+        do {
+          currentT = aA + (aB - aA) / 2.0;
+          currentX = calcBezier(currentT, mX1, mX2) - aX;
+          if (currentX > 0.0) {
+            aB = currentT;
+          } else {
+            aA = currentT;
+          }
+        } while (
+        Math.abs(currentX) > SUBDIVISION_PRECISION &&
+        ++i < SUBDIVISION_MAX_ITERATIONS);
+
+        return currentT;
+      };_f._closure = { SUBDIVISION_PRECISION: SUBDIVISION_PRECISION, SUBDIVISION_MAX_ITERATIONS: SUBDIVISION_MAX_ITERATIONS, calcBezier: calcBezier };_f.asString = "function binarySubdivide(aX,aA,aB,mX1,mX2){const{SUBDIVISION_PRECISION,SUBDIVISION_MAX_ITERATIONS,calcBezier}=jsThis._closure;{var currentX;var currentT;var i=0;do{currentT=aA+(aB-aA)/2.0;currentX=calcBezier(currentT,mX1,mX2)-aX;if(currentX>0.0){aB=currentT;}else{aA=currentT;}}while(Math.abs(currentX)>SUBDIVISION_PRECISION&&++i<SUBDIVISION_MAX_ITERATIONS);return currentT;}}";_f.__workletHash = 8216390185547;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/Bezier.js (45:2)";global.__reanimatedWorkletInit(_f);return _f;}();var
+
+    newtonRaphsonIterate = function () {var _f = function _f(aX, aGuessT, mX1, mX2) {
+
+        for (var i = 0; i < NEWTON_ITERATIONS; ++i) {
+          var currentSlope = getSlope(aGuessT, mX1, mX2);
+          if (currentSlope === 0.0) {
+            return aGuessT;
+          }
+          var currentX = calcBezier(aGuessT, mX1, mX2) - aX;
+          aGuessT -= currentX / currentSlope;
+        }
+        return aGuessT;
+      };_f._closure = { NEWTON_ITERATIONS: NEWTON_ITERATIONS, getSlope: getSlope, calcBezier: calcBezier };_f.asString = "function newtonRaphsonIterate(aX,aGuessT,mX1,mX2){const{NEWTON_ITERATIONS,getSlope,calcBezier}=jsThis._closure;{for(var i=0;i<NEWTON_ITERATIONS;++i){var currentSlope=getSlope(aGuessT,mX1,mX2);if(currentSlope===0.0){return aGuessT;}var currentX=calcBezier(aGuessT,mX1,mX2)-aX;aGuessT-=currentX/currentSlope;}return aGuessT;}}";_f.__workletHash = 5901993849860;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/Bezier.js (65:2)";global.__reanimatedWorkletInit(_f);return _f;}();var
+
+    LinearEasing = function () {var _f = function _f(x) {
+
+        return x;
+      };_f._closure = {};_f.asString = "function LinearEasing(x){return x;}";_f.__workletHash = 3962143445177;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/Bezier.js (78:2)";global.__reanimatedWorkletInit(_f);return _f;}();
+
+    if (!(mX1 >= 0 && mX1 <= 1 && mX2 >= 0 && mX2 <= 1)) {
+      throw new Error('bezier x values must be in [0, 1] range');
+    }
+
+    if (mX1 === mY1 && mX2 === mY2) {
+      return LinearEasing;
+    }
+
+
+
+
+
+
+
+
+
+    var sampleValues = new Array(kSplineTableSize);
+
+    for (var i = 0; i < kSplineTableSize; ++i) {
+      sampleValues[i] = calcBezier(i * kSampleStepSize, mX1, mX2);
+    }var
+
+    getTForX = function () {var _f = function _f(aX) {
+
+        var intervalStart = 0.0;
+        var currentSample = 1;
+        var lastSample = kSplineTableSize - 1;
+
+        for (;
+
+        currentSample !== lastSample && sampleValues[currentSample] <= aX;
+        ++currentSample)
+        {
+          intervalStart += kSampleStepSize;
+        }
+        --currentSample;
+
+
+        var dist =
+        (aX - sampleValues[currentSample]) / (
+        sampleValues[currentSample + 1] - sampleValues[currentSample]);
+        var guessForT = intervalStart + dist * kSampleStepSize;
+
+        var initialSlope = getSlope(guessForT, mX1, mX2);
+        if (initialSlope >= NEWTON_MIN_SLOPE) {
+          return newtonRaphsonIterate(aX, guessForT, mX1, mX2);
+        } else if (initialSlope === 0.0) {
+          return guessForT;
+        } else {
+          return binarySubdivide(
+          aX,
+          intervalStart,
+          intervalStart + kSampleStepSize,
+          mX1,
+          mX2);
+
+        }
+      };_f._closure = { kSplineTableSize: kSplineTableSize, sampleValues: sampleValues, kSampleStepSize: kSampleStepSize, getSlope: getSlope, mX1: mX1, mX2: mX2, NEWTON_MIN_SLOPE: NEWTON_MIN_SLOPE, newtonRaphsonIterate: newtonRaphsonIterate, binarySubdivide: binarySubdivide };_f.asString = "function getTForX(aX){const{kSplineTableSize,sampleValues,kSampleStepSize,getSlope,mX1,mX2,NEWTON_MIN_SLOPE,newtonRaphsonIterate,binarySubdivide}=jsThis._closure;{var intervalStart=0.0;var currentSample=1;var lastSample=kSplineTableSize-1;for(;currentSample!==lastSample&&sampleValues[currentSample]<=aX;++currentSample){intervalStart+=kSampleStepSize;}--currentSample;var dist=(aX-sampleValues[currentSample])/(sampleValues[currentSample+1]-sampleValues[currentSample]);var guessForT=intervalStart+dist*kSampleStepSize;var initialSlope=getSlope(guessForT,mX1,mX2);if(initialSlope>=NEWTON_MIN_SLOPE){return newtonRaphsonIterate(aX,guessForT,mX1,mX2);}else if(initialSlope===0.0){return guessForT;}else{return binarySubdivide(aX,intervalStart,intervalStart+kSampleStepSize,mX1,mX2);}}}";_f.__workletHash = 10148290284160;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/Bezier.js (105:2)";global.__reanimatedWorkletInit(_f);return _f;}();
+
+    return function () {var _f = function _f(x) {
+
+        if (mX1 === mY1 && mX2 === mY2) {
+          return x;
+        }
+
+        if (x === 0) {
+          return 0;
+        }
+        if (x === 1) {
+          return 1;
+        }
+        return calcBezier(getTForX(x), mY1, mY2);
+      };_f._closure = { mX1: mX1, mY1: mY1, mX2: mX2, mY2: mY2, calcBezier: calcBezier, getTForX: getTForX };_f.asString = "function BezierEasing(x){const{mX1,mY1,mX2,mY2,calcBezier,getTForX}=jsThis._closure;{if(mX1===mY1&&mX2===mY2){return x;}if(x===0){return 0;}if(x===1){return 1;}return calcBezier(getTForX(x),mY1,mY2);}}";_f.__workletHash = 8676971518933;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/Bezier.js (142:9)";global.__reanimatedWorkletInit(_f);return _f;}();
+  };_f._closure = {};_f.asString = "function Bezier(mX1,mY1,mX2,mY2){var NEWTON_ITERATIONS=4;var NEWTON_MIN_SLOPE=0.001;var SUBDIVISION_PRECISION=0.0000001;var SUBDIVISION_MAX_ITERATIONS=10;var kSplineTableSize=11;var kSampleStepSize=1.0/(kSplineTableSize-1.0);var A=function(){var _f=function _f(aA1,aA2){return 1.0-3.0*aA2+3.0*aA1;};_f._closure={};_f.asString=\"function A(aA1,aA2){return 1.0-3.0*aA2+3.0*aA1;}\";_f.__workletHash=7696928702327;_f.__location=\"/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/Bezier.js (20:2)\";global.__reanimatedWorkletInit(_f);return _f;}();var B=function(){var _f=function _f(aA1,aA2){return 3.0*aA2-6.0*aA1;};_f._closure={};_f.asString=\"function B(aA1,aA2){return 3.0*aA2-6.0*aA1;}\";_f.__workletHash=3169786778773;_f.__location=\"/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/Bezier.js (24:2)\";global.__reanimatedWorkletInit(_f);return _f;}();var C=function(){var _f=function _f(aA1){return 3.0*aA1;};_f._closure={};_f.asString=\"function C(aA1){return 3.0*aA1;}\";_f.__workletHash=6399610653367;_f.__location=\"/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/Bezier.js (28:2)\";global.__reanimatedWorkletInit(_f);return _f;}();var calcBezier=function(){var _f=function _f(aT,aA1,aA2){return((A(aA1,aA2)*aT+B(aA1,aA2))*aT+C(aA1))*aT;};_f._closure={A:A,B:B,C:C};_f.asString=\"function calcBezier(aT,aA1,aA2){const{A,B,C}=jsThis._closure;{return((A(aA1,aA2)*aT+B(aA1,aA2))*aT+C(aA1))*aT;}}\";_f.__workletHash=3153137150968;_f.__location=\"/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/Bezier.js (34:2)\";global.__reanimatedWorkletInit(_f);return _f;}();var getSlope=function(){var _f=function _f(aT,aA1,aA2){return 3.0*A(aA1,aA2)*aT*aT+2.0*B(aA1,aA2)*aT+C(aA1);};_f._closure={A:A,B:B,C:C};_f.asString=\"function getSlope(aT,aA1,aA2){const{A,B,C}=jsThis._closure;{return 3.0*A(aA1,aA2)*aT*aT+2.0*B(aA1,aA2)*aT+C(aA1);}}\";_f.__workletHash=17050227570308;_f.__location=\"/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/Bezier.js (40:2)\";global.__reanimatedWorkletInit(_f);return _f;}();var binarySubdivide=function(){var _f=function _f(aX,aA,aB,mX1,mX2){var currentX;var currentT;var i=0;do{currentT=aA+(aB-aA)/2.0;currentX=calcBezier(currentT,mX1,mX2)-aX;if(currentX>0.0){aB=currentT;}else{aA=currentT;}}while(Math.abs(currentX)>SUBDIVISION_PRECISION&&++i<SUBDIVISION_MAX_ITERATIONS);return currentT;};_f._closure={SUBDIVISION_PRECISION:SUBDIVISION_PRECISION,SUBDIVISION_MAX_ITERATIONS:SUBDIVISION_MAX_ITERATIONS,calcBezier:calcBezier};_f.asString=\"function binarySubdivide(aX,aA,aB,mX1,mX2){const{SUBDIVISION_PRECISION,SUBDIVISION_MAX_ITERATIONS,calcBezier}=jsThis._closure;{var currentX;var currentT;var i=0;do{currentT=aA+(aB-aA)/2.0;currentX=calcBezier(currentT,mX1,mX2)-aX;if(currentX>0.0){aB=currentT;}else{aA=currentT;}}while(Math.abs(currentX)>SUBDIVISION_PRECISION&&++i<SUBDIVISION_MAX_ITERATIONS);return currentT;}}\";_f.__workletHash=8216390185547;_f.__location=\"/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/Bezier.js (45:2)\";global.__reanimatedWorkletInit(_f);return _f;}();var newtonRaphsonIterate=function(){var _f=function _f(aX,aGuessT,mX1,mX2){for(var i=0;i<NEWTON_ITERATIONS;++i){var currentSlope=getSlope(aGuessT,mX1,mX2);if(currentSlope===0.0){return aGuessT;}var currentX=calcBezier(aGuessT,mX1,mX2)-aX;aGuessT-=currentX/currentSlope;}return aGuessT;};_f._closure={NEWTON_ITERATIONS:NEWTON_ITERATIONS,getSlope:getSlope,calcBezier:calcBezier};_f.asString=\"function newtonRaphsonIterate(aX,aGuessT,mX1,mX2){const{NEWTON_ITERATIONS,getSlope,calcBezier}=jsThis._closure;{for(var i=0;i<NEWTON_ITERATIONS;++i){var currentSlope=getSlope(aGuessT,mX1,mX2);if(currentSlope===0.0){return aGuessT;}var currentX=calcBezier(aGuessT,mX1,mX2)-aX;aGuessT-=currentX/currentSlope;}return aGuessT;}}\";_f.__workletHash=5901993849860;_f.__location=\"/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/Bezier.js (65:2)\";global.__reanimatedWorkletInit(_f);return _f;}();var LinearEasing=function(){var _f=function _f(x){return x;};_f._closure={};_f.asString=\"function LinearEasing(x){return x;}\";_f.__workletHash=3962143445177;_f.__location=\"/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/Bezier.js (78:2)\";global.__reanimatedWorkletInit(_f);return _f;}();if(!(mX1>=0&&mX1<=1&&mX2>=0&&mX2<=1)){throw new Error('bezier x values must be in [0, 1] range');}if(mX1===mY1&&mX2===mY2){return LinearEasing;}var sampleValues=new Array(kSplineTableSize);for(var i=0;i<kSplineTableSize;++i){sampleValues[i]=calcBezier(i*kSampleStepSize,mX1,mX2);}var getTForX=function(){var _f=function _f(aX){var intervalStart=0.0;var currentSample=1;var lastSample=kSplineTableSize-1;for(;currentSample!==lastSample&&sampleValues[currentSample]<=aX;++currentSample){intervalStart+=kSampleStepSize;}--currentSample;var dist=(aX-sampleValues[currentSample])/(sampleValues[currentSample+1]-sampleValues[currentSample]);var guessForT=intervalStart+dist*kSampleStepSize;var initialSlope=getSlope(guessForT,mX1,mX2);if(initialSlope>=NEWTON_MIN_SLOPE){return newtonRaphsonIterate(aX,guessForT,mX1,mX2);}else if(initialSlope===0.0){return guessForT;}else{return binarySubdivide(aX,intervalStart,intervalStart+kSampleStepSize,mX1,mX2);}};_f._closure={kSplineTableSize:kSplineTableSize,sampleValues:sampleValues,kSampleStepSize:kSampleStepSize,getSlope:getSlope,mX1:mX1,mX2:mX2,NEWTON_MIN_SLOPE:NEWTON_MIN_SLOPE,newtonRaphsonIterate:newtonRaphsonIterate,binarySubdivide:binarySubdivide};_f.asString=\"function getTForX(aX){const{kSplineTableSize,sampleValues,kSampleStepSize,getSlope,mX1,mX2,NEWTON_MIN_SLOPE,newtonRaphsonIterate,binarySubdivide}=jsThis._closure;{var intervalStart=0.0;var currentSample=1;var lastSample=kSplineTableSize-1;for(;currentSample!==lastSample&&sampleValues[currentSample]<=aX;++currentSample){intervalStart+=kSampleStepSize;}--currentSample;var dist=(aX-sampleValues[currentSample])/(sampleValues[currentSample+1]-sampleValues[currentSample]);var guessForT=intervalStart+dist*kSampleStepSize;var initialSlope=getSlope(guessForT,mX1,mX2);if(initialSlope>=NEWTON_MIN_SLOPE){return newtonRaphsonIterate(aX,guessForT,mX1,mX2);}else if(initialSlope===0.0){return guessForT;}else{return binarySubdivide(aX,intervalStart,intervalStart+kSampleStepSize,mX1,mX2);}}}\";_f.__workletHash=10148290284160;_f.__location=\"/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/Bezier.js (105:2)\";global.__reanimatedWorkletInit(_f);return _f;}();return function(){var _f=function _f(x){if(mX1===mY1&&mX2===mY2){return x;}if(x===0){return 0;}if(x===1){return 1;}return calcBezier(getTForX(x),mY1,mY2);};_f._closure={mX1:mX1,mY1:mY1,mX2:mX2,mY2:mY2,calcBezier:calcBezier,getTForX:getTForX};_f.asString=\"function BezierEasing(x){const{mX1,mY1,mX2,mY2,calcBezier,getTForX}=jsThis._closure;{if(mX1===mY1&&mX2===mY2){return x;}if(x===0){return 0;}if(x===1){return 1;}return calcBezier(getTForX(x),mY1,mY2);}}\";_f.__workletHash=8676971518933;_f.__location=\"/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/Bezier.js (142:9)\";global.__reanimatedWorkletInit(_f);return _f;}();}";_f.__workletHash = 7087270167218;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/Bezier.js (9:7)";global.__reanimatedWorkletInit(_f);return _f;}();exports.Bezier = Bezier;

@@ -1,0 +1,429 @@
+f5ef65662a74e1a1cf1452a8f5737c7c
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports, "__esModule", { value: true });exports.default = createAnimatedComponent;var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime/helpers/possibleConstructorReturn"));var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/getPrototypeOf"));var _react = _interopRequireDefault(require("react"));
+var _reactNative = require("react-native");
+var _ReanimatedEventEmitter = _interopRequireDefault(require("./ReanimatedEventEmitter"));
+
+var _AnimatedEvent = _interopRequireDefault(require("./core/AnimatedEvent"));
+var _AnimatedNode = _interopRequireDefault(require("./core/AnimatedNode"));
+var _AnimatedValue = _interopRequireDefault(require("./core/AnimatedValue"));
+var _AnimatedProps = require("./core/AnimatedProps");
+var _WorkletEventHandler = _interopRequireDefault(require("./reanimated2/WorkletEventHandler"));
+var _setAndForwardRef = _interopRequireDefault(require("./setAndForwardRef"));
+
+var _invariant = _interopRequireDefault(require("fbjs/lib/invariant"));
+var _ConfigHelper = require("./ConfigHelper");
+var _RNRenderer = require("./reanimated2/platform-specific/RNRenderer");var _jsxFileName = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/createAnimatedComponent.js";function _createForOfIteratorHelperLoose(o, allowArrayLike) {var it;if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) {if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") {if (it) o = it;var i = 0;return function () {if (i >= o.length) return { done: true };return { done: false, value: o[i++] };};}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}it = o[Symbol.iterator]();return it.next.bind(it);}function _unsupportedIterableToArray(o, minLen) {if (!o) return;if (typeof o === "string") return _arrayLikeToArray(o, minLen);var n = Object.prototype.toString.call(o).slice(8, -1);if (n === "Object" && o.constructor) n = o.constructor.name;if (n === "Map" || n === "Set") return Array.from(o);if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);}function _arrayLikeToArray(arr, len) {if (len == null || len > arr.length) len = arr.length;for (var i = 0, arr2 = new Array(len); i < len; i++) {arr2[i] = arr[i];}return arr2;}function _createSuper(Derived) {var hasNativeReflectConstruct = _isNativeReflectConstruct();return function _createSuperInternal() {var Super = (0, _getPrototypeOf2.default)(Derived),result;if (hasNativeReflectConstruct) {var NewTarget = (0, _getPrototypeOf2.default)(this).constructor;result = Reflect.construct(Super, arguments, NewTarget);} else {result = Super.apply(this, arguments);}return (0, _possibleConstructorReturn2.default)(this, result);};}function _isNativeReflectConstruct() {if (typeof Reflect === "undefined" || !Reflect.construct) return false;if (Reflect.construct.sham) return false;if (typeof Proxy === "function") return true;try {Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));return true;} catch (e) {return false;}}
+
+var NODE_MAPPING = new Map();
+
+function listener(data) {
+  var component = NODE_MAPPING.get(data.viewTag);
+  component && component._updateFromNative(data.props);
+}
+
+function dummyListener() {
+
+
+}
+
+function hasAnimatedNodes(value) {
+  if (value instanceof _AnimatedNode.default) {
+    return true;
+  }
+  if (Array.isArray(value)) {
+    return value.some(function (item) {return hasAnimatedNodes(item);});
+  }
+  if (value && typeof value === 'object') {
+    return Object.keys(value).some(function (key) {return hasAnimatedNodes(value[key]);});
+  }
+  return false;
+}
+
+function flattenArray(array) {
+  if (!Array.isArray(array)) {
+    return array;
+  }
+  var resultArr = [];
+
+  var _flattenArray = function _flattenArray(arr) {
+    arr.forEach(function (item) {
+      if (Array.isArray(item)) {
+        _flattenArray(item);
+      } else {
+        resultArr.push(item);
+      }
+    });
+  };
+  _flattenArray(array);
+  return resultArr;
+}
+
+function createAnimatedComponent(Component) {
+  (0, _invariant.default)(
+  typeof Component !== 'function' ||
+  Component.prototype && Component.prototype.isReactComponent,
+  '`createAnimatedComponent` does not support stateless functional components; ' +
+  'use a class component instead.');var
+
+
+  AnimatedComponent = function (_React$Component) {(0, _inherits2.default)(AnimatedComponent, _React$Component);var _super = _createSuper(AnimatedComponent);
+
+
+    function AnimatedComponent(props) {var _this;(0, _classCallCheck2.default)(this, AnimatedComponent);
+      _this = _super.call(this, props);_this._invokeAnimatedPropsCallbackOnMount = false;_this.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      _animatedPropsCallback = function () {
+        if (_this._component == null) {
+
+
+
+
+
+          _this._invokeAnimatedPropsCallbackOnMount = true;
+        } else if (typeof _this._component.setNativeProps !== 'function') {
+          _this.forceUpdate();
+        } else {
+          _this._component.setNativeProps(_this._propsAnimated.__getValue());
+        }
+      };_this.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      _setComponentRef = (0, _setAndForwardRef.default)({
+        getForwardedRef: function getForwardedRef() {return _this.props.forwardedRef;},
+        setLocalRef: function setLocalRef(ref) {
+          if (ref !== _this._component) {
+            _this._component = ref;
+          }
+
+
+          if (ref != null && ref.getNode == null) {
+            ref.getNode = function () {var _ref$constructor$name;
+              console.warn(
+              '%s: Calling %s on the ref of an Animated component ' +
+              'is no longer necessary. You can now directly use the ref ' +
+              'instead. This method will be removed in a future release.', (_ref$constructor$name =
+              ref.constructor.name) != null ? _ref$constructor$name : '<<anonymous>>',
+              'getNode()');
+
+              return ref;
+            };
+          }
+        } });_this._attachProps(_this.props);return _this;}(0, _createClass2.default)(AnimatedComponent, [{ key: "componentWillUnmount", value: function componentWillUnmount() {this._detachPropUpdater();this._propsAnimated && this._propsAnimated.__detach();this._detachNativeEvents();} }, { key: "componentDidMount", value: function componentDidMount() {if (this._invokeAnimatedPropsCallbackOnMount) {this._invokeAnimatedPropsCallbackOnMount = false;this._animatedPropsCallback();}this._propsAnimated && this._propsAnimated.setNativeView(this._component);this._attachNativeEvents();this._attachPropUpdater();this._attachAnimatedStyles();} }, { key: "_getEventViewRef", value: function _getEventViewRef() {return this._component.getScrollableNode ? this._component.getScrollableNode() : this._component;} }, { key: "_attachNativeEvents", value: function _attachNativeEvents() {var node = this._getEventViewRef();var viewTag = (0, _reactNative.findNodeHandle)(node);for (var key in this.props) {var prop = this.props[key];if (prop instanceof _AnimatedEvent.default) {prop.attachEvent(node, key);} else if (prop != null && prop.current && prop.current instanceof _WorkletEventHandler.default) {prop.current.registerForEvents(viewTag, key);}}} }, { key: "_detachNativeEvents", value: function _detachNativeEvents() {var node = this._getEventViewRef();for (var key in this.props) {var prop = this.props[key];if (prop instanceof _AnimatedEvent.default) {prop.detachEvent(node, key);} else if (prop != null && prop.current && prop.current instanceof _WorkletEventHandler.default) {prop.current.unregisterFromEvents();}}} }, { key: "_reattachNativeEvents", value: function _reattachNativeEvents(prevProps) {var node = this._getEventViewRef();var attached = new Set();var nextEvts = new Set();var viewTag;for (var key in this.props) {var prop = this.props[key];if (prop instanceof _AnimatedEvent.default) {nextEvts.add(prop.__nodeID);} else if (prop != null && prop.current && prop.current instanceof _WorkletEventHandler.default) {if (viewTag === undefined) {viewTag = prop.current.viewTag;}}}for (var _key in prevProps) {var _prop = this.props[_key];if (_prop instanceof _AnimatedEvent.default) {if (!nextEvts.has(_prop.__nodeID)) {_prop.detachEvent(node, _key);} else {attached.add(_prop.__nodeID);}} else if (_prop != null && _prop.current && _prop.current instanceof _WorkletEventHandler.default && _prop.current.reattachNeeded) {_prop.current.unregisterFromEvents();}}for (var _key2 in this.props) {var _prop2 = this.props[_key2];if (_prop2 instanceof _AnimatedEvent.default && !attached.has(_prop2.__nodeID)) {_prop2.attachEvent(node, _key2);} else if (_prop2 != null && _prop2.current && _prop2.current instanceof _WorkletEventHandler.default && _prop2.current.reattachNeeded) {_prop2.current.registerForEvents(viewTag, _key2);_prop2.current.reattachNeeded = false;}}} }, { key: "_attachProps", value: function _attachProps(nextProps) {var oldPropsAnimated = this._propsAnimated;this._propsAnimated = (0, _AnimatedProps.createOrReusePropsNode)(nextProps, this._animatedPropsCallback, oldPropsAnimated);if (oldPropsAnimated !== this._propsAnimated) {oldPropsAnimated && oldPropsAnimated.__detach();}} }, { key: "_updateFromNative", value: function _updateFromNative(props) {var _this$_component$setN, _this$_component;(_this$_component$setN = (_this$_component = this._component).setNativeProps) == null ? void 0 : _this$_component$setN.call(_this$_component, props);} }, { key: "_attachPropUpdater", value: function _attachPropUpdater() {var viewTag = (0, _reactNative.findNodeHandle)(this);NODE_MAPPING.set(viewTag, this);if (NODE_MAPPING.size === 1) {_ReanimatedEventEmitter.default.addListener('onReanimatedPropsChange', listener);}} }, { key: "_attachAnimatedStyles", value: function _attachAnimatedStyles() {var _this$props$animatedP;var styles = Array.isArray(this.props.style) ? this.props.style : [this.props.style];styles = flattenArray(styles);var viewTag, viewName;if (_reactNative.Platform.OS === 'web') {viewTag = (0, _reactNative.findNodeHandle)(this);viewName = null;} else {var _hostInstance$viewCon;var hostInstance = _RNRenderer.RNRenderer.findHostInstance_DEPRECATED(this);viewTag = hostInstance == null ? void 0 : hostInstance._nativeTag;viewName = hostInstance == null ? void 0 : (_hostInstance$viewCon = hostInstance.viewConfig) == null ? void 0 : _hostInstance$viewCon.uiViewClassName;if (hostInstance && this._hasReanimated2Props(styles)) {(0, _ConfigHelper.adaptViewConfig)(hostInstance.viewConfig);}}styles.forEach(function (style) {if (style != null && style.viewDescriptor) {style.viewDescriptor.value = { tag: viewTag, name: viewName };}});if ((_this$props$animatedP = this.props.animatedProps) != null && _this$props$animatedP.viewDescriptor) {this.props.animatedProps.viewDescriptor.value = { tag: viewTag, name: viewName };}} }, { key: "_hasReanimated2Props", value: function _hasReanimated2Props(flattenStyles) {var _this$props$animatedP2;if ((_this$props$animatedP2 = this.props.animatedProps) != null && _this$props$animatedP2.viewDescriptor) {return true;}if (this.props.style) {for (var _iterator = _createForOfIteratorHelperLoose(flattenStyles), _step; !(_step = _iterator()).done;) {var style = _step.value;if (style != null && style.hasOwnProperty('viewDescriptor')) {return true;}}}return false;} }, { key: "_detachPropUpdater", value: function _detachPropUpdater() {var viewTag = (0, _reactNative.findNodeHandle)(this);NODE_MAPPING.delete(viewTag);if (NODE_MAPPING.size === 0) {_ReanimatedEventEmitter.default.removeAllListeners('onReanimatedPropsChange');}} }, { key: "componentDidUpdate", value: function componentDidUpdate(prevProps) {this._attachProps(this.props);this._reattachNativeEvents(prevProps);this._propsAnimated && this._propsAnimated.setNativeView(this._component);} }, { key: "_filterNonAnimatedStyle", value: function _filterNonAnimatedStyle(
+
+
+      inputStyle) {
+        var style = {};
+        for (var key in inputStyle) {
+          var value = inputStyle[key];
+          if (!hasAnimatedNodes(value)) {
+            style[key] = value;
+          } else if (value instanceof _AnimatedValue.default) {
+
+
+            style[key] = value._startingValue;
+          }
+        }
+        return style;
+      } }, { key: "_filterNonAnimatedProps", value: function _filterNonAnimatedProps(
+
+      inputProps) {var _this2 = this;
+        var props = {};var _loop = function _loop(
+        key) {
+          var value = inputProps[key];
+          if (key === 'style') {
+            var styles = Array.isArray(value) ? value : [value];
+            var processedStyle = styles.map(function (style) {
+              if (style && style.viewDescriptor) {
+
+                if (style.viewRef.current === null) {
+                  style.viewRef.current = _this2;
+                }
+                return style.initial;
+              } else {
+                return style;
+              }
+            });
+            props[key] = _this2._filterNonAnimatedStyle(
+            _reactNative.StyleSheet.flatten(processedStyle));
+
+          } else if (key === 'animatedProps') {
+            Object.keys(value.initial).forEach(function (key) {
+              props[key] = value.initial[key];
+            });
+          } else if (value instanceof _AnimatedEvent.default) {
+
+
+
+
+            props[key] = dummyListener;
+          } else if (
+          value != null && value.current &&
+          value.current instanceof _WorkletEventHandler.default)
+          {
+            if (value.current.eventNames.length > 0) {
+              value.current.eventNames.forEach(function (eventName) {
+                props[eventName] = value.current.listeners ?
+                value.current.listeners[eventName] :
+                dummyListener;
+              });
+            } else {
+              props[key] = dummyListener;
+            }
+          } else if (!(value instanceof _AnimatedNode.default)) {
+            props[key] = value;
+          } else if (value instanceof _AnimatedValue.default) {
+
+
+            props[key] = value._startingValue;
+          }};for (var key in inputProps) {_loop(key);
+        }
+        return props;
+      } }, { key: "render", value: function render()
+
+      {
+        var props = this._filterNonAnimatedProps(this.props);
+        var platformProps = _reactNative.Platform.select({
+          web: {},
+          default: { collapsable: false } });
+
+        return (
+          _react.default.createElement(Component, (0, _extends2.default)({}, props, { ref: this._setComponentRef }, platformProps, { __self: this, __self: this, __source: { fileName: _jsxFileName, lineNumber: 411, columnNumber: 9 } })));
+
+      } }]);return AnimatedComponent;}(_react.default.Component);
+
+
+  AnimatedComponent.displayName = "AnimatedComponent(" + (Component.displayName ||
+  Component.name ||
+  'Component') + ")";
+
+  return _react.default.forwardRef(function AnimatedComponentWrapper(props, ref) {
+    return (
+      _react.default.createElement(AnimatedComponent, (0, _extends2.default)({},
+      props,
+      ref == null ? null : { forwardedRef: ref }, { __self: this, __self: this, __source: { fileName: _jsxFileName, lineNumber: 422, columnNumber: 7 } })));
+
+
+  });
+}

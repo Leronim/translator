@@ -1,0 +1,25 @@
+6922d376e3d1cf02693bc0c9205e85c5
+"use strict";Object.defineProperty(exports, "__esModule", { value: true });exports.default = Pattern;
+
+
+
+
+
+
+
+
+
+
+var PATTERN = 3;
+
+function Pattern(
+url,
+width,
+height,
+left,
+top)
+{
+  return {
+    _brush: [PATTERN, url, +left || 0, +top || 0, +width, +height] };
+
+}

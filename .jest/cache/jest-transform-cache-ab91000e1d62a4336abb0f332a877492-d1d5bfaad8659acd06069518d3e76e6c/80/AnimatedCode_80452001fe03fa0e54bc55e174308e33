@@ -1,0 +1,33 @@
+bba432ea259e0b0a2c6861a41f070689
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _useCode = _interopRequireDefault(require("../derived/useCode"));
+var _AnimatedNode = _interopRequireDefault(require("./AnimatedNode"));
+
+function assertNodesNotNull(code, children, exec) {
+  if (!code) {
+    var error = !children ? "Got \"" +
+    typeof children + "\" type passed to children" : "Got \"" +
+    typeof exec + "\" type passed to exec";
+
+    throw new Error("<Animated.Code /> expects the 'exec' prop or children to be an animated node or a function returning an animated node. " +
+    error);
+
+  }
+}
+
+function Code(_ref) {var exec = _ref.exec,children = _ref.children,dependencies = _ref.dependencies;
+  var nodes = children || exec;
+
+  var code = null;
+  if (nodes instanceof _AnimatedNode.default) {
+    code = function code() {return nodes;};
+  } else if (typeof nodes === 'function') {
+    code = nodes;
+  }
+
+  assertNodesNotNull(code, children, exec);
+
+  (0, _useCode.default)(code, dependencies);
+  return null;
+}var _default =
+
+Code;exports.default = _default;

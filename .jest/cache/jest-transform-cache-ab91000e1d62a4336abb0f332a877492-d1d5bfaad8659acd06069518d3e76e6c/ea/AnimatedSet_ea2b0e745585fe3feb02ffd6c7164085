@@ -1,0 +1,39 @@
+e2b4aaef5a97197dbc62f2cfe93cc867
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports, "__esModule", { value: true });exports.createAnimatedSet = createAnimatedSet;var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime/helpers/possibleConstructorReturn"));var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/getPrototypeOf"));var _AnimatedNode2 = _interopRequireDefault(require("./AnimatedNode"));
+var _invariant = _interopRequireDefault(require("fbjs/lib/invariant"));
+var _val = require("../val");
+var _AnimatedBlock = require("../core/AnimatedBlock");function _createSuper(Derived) {var hasNativeReflectConstruct = _isNativeReflectConstruct();return function _createSuperInternal() {var Super = (0, _getPrototypeOf2.default)(Derived),result;if (hasNativeReflectConstruct) {var NewTarget = (0, _getPrototypeOf2.default)(this).constructor;result = Reflect.construct(Super, arguments, NewTarget);} else {result = Super.apply(this, arguments);}return (0, _possibleConstructorReturn2.default)(this, result);};}function _isNativeReflectConstruct() {if (typeof Reflect === "undefined" || !Reflect.construct) return false;if (Reflect.construct.sham) return false;if (typeof Proxy === "function") return true;try {Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));return true;} catch (e) {return false;}}var
+
+AnimatedSet = function (_AnimatedNode) {(0, _inherits2.default)(AnimatedSet, _AnimatedNode);var _super = _createSuper(AnimatedSet);
+
+
+
+  function AnimatedSet(what, value) {var _this;(0, _classCallCheck2.default)(this, AnimatedSet);
+    (0, _invariant.default)(
+    what instanceof _AnimatedNode2.default, "Reanimated: Animated.set first argument should be of type AnimatedNode but got " +
+    what);
+
+    (0, _invariant.default)(
+    value instanceof _AnimatedNode2.default, "Reanimated: Animated.set second argument should be of type AnimatedNode, String or Number but got " +
+    value);
+
+    _this = _super.call(this, { type: 'set', what: what, value: value }, [value]);
+    (0, _invariant.default)(!what._constant, 'Value to be set cannot be constant');
+    _this._what = what;
+    _this._value = value;return _this;
+  }(0, _createClass2.default)(AnimatedSet, [{ key: "toString", value: function toString()
+
+    {
+      return "AnimatedSet, id: " + this.__nodeID;
+    } }, { key: "__onEvaluate", value: function __onEvaluate()
+
+    {
+      var newValue = (0, _val.val)(this._value);
+      this._what.setValue(newValue);
+      return newValue;
+    } }]);return AnimatedSet;}(_AnimatedNode2.default);
+
+
+function createAnimatedSet(what, value) {
+  return new AnimatedSet(what, (0, _AnimatedBlock.adapt)(value));
+}

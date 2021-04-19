@@ -1,0 +1,23 @@
+e33f755390fc8a2c6de63c10a3df4d7c
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports, "__esModule", { value: true });exports.createAnimatedClockTest = createAnimatedClockTest;var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime/helpers/possibleConstructorReturn"));var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/getPrototypeOf"));var _AnimatedNode2 = _interopRequireDefault(require("./AnimatedNode"));function _createSuper(Derived) {var hasNativeReflectConstruct = _isNativeReflectConstruct();return function _createSuperInternal() {var Super = (0, _getPrototypeOf2.default)(Derived),result;if (hasNativeReflectConstruct) {var NewTarget = (0, _getPrototypeOf2.default)(this).constructor;result = Reflect.construct(Super, arguments, NewTarget);} else {result = Super.apply(this, arguments);}return (0, _possibleConstructorReturn2.default)(this, result);};}function _isNativeReflectConstruct() {if (typeof Reflect === "undefined" || !Reflect.construct) return false;if (Reflect.construct.sham) return false;if (typeof Proxy === "function") return true;try {Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));return true;} catch (e) {return false;}}var
+
+AnimatedClockTest = function (_AnimatedNode) {(0, _inherits2.default)(AnimatedClockTest, _AnimatedNode);var _super = _createSuper(AnimatedClockTest);
+
+
+  function AnimatedClockTest(clockNode) {var _this;(0, _classCallCheck2.default)(this, AnimatedClockTest);
+    _this = _super.call(this, { type: 'clockTest', clock: clockNode });
+    _this._clockNode = clockNode;return _this;
+  }(0, _createClass2.default)(AnimatedClockTest, [{ key: "toString", value: function toString()
+
+    {
+      return "AnimatedClockTest, id: " + this.__nodeID;
+    } }, { key: "__onEvaluate", value: function __onEvaluate()
+
+    {
+      return this._clockNode.isStarted() ? 1 : 0;
+    } }]);return AnimatedClockTest;}(_AnimatedNode2.default);
+
+
+function createAnimatedClockTest(clock) {
+  return new AnimatedClockTest(clock);
+}

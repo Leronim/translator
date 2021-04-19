@@ -1,0 +1,238 @@
+2c3a6b67f52bb9adb164ad98110e7ac8
+
+
+
+
+
+
+
+
+
+
+'use strict';var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
+
+var React = _interopRequireWildcard(require("react"));
+
+var _useAndroidRippleForView = _interopRequireDefault(require("./useAndroidRippleForView"));
+
+
+
+
+
+
+
+
+
+var _PressabilityDebug = require("../../Pressability/PressabilityDebug");
+var _usePressability = _interopRequireDefault(require("../../Pressability/usePressability"));
+var _Rect = require("../../StyleSheet/Rect");
+
+
+var _View = _interopRequireDefault(require("../View/View"));var _jsxFileName = "/Users/leronim/Project/translator/node_modules/react-native/Libraries/Components/Pressable/Pressable.js";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function Pressable(props, forwardedRef) {var
+
+  accessible =
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  props.accessible,android_disableSound = props.android_disableSound,android_ripple = props.android_ripple,children = props.children,delayLongPress = props.delayLongPress,disabled = props.disabled,focusable = props.focusable,onLongPress = props.onLongPress,onPress = props.onPress,_onPressIn = props.onPressIn,_onPressOut = props.onPressOut,pressRetentionOffset = props.pressRetentionOffset,style = props.style,testOnly_pressed = props.testOnly_pressed,restProps = (0, _objectWithoutProperties2.default)(props, ["accessible", "android_disableSound", "android_ripple", "children", "delayLongPress", "disabled", "focusable", "onLongPress", "onPress", "onPressIn", "onPressOut", "pressRetentionOffset", "style", "testOnly_pressed"]);
+
+  var viewRef = (0, React.useRef)(null);
+  (0, React.useImperativeHandle)(forwardedRef, function () {return viewRef.current;});
+
+  var android_rippleConfig = (0, _useAndroidRippleForView.default)(android_ripple, viewRef);var _usePressState =
+
+  usePressState(testOnly_pressed === true),_usePressState2 = (0, _slicedToArray2.default)(_usePressState, 2),pressed = _usePressState2[0],setPressed = _usePressState2[1];
+
+  var hitSlop = (0, _Rect.normalizeRect)(props.hitSlop);
+
+  var config = (0, React.useMemo)(
+  function () {return {
+      disabled: disabled,
+      hitSlop: hitSlop,
+      pressRectOffset: pressRetentionOffset,
+      android_disableSound: android_disableSound,
+      delayLongPress: delayLongPress,
+      onLongPress: onLongPress,
+      onPress: onPress,
+      onPressIn: function onPressIn(event) {
+        if (android_rippleConfig != null) {
+          android_rippleConfig.onPressIn(event);
+        }
+        setPressed(true);
+        if (_onPressIn != null) {
+          _onPressIn(event);
+        }
+      },
+      onPressMove: android_rippleConfig == null ? void 0 : android_rippleConfig.onPressMove,
+      onPressOut: function onPressOut(event) {
+        if (android_rippleConfig != null) {
+          android_rippleConfig.onPressOut(event);
+        }
+        setPressed(false);
+        if (_onPressOut != null) {
+          _onPressOut(event);
+        }
+      } };},
+
+  [
+  android_disableSound,
+  android_rippleConfig,
+  delayLongPress,
+  disabled,
+  hitSlop,
+  onLongPress,
+  onPress,
+  _onPressIn,
+  _onPressOut,
+  pressRetentionOffset,
+  setPressed]);
+
+
+  var eventHandlers = (0, _usePressability.default)(config);
+
+  return (
+    React.createElement(_View.default, (0, _extends2.default)({},
+    restProps,
+    eventHandlers,
+    android_rippleConfig == null ? void 0 : android_rippleConfig.viewProps, {
+      accessible: accessible !== false,
+      focusable: focusable !== false,
+      hitSlop: hitSlop,
+      ref: viewRef,
+      style: typeof style === 'function' ? style({ pressed: pressed }) : style, __self: this, __self: this, __source: { fileName: _jsxFileName, lineNumber: 214, columnNumber: 5 } }),
+    typeof children === 'function' ? children({ pressed: pressed }) : children,
+    __DEV__ ? React.createElement(_PressabilityDebug.PressabilityDebugView, { color: "red", hitSlop: hitSlop, __self: this, __self: this, __source: { fileName: _jsxFileName, lineNumber: 224, columnNumber: 18 } }) : null));
+
+
+}
+
+function usePressState(forcePressed) {var _useState =
+  (0, React.useState)(false),_useState2 = (0, _slicedToArray2.default)(_useState, 2),pressed = _useState2[0],setPressed = _useState2[1];
+  return [pressed || forcePressed, setPressed];
+}
+
+var MemoedPressable = React.memo(React.forwardRef(Pressable));
+MemoedPressable.displayName = 'Pressable';var _default =
+
+MemoedPressable;exports.default = _default;

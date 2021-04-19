@@ -1,0 +1,56 @@
+e541cb9df67d777b4f904a8506bef66d
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports, "__esModule", { value: true });exports.createAnimatedFunction = createAnimatedFunction;var _construct2 = _interopRequireDefault(require("@babel/runtime/helpers/construct"));var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime/helpers/possibleConstructorReturn"));var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/getPrototypeOf"));var _AnimatedNode2 = _interopRequireDefault(require("./AnimatedNode"));
+var _AnimatedCallFunc = require("./AnimatedCallFunc");
+var _AnimatedParam = require("./AnimatedParam");
+var _val = require("../val");
+var _invariant = _interopRequireDefault(require("fbjs/lib/invariant"));function _createSuper(Derived) {var hasNativeReflectConstruct = _isNativeReflectConstruct();return function _createSuperInternal() {var Super = (0, _getPrototypeOf2.default)(Derived),result;if (hasNativeReflectConstruct) {var NewTarget = (0, _getPrototypeOf2.default)(this).constructor;result = Reflect.construct(Super, arguments, NewTarget);} else {result = Super.apply(this, arguments);}return (0, _possibleConstructorReturn2.default)(this, result);};}function _isNativeReflectConstruct() {if (typeof Reflect === "undefined" || !Reflect.construct) return false;if (Reflect.construct.sham) return false;if (typeof Proxy === "function") return true;try {Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));return true;} catch (e) {return false;}}var
+
+AnimatedFunction = function (_AnimatedNode) {(0, _inherits2.default)(AnimatedFunction, _AnimatedNode);var _super = _createSuper(AnimatedFunction);
+
+
+  function AnimatedFunction(what) {var _this;(0, _classCallCheck2.default)(this, AnimatedFunction);
+    (0, _invariant.default)(
+    what instanceof _AnimatedNode2.default, "Reanimated: AnimatedCallFunc 'what' argument should be of type AnimatedNode but got " +
+    what);for (var _len = arguments.length, params = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {params[_key - 1] = arguments[_key];}
+
+    _this = _super.call(this,
+    {
+      type: 'func',
+      what: what }, [
+
+    what].concat(params));
+
+    _this._what = what;
+    _this.__attach();return _this;
+  }(0, _createClass2.default)(AnimatedFunction, [{ key: "__onEvaluate", value: function __onEvaluate()
+
+    {
+      return (0, _val.val)(this._what);
+    } }, { key: "toString", value: function toString()
+
+    {
+      return "AnimatedFunction, id: " + this.__nodeID;
+    } }]);return AnimatedFunction;}(_AnimatedNode2.default);
+
+
+function createAnimatedFunction(cb) {
+  var params = new Array(cb.length);
+  for (var i = 0; i < params.length; i++) {
+    params[i] = (0, _AnimatedParam.createAnimatedParam)();
+  }
+
+  var what = cb.apply(void 0, params);
+  var func = (0, _construct2.default)(AnimatedFunction, [what].concat(params));
+  return function () {for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {args[_key2] = arguments[_key2];}
+    if (args.length !== params.length) {
+      throw new Error(
+      'Parameter mismatch when calling reanimated function. Expected ' +
+      params.length +
+      ' parameters, got ' +
+      args.length +
+      '.');
+
+    }
+    return (0, _AnimatedCallFunc.createAnimatedCallFunc)(func, args, params);
+  };
+}

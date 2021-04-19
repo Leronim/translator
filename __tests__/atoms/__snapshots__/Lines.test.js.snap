@@ -1,0 +1,42 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Lines render 1`] = `
+<View
+  style={
+    Object {
+      "height": 70,
+    }
+  }
+>
+  <View
+    style={
+      Object {
+        "backgroundColor": "#4B4B4B",
+        "height": 1,
+        "top": 0,
+        "width": "100%",
+      }
+    }
+  />
+  <View
+    style={
+      Object {
+        "backgroundColor": "#4B4B4B",
+        "height": 1,
+        "top": 55,
+        "width": "100%",
+      }
+    }
+  />
+  <View
+    style={
+      Object {
+        "backgroundColor": "#4B4B4B",
+        "height": 1,
+        "top": 110,
+        "width": "100%",
+      }
+    }
+  />
+</View>
+`;

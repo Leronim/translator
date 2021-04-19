@@ -1,0 +1,49 @@
+3ae3d4413a75ee9aa570b509d5772edb
+"use strict";Object.defineProperty(exports, "__esModule", { value: true });exports.TextInputAdapter = exports.SVGAdapter = void 0;var _core = require("./core");
+
+var SVGAdapter = (0, _core.createAnimatedPropAdapter)(function () {var _f = function _f(props) {
+
+    var keys = Object.keys(props);
+
+    if (keys.includes('transform')) {
+      if (Array.isArray(props.transform)) {var _props$x, _props$y;
+
+        if (props.transform.length !== 6) {
+          throw new Error("invalid transform length of " +
+          props.transform.length + ", should be 6");
+
+        }
+        var transform = props.transform;
+        var x = (_props$x = props.x) != null ? _props$x : 0;
+        var y = (_props$y = props.y) != null ? _props$y : 0;
+        props.transform = [
+        { translateX: transform[0] * x + transform[2] * y + transform[4] },
+        { translateX: transform[1] * x + transform[3] * y + transform[5] }];
+
+      } else if (typeof props.transform === 'string') {
+
+
+        var arr = props.transform.
+        replace('translate(', '').
+        replace(')', '').
+        split(' ');
+        props.transform = [
+        { translateX: parseFloat(arr[0]) },
+        { translateY: parseFloat(arr[1]) }];
+
+      }
+    }
+
+  };_f._closure = {};_f.asString = "function _f(props){var keys=Object.keys(props);if(keys.includes('transform')){if(Array.isArray(props.transform)){var _props$x,_props$y;if(props.transform.length!==6){throw new Error(\"invalid transform length of \"+props.transform.length+\", should be 6\");}var transform=props.transform;var x=(_props$x=props.x)!=null?_props$x:0;var y=(_props$y=props.y)!=null?_props$y:0;props.transform=[{translateX:transform[0]*x+transform[2]*y+transform[4]},{translateX:transform[1]*x+transform[3]*y+transform[5]}];}else if(typeof props.transform==='string'){var arr=props.transform.replace('translate(','').replace(')','').split(' ');props.transform=[{translateX:parseFloat(arr[0])},{translateY:parseFloat(arr[1])}];}}}";_f.__workletHash = 5607460274719;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/PropAdapters.js (3:52)";global.__reanimatedWorkletInit(_f);return _f;}());exports.SVGAdapter = SVGAdapter;
+
+var TextInputAdapter = (0, _core.createAnimatedPropAdapter)(function () {var _f = function _f(
+  props) {
+
+    var keys = Object.keys(props);
+
+    if (keys.includes('value')) {
+      props.text = props.value;
+      delete props.value;
+    }
+  };_f._closure = {};_f.asString = "function _f(props){var keys=Object.keys(props);if(keys.includes('value')){props.text=props.value;delete props.value;}}";_f.__workletHash = 16281321885564;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/PropAdapters.js (39:2)";global.__reanimatedWorkletInit(_f);return _f;}(),
+['text']);exports.TextInputAdapter = TextInputAdapter;

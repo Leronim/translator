@@ -1,0 +1,33 @@
+47b4abd6aa6d10334683120bdf72cbef
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));var _InternalAnimatedValue = _interopRequireDefault(require("../core/InternalAnimatedValue"));var
+
+Animation = function () {function Animation() {(0, _classCallCheck2.default)(this, Animation);}(0, _createClass2.default)(Animation, null, [{ key: "springDefaultState", value: function springDefaultState()
+    {
+      return {
+        position: new _InternalAnimatedValue.default(0),
+        finished: new _InternalAnimatedValue.default(0),
+        velocity: new _InternalAnimatedValue.default(0),
+        time: new _InternalAnimatedValue.default(0) };
+
+    } }, { key: "decayDefaultState", value: function decayDefaultState()
+
+    {
+      return {
+        position: new _InternalAnimatedValue.default(0),
+        finished: new _InternalAnimatedValue.default(0),
+        velocity: new _InternalAnimatedValue.default(0),
+        time: new _InternalAnimatedValue.default(0) };
+
+    } }, { key: "timingDefaultState", value: function timingDefaultState()
+
+    {
+      return {
+        position: new _InternalAnimatedValue.default(0),
+        finished: new _InternalAnimatedValue.default(0),
+        time: new _InternalAnimatedValue.default(0),
+        frameTime: new _InternalAnimatedValue.default(0) };
+
+    } }]);return Animation;}();var _default =
+
+
+Animation;exports.default = _default;

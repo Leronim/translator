@@ -1,0 +1,264 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Background render 1`] = `
+<View
+  style={
+    Object {
+      "backfaceVisibility": undefined,
+      "backgroundColor": "#E6E5E6",
+      "borderRadius": 13,
+      "bottom": undefined,
+      "direction": undefined,
+      "display": undefined,
+      "end": undefined,
+      "height": 35,
+      "left": 98,
+      "margin": undefined,
+      "marginBottom": undefined,
+      "marginEnd": undefined,
+      "marginHorizontal": undefined,
+      "marginLeft": undefined,
+      "marginRight": undefined,
+      "marginStart": undefined,
+      "marginTop": undefined,
+      "marginVertical": undefined,
+      "opacity": undefined,
+      "position": "absolute",
+      "right": undefined,
+      "start": undefined,
+      "top": 115,
+      "transform": undefined,
+      "width": 94,
+      "zIndex": undefined,
+    }
+  }
+>
+  <View
+    style={
+      Array [
+        Object {
+          "overflow": "hidden",
+          "position": "absolute",
+        },
+        Object {
+          "borderRadius": 13,
+          "height": 35,
+          "width": 94,
+        },
+      ]
+    }
+  >
+    <ARTSurfaceView
+      style={
+        Array [
+          Object {
+            "position": "absolute",
+          },
+          Object {
+            "height": 35,
+            "width": 94,
+          },
+        ]
+      }
+    >
+      <ARTGroup
+        opacity={1}
+        transform={
+          Array [
+            1,
+            0,
+            0,
+            1,
+            -18,
+            -18,
+          ]
+        }
+      >
+        <ARTShape
+          d={
+            Array [
+              0,
+              0,
+              30,
+              3,
+              0,
+              13.431457505076203,
+              13.431457505076192,
+              3.552713678800501e-15,
+              29.999999999999993,
+              0,
+              2,
+              100,
+              0,
+              3,
+              116.5685424949238,
+              0,
+              130,
+              13.4314575050762,
+              130,
+              30,
+              2,
+              130,
+              41,
+              3,
+              130,
+              57.568542494923804,
+              116.5685424949238,
+              71,
+              100,
+              71,
+              2,
+              30,
+              71,
+              3,
+              13.431457505076203,
+              71,
+              3.552713678800501e-15,
+              57.568542494923804,
+              0,
+              41.00000000000001,
+              1,
+            ]
+          }
+          fill={null}
+          opacity={1}
+          shadow={
+            Array [
+              4294967295,
+              0.6639631678079756,
+              8,
+              -4,
+              -4,
+            ]
+          }
+          stroke="#e6e5e6"
+          strokeCap={1}
+          strokeDash={null}
+          strokeJoin={1}
+          strokeWidth={34}
+          transform={
+            Array [
+              1,
+              0,
+              0,
+              1,
+              0,
+              0,
+            ]
+          }
+        />
+      </ARTGroup>
+    </ARTSurfaceView>
+    <ARTSurfaceView
+      style={
+        Array [
+          Object {
+            "position": "absolute",
+          },
+          Object {
+            "height": 35,
+            "width": 94,
+          },
+        ]
+      }
+    >
+      <ARTGroup
+        opacity={1}
+        transform={
+          Array [
+            1,
+            0,
+            0,
+            1,
+            -18,
+            -18,
+          ]
+        }
+      >
+        <ARTShape
+          d={
+            Array [
+              0,
+              0,
+              30,
+              3,
+              0,
+              13.431457505076203,
+              13.431457505076192,
+              3.552713678800501e-15,
+              29.999999999999993,
+              0,
+              2,
+              100,
+              0,
+              3,
+              116.5685424949238,
+              0,
+              130,
+              13.4314575050762,
+              130,
+              30,
+              2,
+              130,
+              41,
+              3,
+              130,
+              57.568542494923804,
+              116.5685424949238,
+              71,
+              100,
+              71,
+              2,
+              30,
+              71,
+              3,
+              13.431457505076203,
+              71,
+              3.552713678800501e-15,
+              57.568542494923804,
+              0,
+              41.00000000000001,
+              1,
+            ]
+          }
+          fill={null}
+          opacity={1}
+          shadow={
+            Array [
+              4278190080,
+              0.1206286064279062,
+              8,
+              4,
+              4,
+            ]
+          }
+          stroke="#e6e5e6"
+          strokeCap={1}
+          strokeDash={null}
+          strokeJoin={1}
+          strokeWidth={34}
+          transform={
+            Array [
+              1,
+              0,
+              0,
+              1,
+              0,
+              0,
+            ]
+          }
+        />
+      </ARTGroup>
+    </ARTSurfaceView>
+  </View>
+  <View
+    style={
+      Object {
+        "borderRadius": 13,
+        "height": 35,
+        "width": 94,
+      }
+    }
+  />
+</View>
+`;

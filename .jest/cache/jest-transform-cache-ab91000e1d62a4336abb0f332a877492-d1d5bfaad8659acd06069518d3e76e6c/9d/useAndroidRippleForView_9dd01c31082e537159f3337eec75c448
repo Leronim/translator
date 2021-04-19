@@ -1,0 +1,106 @@
+c78c9bd2df104754d538c95a9d713c40
+
+
+
+
+
+
+
+
+
+
+'use strict';var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports, "__esModule", { value: true });exports.default = useAndroidRippleForView;
+
+var _invariant = _interopRequireDefault(require("invariant"));
+var _ViewNativeComponent = require("../View/ViewNativeComponent");
+
+
+var _reactNative = require("react-native");
+var React = _interopRequireWildcard(require("react"));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function useAndroidRippleForView(
+rippleConfig,
+viewRef)
+
+
+
+
+
+
+
+{var _ref =
+  rippleConfig != null ? rippleConfig : {},color = _ref.color,borderless = _ref.borderless,radius = _ref.radius;
+  var normalizedBorderless = borderless === true;
+
+  return (0, React.useMemo)(function () {
+    if (
+    _reactNative.Platform.OS === 'android' &&
+    _reactNative.Platform.Version >= 21 && (
+    color != null || normalizedBorderless || radius != null))
+    {
+      var processedColor = (0, _reactNative.processColor)(color);
+      (0, _invariant.default)(
+      processedColor == null || typeof processedColor === 'number',
+      'Unexpected color given for Ripple color');
+
+
+      return {
+        viewProps: {
+
+          nativeBackgroundAndroid: {
+            type: 'RippleAndroid',
+            color: processedColor,
+            borderless: normalizedBorderless,
+            rippleRadius: radius } },
+
+
+        onPressIn: function onPressIn(event) {
+          var view = viewRef.current;
+          if (view != null) {var _event$nativeEvent$lo, _event$nativeEvent$lo2;
+            _ViewNativeComponent.Commands.setPressed(view, true);
+            _ViewNativeComponent.Commands.hotspotUpdate(
+            view, (_event$nativeEvent$lo =
+            event.nativeEvent.locationX) != null ? _event$nativeEvent$lo : 0, (_event$nativeEvent$lo2 =
+            event.nativeEvent.locationY) != null ? _event$nativeEvent$lo2 : 0);
+
+          }
+        },
+        onPressMove: function onPressMove(event) {
+          var view = viewRef.current;
+          if (view != null) {var _event$nativeEvent$lo3, _event$nativeEvent$lo4;
+            _ViewNativeComponent.Commands.hotspotUpdate(
+            view, (_event$nativeEvent$lo3 =
+            event.nativeEvent.locationX) != null ? _event$nativeEvent$lo3 : 0, (_event$nativeEvent$lo4 =
+            event.nativeEvent.locationY) != null ? _event$nativeEvent$lo4 : 0);
+
+          }
+        },
+        onPressOut: function onPressOut(event) {
+          var view = viewRef.current;
+          if (view != null) {
+            _ViewNativeComponent.Commands.setPressed(view, false);
+          }
+        } };
+
+    }
+    return null;
+  }, [color, normalizedBorderless, radius, viewRef]);
+}

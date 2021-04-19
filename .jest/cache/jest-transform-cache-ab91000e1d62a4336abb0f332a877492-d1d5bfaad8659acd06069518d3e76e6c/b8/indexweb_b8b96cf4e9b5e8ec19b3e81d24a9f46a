@@ -1,0 +1,26 @@
+33e2f786224ee75e1f2859d7bb19d577
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports, "__esModule", { value: true });exports.default = exports._updatePropsJS = void 0;var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));var _JSReanimated = _interopRequireDefault(require("./JSReanimated"));
+
+var reanimatedJS = new _JSReanimated.default();
+
+global._frameTimestamp = null;
+
+var _updatePropsJS = function _updatePropsJS(viewTag, viewName, updates, viewRef) {
+  if (viewRef.current && viewRef.current._component) {var _Object$keys$reduce =
+    Object.keys(updates).reduce(
+    function (acc, key) {
+      var value = updates[key];
+      var index = typeof value === 'function' ? 1 : 0;
+      acc[index][key] = value;
+      return acc;
+    },
+    [{}, {}]),_Object$keys$reduce2 = (0, _slicedToArray2.default)(_Object$keys$reduce, 1),rawStyles = _Object$keys$reduce2[0];
+
+
+    viewRef.current._component.setNativeProps({ style: rawStyles });
+  }
+};exports._updatePropsJS = _updatePropsJS;
+
+global._setGlobalConsole = function (val) {};var _default =
+
+reanimatedJS;exports.default = _default;

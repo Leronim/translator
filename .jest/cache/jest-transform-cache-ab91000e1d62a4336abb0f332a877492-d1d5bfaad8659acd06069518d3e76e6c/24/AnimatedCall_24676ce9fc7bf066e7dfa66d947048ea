@@ -1,0 +1,56 @@
+f468f1d7ce19a387325cce0e1cea7519
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports, "__esModule", { value: true });exports.createAnimatedCall = createAnimatedCall;var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));var _get2 = _interopRequireDefault(require("@babel/runtime/helpers/get"));var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime/helpers/possibleConstructorReturn"));var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/getPrototypeOf"));var _invariant = _interopRequireDefault(require("fbjs/lib/invariant"));
+var _ReanimatedEventEmitter = _interopRequireDefault(require("../ReanimatedEventEmitter"));
+var _val = require("../val");
+var _AnimatedNode2 = _interopRequireDefault(require("./AnimatedNode"));function _createSuper(Derived) {var hasNativeReflectConstruct = _isNativeReflectConstruct();return function _createSuperInternal() {var Super = (0, _getPrototypeOf2.default)(Derived),result;if (hasNativeReflectConstruct) {var NewTarget = (0, _getPrototypeOf2.default)(this).constructor;result = Reflect.construct(Super, arguments, NewTarget);} else {result = Super.apply(this, arguments);}return (0, _possibleConstructorReturn2.default)(this, result);};}function _isNativeReflectConstruct() {if (typeof Reflect === "undefined" || !Reflect.construct) return false;if (Reflect.construct.sham) return false;if (typeof Proxy === "function") return true;try {Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));return true;} catch (e) {return false;}}
+
+var NODE_MAPPING = new Map();
+
+function listener(data) {
+  var node = NODE_MAPPING.get(data.id);
+  node && node._callback(data.args);
+}var
+
+AnimatedCall = function (_AnimatedNode) {(0, _inherits2.default)(AnimatedCall, _AnimatedNode);var _super = _createSuper(AnimatedCall);
+
+
+
+  function AnimatedCall(args, jsFunction) {var _this;(0, _classCallCheck2.default)(this, AnimatedCall);
+    (0, _invariant.default)(
+    args.every(function (el) {return el instanceof _AnimatedNode2.default;}), "Reanimated: Animated.call node args should be an array with elements of type AnimatedNode. One or more of them are not AnimatedNodes");
+
+
+    _this = _super.call(this, { type: 'call', input: args }, args);
+    _this._callback = jsFunction;
+    _this._args = args;return _this;
+  }(0, _createClass2.default)(AnimatedCall, [{ key: "toString", value: function toString()
+
+    {
+      return "AnimatedCall, id: " + this.__nodeID;
+    } }, { key: "__attach", value: function __attach()
+
+    {
+      (0, _get2.default)((0, _getPrototypeOf2.default)(AnimatedCall.prototype), "__attach", this).call(this);
+      NODE_MAPPING.set(this.__nodeID, this);
+      if (NODE_MAPPING.size === 1) {
+        _ReanimatedEventEmitter.default.addListener('onReanimatedCall', listener);
+      }
+    } }, { key: "__detach", value: function __detach()
+
+    {
+      NODE_MAPPING.delete(this.__nodeID);
+      if (NODE_MAPPING.size === 0) {
+        _ReanimatedEventEmitter.default.removeAllListeners('onReanimatedCall');
+      }
+      (0, _get2.default)((0, _getPrototypeOf2.default)(AnimatedCall.prototype), "__detach", this).call(this);
+    } }, { key: "__onEvaluate", value: function __onEvaluate()
+
+    {
+      this._callback(this._args.map(_val.val));
+      return 0;
+    } }]);return AnimatedCall;}(_AnimatedNode2.default);
+
+
+function createAnimatedCall(args, func) {
+  return new AnimatedCall(args, func);
+}

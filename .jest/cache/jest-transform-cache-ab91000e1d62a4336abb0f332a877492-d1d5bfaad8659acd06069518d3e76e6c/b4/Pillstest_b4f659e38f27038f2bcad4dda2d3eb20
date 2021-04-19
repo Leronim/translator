@@ -1,0 +1,19 @@
+8f714a18bbcf28b17c31ee34ffd6c893
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));var _react = _interopRequireDefault(require("react"));
+var _reactNative = require("react-native");
+var _Pills = _interopRequireDefault(require("../../component/atoms/Pills"));
+var _reactNative2 = require("@testing-library/react-native");var _this = this,_jsxFileName = "/Users/leronim/Project/translator/__tests__/atoms/Pills.test.js";
+test('Pills render', function () {
+  var tree = (0, _reactNative2.render)(_react.default.createElement(_Pills.default, { __self: _this, __self: _this, __source: { fileName: _jsxFileName, lineNumber: 6, columnNumber: 25 } })).toJSON();
+  expect(tree).toMatchSnapshot();
+});
+
+test('Pills message', function () {
+  var message = "React";var _render =
+
+  (0, _reactNative2.render)(_react.default.createElement(_Pills.default, { text: message, __self: _this, __self: _this, __source: { fileName: _jsxFileName, lineNumber: 13, columnNumber: 44 } })),UNSAFE_getAllByType = _render.UNSAFE_getAllByType;var _UNSAFE_getAllByType =
+
+  UNSAFE_getAllByType(_reactNative.Text),_UNSAFE_getAllByType2 = (0, _slicedToArray2.default)(_UNSAFE_getAllByType, 1),text = _UNSAFE_getAllByType2[0];
+
+  expect(text.props.children).toEqual(message);
+});

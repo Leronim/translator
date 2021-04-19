@@ -13,6 +13,7 @@
   "dependencies": {
     "@react-native-community/art": "git+https://gitlab-delpoy-appcenter:nioVMDY9kwG2sD7z2CbA@gitlab.i-link.pro/front-common/art.git",
     "@react-native-community/async-storage": "^1.12.1",
+    "@testing-library/jest-native": "^4.0.1",
     "react": "16.13.1",
     "react-devtools": "^4.10.1",
     "react-native": "0.63.4",
@@ -21,12 +22,14 @@
     "react-native-neomorph-shadows": "^1.1.2",
     "react-native-reanimated": "file:react-native-reanimated-2.0.0-rc.2.tgz",
     "react-native-redash": "^16.0.8",
-    "react-native-svg": "^12.1.0"
+    "react-native-svg": "^12.1.0",
+    "ts-jest": "^26.5.5"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",
     "@babel/runtime": "^7.12.5",
     "@react-native-community/eslint-config": "^2.0.0",
+    "@testing-library/react-native": "^7.2.0",
     "@types/jest": "^26.0.20",
     "@types/react": "^17.0.0",
     "@types/react-native": "^0.63.46",

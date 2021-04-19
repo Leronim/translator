@@ -22,6 +22,7 @@ const CheckButton: React.FC<Props> = ({ text, onPress }) => {
                 onPressOut={() => setSwap(false)}
                 style={styles.screenContainer} 
                 onPress={() => onPress()}
+                testID="sendButton"
             >
                 <Text style={styles.text}>{text}</Text>
             </Pressable>

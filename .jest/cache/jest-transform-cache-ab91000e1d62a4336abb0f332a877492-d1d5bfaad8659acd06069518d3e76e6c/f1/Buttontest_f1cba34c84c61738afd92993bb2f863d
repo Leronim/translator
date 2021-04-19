@@ -1,0 +1,18 @@
+470a4d89d86fee78d9a07a0b1c10aae7
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");var _react = _interopRequireDefault(require("react"));
+var _Button = _interopRequireDefault(require("../../component/atoms/Button"));
+var _reactNativeTestingLibrary = require("react-native-testing-library");var _this = this,_jsxFileName = "/Users/leronim/Project/translator/__tests__/atoms/Button.test.js";
+
+test('Button render', function () {
+  var tree = (0, _reactNativeTestingLibrary.render)(_react.default.createElement(_Button.default, { text: "Check", __self: _this, __self: _this, __source: { fileName: _jsxFileName, lineNumber: 6, columnNumber: 25 } })).toJSON();
+  expect(tree).toMatchSnapshot();
+});
+
+test('click button', function () {
+  var handleClick = jest.fn();var _render =
+
+  (0, _reactNativeTestingLibrary.render)(_react.default.createElement(_Button.default, { text: "Check", onPress: handleClick, __self: _this, __self: _this, __source: { fileName: _jsxFileName, lineNumber: 13, columnNumber: 36 } })),getByTestId = _render.getByTestId;
+  _reactNativeTestingLibrary.fireEvent.press(getByTestId("sendButton"));
+
+  expect(handleClick).toHaveBeenCalled();
+});

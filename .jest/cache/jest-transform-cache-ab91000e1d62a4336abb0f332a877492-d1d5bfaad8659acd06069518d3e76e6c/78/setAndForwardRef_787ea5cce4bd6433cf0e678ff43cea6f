@@ -1,0 +1,54 @@
+92030c1e8bd025804c5f26f3815af48e
+"use strict";Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function setAndForwardRef(_ref) {var getForwardedRef = _ref.getForwardedRef,setLocalRef = _ref.setLocalRef;
+  return function forwardRef(ref) {
+    var forwardedRef = getForwardedRef();
+
+    setLocalRef(ref);
+
+
+    if (typeof forwardedRef === 'function') {
+
+      forwardedRef(ref);
+    } else if (typeof forwardedRef === 'object' && forwardedRef != null) {
+
+      forwardedRef.current = ref;
+    }
+  };
+}var _default =
+
+setAndForwardRef;exports.default = _default;

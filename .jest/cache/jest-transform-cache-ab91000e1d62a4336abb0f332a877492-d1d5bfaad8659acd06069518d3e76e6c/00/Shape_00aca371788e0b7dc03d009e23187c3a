@@ -1,0 +1,75 @@
+271800fcf8b6cd3e4758b8d23c888d35
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime/helpers/possibleConstructorReturn"));var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/getPrototypeOf"));
+
+
+
+
+
+
+
+
+var React = _interopRequireWildcard(require("react"));
+var _nativeComponents = require("./nativeComponents");
+var _ARTSerializablePath = _interopRequireDefault(require("./ARTSerializablePath"));
+var _helpers = require("./helpers");var _jsxFileName = "/Users/leronim/Project/translator/node_modules/@react-native-community/art/lib/Shape.js";function _createSuper(Derived) {var hasNativeReflectConstruct = _isNativeReflectConstruct();return function _createSuperInternal() {var Super = (0, _getPrototypeOf2.default)(Derived),result;if (hasNativeReflectConstruct) {var NewTarget = (0, _getPrototypeOf2.default)(this).constructor;result = Reflect.construct(Super, arguments, NewTarget);} else {result = Super.apply(this, arguments);}return (0, _possibleConstructorReturn2.default)(this, result);};}function _isNativeReflectConstruct() {if (typeof Reflect === "undefined" || !Reflect.construct) return false;if (Reflect.construct.sham) return false;if (typeof Proxy === "function") return true;try {Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));return true;} catch (e) {return false;}}var
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Shape = function (_React$Component) {(0, _inherits2.default)(Shape, _React$Component);var _super = _createSuper(Shape);function Shape() {(0, _classCallCheck2.default)(this, Shape);return _super.apply(this, arguments);}(0, _createClass2.default)(Shape, [{ key: "render", value: function render()
+
+
+
+
+
+
+    {
+      var props = this.props;
+      var path = props.d || (0, _helpers.childrenAsString)(props.children);
+      var d = (path instanceof _ARTSerializablePath.default ? path : new _ARTSerializablePath.default(path)).toJSON();
+
+      return (
+        React.createElement(_nativeComponents.NativeShape, {
+          fill: (0, _helpers.extractBrush)(props.fill, props),
+          opacity: (0, _helpers.extractOpacity)(props),
+          stroke: (0, _helpers.extractColor)(props.stroke),
+          strokeCap: (0, _helpers.extractStrokeCap)(props.strokeCap),
+          strokeDash: props.strokeDash || null,
+          strokeJoin: (0, _helpers.extractStrokeJoin)(props.strokeJoin),
+          strokeWidth: props.strokeWidth,
+          transform: (0, _helpers.extractTransform)(props),
+          shadow: (0, _helpers.extractShadow)(this.props),
+          d: d, __self: this, __source: { fileName: _jsxFileName, lineNumber: 61, columnNumber: 7 } }));
+
+
+    } }]);return Shape;}(React.Component);exports.default = Shape;Shape.defaultProps = { strokeWidth: 1, width: 0, height: 0 };

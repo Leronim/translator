@@ -1,0 +1,254 @@
+8ca6bb6c78d95cf4dd71a542d7542614
+"use strict";Object.defineProperty(exports, "__esModule", { value: true });exports.Easing = void 0;var _Bezier = require("./Bezier");var
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+linear = function () {var _f = function _f(t) {
+
+    return t;
+  };_f._closure = {};_f.asString = "function linear(t){return t;}";_f.__workletHash = 7988822508142;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/Easing.js (55:0)";global.__reanimatedWorkletInit(_f);return _f;}();var
+
+
+
+
+
+
+
+ease = function () {var _f = function _f(t) {
+
+    return (0, _Bezier.Bezier)(0.42, 0, 1, 1)(t);
+  };_f._closure = { Bezier: _Bezier.Bezier };_f.asString = "function ease(t){const{Bezier}=jsThis._closure;{return Bezier(0.42,0,1,1)(t);}}";_f.__workletHash = 13039945852153;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/Easing.js (66:0)";global.__reanimatedWorkletInit(_f);return _f;}();var
+
+
+
+
+
+
+
+quad = function () {var _f = function _f(t) {
+
+    return t * t;
+  };_f._closure = {};_f.asString = "function quad(t){return t*t;}";_f.__workletHash = 8628631460172;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/Easing.js (77:0)";global.__reanimatedWorkletInit(_f);return _f;}();var
+
+
+
+
+
+
+
+cubic = function () {var _f = function _f(t) {
+
+    return t * t * t;
+  };_f._closure = {};_f.asString = "function cubic(t){return t*t*t;}";_f.__workletHash = 9374441307661;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/Easing.js (88:0)";global.__reanimatedWorkletInit(_f);return _f;}();var
+
+
+
+
+
+
+
+poly = function () {var _f = function _f(n) {
+
+    return function (t) {return Math.pow(t, n);};
+  };_f._closure = {};_f.asString = "function poly(n){return function(t){return Math.pow(t,n);};}";_f.__workletHash = 8669070629046;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/Easing.js (99:0)";global.__reanimatedWorkletInit(_f);return _f;}();var
+
+
+
+
+
+
+sin = function () {var _f = function _f(t) {
+
+    return 1 - Math.cos(t * Math.PI / 2);
+  };_f._closure = {};_f.asString = "function sin(t){return 1-Math.cos(t*Math.PI/2);}";_f.__workletHash = 8621899987563;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/Easing.js (109:0)";global.__reanimatedWorkletInit(_f);return _f;}();var
+
+
+
+
+
+
+circle = function () {var _f = function _f(t) {
+
+    return 1 - Math.sqrt(1 - t * t);
+  };_f._closure = {};_f.asString = "function circle(t){return 1-Math.sqrt(1-t*t);}";_f.__workletHash = 15893365817828;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/Easing.js (119:0)";global.__reanimatedWorkletInit(_f);return _f;}();var
+
+
+
+
+
+
+exp = function () {var _f = function _f(t) {
+
+    return Math.pow(2, 10 * (t - 1));
+  };_f._closure = {};_f.asString = "function exp(t){return Math.pow(2,10*(t-1));}";_f.__workletHash = 15907471981377;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/Easing.js (129:0)";global.__reanimatedWorkletInit(_f);return _f;}();var
+
+
+
+
+
+
+
+
+
+
+
+elastic = function () {var _f = function _f() {var bounciness = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
+
+    var p = bounciness * Math.PI;
+    return function () {var _f = function _f(t) {
+
+        return 1 - Math.pow(Math.cos(t * Math.PI / 2), 3) * Math.cos(t * p);
+      };_f._closure = { p: p };_f.asString = "function _f(t){const{p}=jsThis._closure;{return 1-Math.pow(Math.cos(t*Math.PI/2),3)*Math.cos(t*p);}}";_f.__workletHash = 8897284077766;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/Easing.js (147:9)";global.__reanimatedWorkletInit(_f);return _f;}();
+  };_f._closure = {};_f.asString = "function elastic(){var bounciness=arguments.length>0&&arguments[0]!==undefined?arguments[0]:1;var p=bounciness*Math.PI;return function(){var _f=function _f(t){return 1-Math.pow(Math.cos(t*Math.PI/2),3)*Math.cos(t*p);};_f._closure={p:p};_f.asString=\"function _f(t){const{p}=jsThis._closure;{return 1-Math.pow(Math.cos(t*Math.PI/2),3)*Math.cos(t*p);}}\";_f.__workletHash=8897284077766;_f.__location=\"/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/Easing.js (147:9)\";global.__reanimatedWorkletInit(_f);return _f;}();}";_f.__workletHash = 3006445543093;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/Easing.js (144:0)";global.__reanimatedWorkletInit(_f);return _f;}();var
+
+
+
+
+
+
+
+
+
+back = function () {var _f = function _f() {var s = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1.70158;
+
+    return function (t) {return t * t * ((s + 1) * t - s);};
+  };_f._closure = {};_f.asString = "function back(){var s=arguments.length>0&&arguments[0]!==undefined?arguments[0]:1.70158;return function(t){return t*t*((s+1)*t-s);};}";_f.__workletHash = 3185133767591;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/Easing.js (161:0)";global.__reanimatedWorkletInit(_f);return _f;}();var
+
+
+
+
+
+
+bounce = function () {var _f = function _f(t) {
+
+    if (t < 1 / 2.75) {
+      return 7.5625 * t * t;
+    }
+
+    if (t < 2 / 2.75) {
+      var _t = t - 1.5 / 2.75;
+      return 7.5625 * _t * _t + 0.75;
+    }
+
+    if (t < 2.5 / 2.75) {
+      var _t2 = t - 2.25 / 2.75;
+      return 7.5625 * _t2 * _t2 + 0.9375;
+    }
+
+    var t2 = t - 2.625 / 2.75;
+    return 7.5625 * t2 * t2 + 0.984375;
+  };_f._closure = {};_f.asString = "function bounce(t){if(t<1/2.75){return 7.5625*t*t;}if(t<2/2.75){var _t=t-1.5/2.75;return 7.5625*_t*_t+0.75;}if(t<2.5/2.75){var _t2=t-2.25/2.75;return 7.5625*_t2*_t2+0.9375;}var t2=t-2.625/2.75;return 7.5625*t2*t2+0.984375;}";_f.__workletHash = 12239512606821;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/Easing.js (171:0)";global.__reanimatedWorkletInit(_f);return _f;}();var
+
+
+
+
+
+
+
+
+bezier = function () {var _f = function _f(x1, y1, x2, y2) {
+
+    return (0, _Bezier.Bezier)(x1, y1, x2, y2);
+  };_f._closure = { Bezier: _Bezier.Bezier };_f.asString = "function bezier(x1,y1,x2,y2){const{Bezier}=jsThis._closure;{return Bezier(x1,y1,x2,y2);}}";_f.__workletHash = 17502368919373;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/Easing.js (198:0)";global.__reanimatedWorkletInit(_f);return _f;}();var
+
+
+
+
+in_ = function () {var _f = function _f(easing) {
+
+    return easing;
+  };_f._closure = {};_f.asString = "function in_(easing){return easing;}";_f.__workletHash = 1837493474379;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/Easing.js (206:0)";global.__reanimatedWorkletInit(_f);return _f;}();var
+
+
+
+
+out = function () {var _f = function _f(easing) {
+
+    return function () {var _f = function _f(t) {
+
+        return 1 - easing(1 - t);
+      };_f._closure = { easing: easing };_f.asString = "function _f(t){const{easing}=jsThis._closure;{return 1-easing(1-t);}}";_f.__workletHash = 5726884014519;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/Easing.js (216:9)";global.__reanimatedWorkletInit(_f);return _f;}();
+  };_f._closure = {};_f.asString = "function out(easing){return function(){var _f=function _f(t){return 1-easing(1-t);};_f._closure={easing:easing};_f.asString=\"function _f(t){const{easing}=jsThis._closure;{return 1-easing(1-t);}}\";_f.__workletHash=5726884014519;_f.__location=\"/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/Easing.js (216:9)\";global.__reanimatedWorkletInit(_f);return _f;}();}";_f.__workletHash = 12234290671754;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/Easing.js (214:0)";global.__reanimatedWorkletInit(_f);return _f;}();var
+
+
+
+
+
+
+inOut = function () {var _f = function _f(easing) {
+
+    return function () {var _f = function _f(t) {
+
+        if (t < 0.5) {
+          return easing(t * 2) / 2;
+        }
+        return 1 - easing((1 - t) * 2) / 2;
+      };_f._closure = { easing: easing };_f.asString = "function _f(t){const{easing}=jsThis._closure;{if(t<0.5){return easing(t*2)/2;}return 1-easing((1-t)*2)/2;}}";_f.__workletHash = 2325007799982;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/Easing.js (229:9)";global.__reanimatedWorkletInit(_f);return _f;}();
+  };_f._closure = {};_f.asString = "function inOut(easing){return function(){var _f=function _f(t){if(t<0.5){return easing(t*2)/2;}return 1-easing((1-t)*2)/2;};_f._closure={easing:easing};_f.asString=\"function _f(t){const{easing}=jsThis._closure;{if(t<0.5){return easing(t*2)/2;}return 1-easing((1-t)*2)/2;}}\";_f.__workletHash=2325007799982;_f.__location=\"/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/Easing.js (229:9)\";global.__reanimatedWorkletInit(_f);return _f;}();}";_f.__workletHash = 14856776550926;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/Easing.js (227:0)";global.__reanimatedWorkletInit(_f);return _f;}();
+
+var Easing = {
+  linear: linear,
+  ease: ease,
+  quad: quad,
+  cubic: cubic,
+  poly: poly,
+  sin: sin,
+  circle: circle,
+  exp: exp,
+  elastic: elastic,
+  back: back,
+  bounce: bounce,
+  bezier: bezier,
+  in: in_,
+  out: out,
+  inOut: inOut };exports.Easing = Easing;

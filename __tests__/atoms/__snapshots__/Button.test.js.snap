@@ -1,0 +1,136 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Button render 1`] = `
+<View
+  style={
+    Object {
+      "backfaceVisibility": undefined,
+      "borderRadius": 34,
+      "bottom": undefined,
+      "direction": undefined,
+      "display": undefined,
+      "end": undefined,
+      "height": 68,
+      "left": undefined,
+      "margin": undefined,
+      "marginBottom": undefined,
+      "marginEnd": undefined,
+      "marginHorizontal": undefined,
+      "marginLeft": undefined,
+      "marginRight": undefined,
+      "marginStart": undefined,
+      "marginTop": undefined,
+      "marginVertical": undefined,
+      "opacity": undefined,
+      "position": undefined,
+      "right": undefined,
+      "start": undefined,
+      "top": undefined,
+      "transform": undefined,
+      "width": 710,
+      "zIndex": undefined,
+    }
+  }
+>
+  <View
+    style={
+      Array [
+        Object {
+          "backgroundColor": "#F2F2F2",
+          "borderRadius": 34,
+          "height": 68,
+          "shadowColor": "#000",
+          "shadowOffset": Object {
+            "x": 2,
+            "y": 4,
+          },
+          "shadowOpacity": 0.2,
+          "shadowRadius": 16,
+          "width": 710,
+        },
+        Object {
+          "position": "absolute",
+          "shadowOffset": Object {
+            "height": 4,
+            "width": 2,
+          },
+          "shadowRadius": 8,
+        },
+      ]
+    }
+  />
+  <View
+    style={
+      Array [
+        Object {
+          "backgroundColor": "#F2F2F2",
+          "borderRadius": 34,
+          "height": 68,
+          "shadowColor": "#fff",
+          "shadowOffset": Object {
+            "x": -2,
+            "y": -4,
+          },
+          "shadowOpacity": 0.2,
+          "shadowRadius": 16,
+          "width": 710,
+        },
+        Object {
+          "position": "absolute",
+          "shadowOffset": Object {
+            "height": -4,
+            "width": -2,
+          },
+          "shadowRadius": 8,
+        },
+      ]
+    }
+  />
+  <View
+    style={
+      Object {
+        "backgroundColor": "#F2F2F2",
+        "borderRadius": 34,
+        "height": 68,
+        "width": 710,
+      }
+    }
+  >
+    <View
+      accessible={true}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Object {
+          "alignItems": "center",
+          "height": "100%",
+          "justifyContent": "center",
+        }
+      }
+      testID="sendButton"
+    >
+      <Text
+        style={
+          Object {
+            "color": "#000",
+            "fontSize": 18,
+            "fontStyle": "normal",
+            "fontWeight": "bold",
+            "lineHeight": 21,
+          }
+        }
+      >
+        Check
+      </Text>
+    </View>
+  </View>
+</View>
+`;

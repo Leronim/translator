@@ -1,0 +1,87 @@
+a17c9c3b785093ace912182bf518d543
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime/helpers/possibleConstructorReturn"));var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/getPrototypeOf"));
+
+
+
+
+
+
+
+
+var React = _interopRequireWildcard(require("react"));
+var _ARTSerializablePath = _interopRequireDefault(require("./ARTSerializablePath"));
+var _nativeComponents = require("./nativeComponents");
+var _helpers = require("./helpers");var _jsxFileName = "/Users/leronim/Project/translator/node_modules/@react-native-community/art/lib/Text.js";function _createSuper(Derived) {var hasNativeReflectConstruct = _isNativeReflectConstruct();return function _createSuperInternal() {var Super = (0, _getPrototypeOf2.default)(Derived),result;if (hasNativeReflectConstruct) {var NewTarget = (0, _getPrototypeOf2.default)(this).constructor;result = Reflect.construct(Super, arguments, NewTarget);} else {result = Super.apply(this, arguments);}return (0, _possibleConstructorReturn2.default)(this, result);};}function _isNativeReflectConstruct() {if (typeof Reflect === "undefined" || !Reflect.construct) return false;if (Reflect.construct.sham) return false;if (typeof Proxy === "function") return true;try {Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));return true;} catch (e) {return false;}}var
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Text = function (_React$Component) {(0, _inherits2.default)(Text, _React$Component);var _super = _createSuper(Text);function Text() {(0, _classCallCheck2.default)(this, Text);return _super.apply(this, arguments);}(0, _createClass2.default)(Text, [{ key: "render", value: function render()
+
+
+
+
+
+
+    {
+      var props = this.props;
+      var path = props.path;
+      var textPath = path ?
+      (path instanceof _ARTSerializablePath.default ? path : new _ARTSerializablePath.default(path)).toJSON() :
+      null;
+      var textFrame = (0, _helpers.extractFontAndLines)(
+      props.font,
+      (0, _helpers.childrenAsString)(props.children));
+
+      return (
+        React.createElement(_nativeComponents.NativeText, {
+          fill: (0, _helpers.extractBrush)(props.fill, props),
+          opacity: (0, _helpers.extractOpacity)(props),
+          stroke: (0, _helpers.extractColor)(props.stroke),
+          strokeCap: (0, _helpers.extractStrokeCap)(props.strokeCap),
+          strokeDash: props.strokeDash || null,
+          strokeJoin: (0, _helpers.extractStrokeJoin)(props.strokeJoin),
+          strokeWidth: props.strokeWidth,
+          transform: (0, _helpers.extractTransform)(props),
+          alignment: (0, _helpers.extractAlignment)(props.alignment),
+          shadow: (0, _helpers.extractShadow)(this.props),
+          frame: textFrame,
+          path: textPath, __self: this, __source: { fileName: _jsxFileName, lineNumber: 71, columnNumber: 7 } }));
+
+
+    } }]);return Text;}(React.Component);exports.default = Text;Text.defaultProps = { strokeWidth: 1, width: 0, height: 0 };

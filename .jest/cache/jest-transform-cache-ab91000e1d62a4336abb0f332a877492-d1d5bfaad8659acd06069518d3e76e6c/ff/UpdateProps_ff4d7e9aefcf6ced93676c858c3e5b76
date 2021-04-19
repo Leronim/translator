@@ -1,0 +1,61 @@
+d288e0d19cabf8d08ac6bca502a4a605
+"use strict";Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;
+var _Colors = require("./Colors");
+var _core = require("./core");
+var _reactNative = require("react-native");
+var _index = require("./js-reanimated/index");
+
+
+var colorProps = [
+'backgroundColor',
+'borderBottomColor',
+'borderColor',
+'borderLeftColor',
+'borderRightColor',
+'borderTopColor',
+'borderStartColor',
+'borderEndColor',
+'color',
+'shadowColor',
+'textDecorationColor',
+'tintColor',
+'textShadowColor',
+'overlayColor'];
+
+
+var ColorProperties = (0, _core.makeShareable)(colorProps);var _default = function () {var _f = function _f(
+
+
+  viewDescriptor,
+  updates,
+  maybeViewRef,
+  adapters)
+  {
+
+
+    var viewName = viewDescriptor.value.name || 'RCTView';
+
+    if (adapters) {
+      adapters.forEach(function (adapter) {
+        adapter(updates);
+      });
+    }
+
+    if (_reactNative.Platform.OS !== 'web') {
+      Object.keys(updates).forEach(function (key) {
+        if (ColorProperties.indexOf(key) !== -1) {
+          updates[key] = (0, _Colors.processColor)(updates[key]);
+        }
+      });
+    }
+
+    var updatePropsInternal =
+    typeof _updateProps === 'undefined' ? _index._updatePropsJS : _updateProps;
+
+    updatePropsInternal(
+    viewDescriptor.value.tag,
+    viewName,
+    updates,
+    maybeViewRef);
+
+  };_f._closure = { Platform: { OS: _reactNative.Platform.OS }, ColorProperties: ColorProperties, processColor: _Colors.processColor, _updatePropsJS: _index._updatePropsJS };_f.asString = "function updateProps(viewDescriptor,updates,maybeViewRef,adapters){const{Platform,ColorProperties,processColor,_updatePropsJS}=jsThis._closure;{var viewName=viewDescriptor.value.name||'RCTView';if(adapters){adapters.forEach(function(adapter){adapter(updates);});}if(Platform.OS!=='web'){Object.keys(updates).forEach(function(key){if(ColorProperties.indexOf(key)!==-1){updates[key]=processColor(updates[key]);}});}var updatePropsInternal=typeof _updateProps==='undefined'?_updatePropsJS:_updateProps;updatePropsInternal(viewDescriptor.value.tag,viewName,updates,maybeViewRef);}}";_f.__workletHash = 410185615534;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/UpdateProps.js (27:15)";global.__reanimatedWorkletInit(_f);return _f;}();exports.default = _default;

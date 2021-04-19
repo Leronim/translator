@@ -1,0 +1,697 @@
+d8ff62023205686c9244af14ca0bbc3c
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports, "__esModule", { value: true });exports.useSharedValue = useSharedValue;exports.useEvent = useEvent;exports.useAnimatedStyle = useAnimatedStyle;exports.useDerivedValue = useDerivedValue;exports.useAnimatedGestureHandler = useAnimatedGestureHandler;exports.useAnimatedScrollHandler = useAnimatedScrollHandler;exports.useAnimatedRef = useAnimatedRef;exports.useAnimatedReaction = useAnimatedReaction;exports.useWorkletCallback = useWorkletCallback;exports.createWorklet = createWorklet;exports.useAnimatedProps = void 0;var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
+var _react = require("react");
+
+var _WorkletEventHandler = _interopRequireDefault(require("./WorkletEventHandler"));
+var _core = require("./core");
+
+
+
+
+
+
+
+var _UpdateProps = _interopRequireDefault(require("./UpdateProps"));
+var _animations = require("./animations");
+var _NativeMethods = require("./NativeMethods");
+var _NativeReanimated = _interopRequireDefault(require("./NativeReanimated"));
+var _reactNative = require("react-native");
+
+function useSharedValue(init) {var shouldRebuild = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+  var ref = (0, _react.useRef)(null);
+  if (ref.current === null) {
+    ref.current = {
+      mutable: (0, _core.makeMutable)(init),
+      last: init };
+
+  } else if (init !== ref.current.last && shouldRebuild) {
+    ref.current.last = init;
+    ref.current.mutable.value = init;
+  }
+
+  (0, _react.useEffect)(function () {
+    return function () {
+      (0, _animations.cancelAnimation)(ref.current.mutable);
+    };
+  }, []);
+
+  return ref.current.mutable;
+}
+
+function useEvent(handler) {var eventNames = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];var rebuild = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+  var initRef = (0, _react.useRef)(null);
+  if (initRef.current === null) {
+    initRef.current = new _WorkletEventHandler.default(handler, eventNames);
+  } else if (rebuild) {
+    initRef.current.updateWorklet(handler);
+  }
+
+  (0, _react.useEffect)(function () {
+    return function () {
+      initRef.current = null;
+    };
+  }, []);
+
+  return initRef;
+}var
+
+prepareAnimation = function () {var _f = function _f(animatedProp, lastAnimation, lastValue) {
+
+    function prepareAnimation(animatedProp, lastAnimation, lastValue) {
+      if (Array.isArray(animatedProp)) {
+        animatedProp.forEach(function (prop, index) {return (
+            prepareAnimation(
+            prop,
+            lastAnimation && lastAnimation[index],
+            lastValue && lastValue[index]));});
+
+
+        return animatedProp;
+      }
+      if (typeof animatedProp === 'object' && animatedProp.onFrame) {
+        var animation = animatedProp;
+
+        var value = animation.current;
+        if (lastValue !== undefined) {
+          if (typeof lastValue === 'object') {
+            if (lastValue.value !== undefined) {
+
+              value = lastValue.value;
+            } else if (lastValue.onFrame !== undefined) {
+              if ((lastAnimation == null ? void 0 : lastAnimation.current) !== undefined) {
+
+                value = lastAnimation.current;
+              } else if ((lastValue == null ? void 0 : lastValue.current) !== undefined) {
+
+                value = lastValue.current;
+              }
+            }
+          } else {
+
+            value = lastValue;
+          }
+        }
+
+        animation.callStart = function (timestamp) {
+          animation.onStart(animation, value, timestamp, lastAnimation);
+        };
+        animation.callStart((0, _core.getTimestamp)());
+        animation.callStart = null;
+      } else if (typeof animatedProp === 'object') {
+
+        Object.keys(animatedProp).forEach(function (key) {return (
+            prepareAnimation(
+            animatedProp[key],
+            lastAnimation && lastAnimation[key],
+            lastValue && lastValue[key]));});
+
+
+      }
+    }
+    return prepareAnimation(animatedProp, lastAnimation, lastValue);
+  };_f._closure = { getTimestamp: _core.getTimestamp };_f.asString = "function prepareAnimation(animatedProp,lastAnimation,lastValue){const{getTimestamp}=jsThis._closure;{function prepareAnimation(animatedProp,lastAnimation,lastValue){if(Array.isArray(animatedProp)){animatedProp.forEach(function(prop,index){return prepareAnimation(prop,lastAnimation&&lastAnimation[index],lastValue&&lastValue[index]);});return animatedProp;}if(typeof animatedProp==='object'&&animatedProp.onFrame){var animation=animatedProp;var value=animation.current;if(lastValue!==undefined){if(typeof lastValue==='object'){if(lastValue.value!==undefined){value=lastValue.value;}else if(lastValue.onFrame!==undefined){if((lastAnimation==null?void 0:lastAnimation.current)!==undefined){value=lastAnimation.current;}else if((lastValue==null?void 0:lastValue.current)!==undefined){value=lastValue.current;}}}else{value=lastValue;}}animation.callStart=function(timestamp){animation.onStart(animation,value,timestamp,lastAnimation);};animation.callStart(getTimestamp());animation.callStart=null;}else if(typeof animatedProp==='object'){Object.keys(animatedProp).forEach(function(key){return prepareAnimation(animatedProp[key],lastAnimation&&lastAnimation[key],lastValue&&lastValue[key]);});}}return prepareAnimation(animatedProp,lastAnimation,lastValue);}}";_f.__workletHash = 7326879193731;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/Hooks.js (57:0)";global.__reanimatedWorkletInit(_f);return _f;}();var
+
+runAnimations = function () {var _f = function _f(animation, timestamp, key, result, animationsActive) {
+
+    function runAnimations(animation, timestamp, key, result, animationsActive) {
+      if (!animationsActive.value) {
+        return true;
+      }
+      if (Array.isArray(animation)) {
+        result[key] = [];
+        var allFinished = true;
+        animation.forEach(function (entry, index) {
+          if (
+          !runAnimations(entry, timestamp, index, result[key], animationsActive))
+          {
+            allFinished = false;
+          }
+        });
+        return allFinished;
+      } else if (typeof animation === 'object' && animation.onFrame) {
+        var finished = true;
+        if (!animation.finished) {
+          if (animation.callStart) {
+            animation.callStart(timestamp);
+            animation.callStart = null;
+          }
+          finished = animation.onFrame(animation, timestamp);
+          animation.timestamp = timestamp;
+          if (finished) {
+            animation.finished = true;
+            animation.callback && animation.callback(true);
+          }
+        }
+        result[key] = animation.current;
+        return finished;
+      } else if (typeof animation === 'object') {
+        result[key] = {};
+        var _allFinished = true;
+        Object.keys(animation).forEach(function (k) {
+          if (
+          !runAnimations(
+          animation[k],
+          timestamp,
+          k,
+          result[key],
+          animationsActive))
+
+          {
+            _allFinished = false;
+          }
+        });
+        return _allFinished;
+      } else {
+        result[key] = animation;
+        return true;
+      }
+    }
+    return runAnimations(animation, timestamp, key, result, animationsActive);
+  };_f._closure = {};_f.asString = "function runAnimations(animation,timestamp,key,result,animationsActive){function runAnimations(animation,timestamp,key,result,animationsActive){if(!animationsActive.value){return true;}if(Array.isArray(animation)){result[key]=[];var allFinished=true;animation.forEach(function(entry,index){if(!runAnimations(entry,timestamp,index,result[key],animationsActive)){allFinished=false;}});return allFinished;}else if(typeof animation==='object'&&animation.onFrame){var finished=true;if(!animation.finished){if(animation.callStart){animation.callStart(timestamp);animation.callStart=null;}finished=animation.onFrame(animation,timestamp);animation.timestamp=timestamp;if(finished){animation.finished=true;animation.callback&&animation.callback(true);}}result[key]=animation.current;return finished;}else if(typeof animation==='object'){result[key]={};var _allFinished=true;Object.keys(animation).forEach(function(k){if(!runAnimations(animation[k],timestamp,k,result[key],animationsActive)){_allFinished=false;}});return _allFinished;}else{result[key]=animation;return true;}}return runAnimations(animation,timestamp,key,result,animationsActive);}";_f.__workletHash = 15750931731485;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/Hooks.js (113:0)";global.__reanimatedWorkletInit(_f);return _f;}();var
+
+
+isAnimated = function () {var _f = function _f(prop) {
+
+    function isAnimated(prop) {
+      if (Array.isArray(prop)) {
+        return prop.some(isAnimated);
+      }
+      if (typeof prop === 'object') {
+        if (prop.onFrame) {
+          return true;
+        }
+        return Object.keys(prop).some(function (key) {return isAnimated(prop[key]);});
+      }
+      return false;
+    }
+    return isAnimated(prop);
+  };_f._closure = {};_f.asString = "function isAnimated(prop){function isAnimated(prop){if(Array.isArray(prop)){return prop.some(isAnimated);}if(typeof prop==='object'){if(prop.onFrame){return true;}return Object.keys(prop).some(function(key){return isAnimated(prop[key]);});}return false;}return isAnimated(prop);}";_f.__workletHash = 17049513327359;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/Hooks.js (172:0)";global.__reanimatedWorkletInit(_f);return _f;}();var
+
+styleDiff = function () {var _f = function _f(oldStyle, newStyle) {
+
+    var diff = {};
+    Object.keys(oldStyle).forEach(function (key) {
+      if (newStyle[key] === undefined) {
+        diff[key] = null;
+      }
+    });
+    Object.keys(newStyle).forEach(function (key) {
+      var value = newStyle[key];
+      var oldValue = oldStyle[key];
+
+      if (isAnimated(value)) {
+
+        return;
+      }
+      if (
+      oldValue !== value &&
+      JSON.stringify(oldValue) !== JSON.stringify(value))
+      {
+
+        diff[key] = value;
+      }
+    });
+    return diff;
+  };_f._closure = { isAnimated: isAnimated };_f.asString = "function styleDiff(oldStyle,newStyle){const{isAnimated}=jsThis._closure;{var diff={};Object.keys(oldStyle).forEach(function(key){if(newStyle[key]===undefined){diff[key]=null;}});Object.keys(newStyle).forEach(function(key){var value=newStyle[key];var oldValue=oldStyle[key];if(isAnimated(value)){return;}if(oldValue!==value&&JSON.stringify(oldValue)!==JSON.stringify(value)){diff[key]=value;}});return diff;}}";_f.__workletHash = 12547599973310;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/Hooks.js (189:0)";global.__reanimatedWorkletInit(_f);return _f;}();var
+
+styleUpdater = function () {var _f = function _f(
+  viewDescriptor,
+  updater,
+  state,
+  maybeViewRef,
+  adapters,
+  animationsActive)
+  {
+
+    var animations = state.animations || {};
+    var newValues = updater() || {};
+    var oldValues = state.last;
+
+
+    var hasAnimations = false;
+    Object.keys(animations).forEach(function (key) {
+      var value = newValues[key];
+      if (!isAnimated(value)) {
+        delete animations[key];
+      }
+    });
+    Object.keys(newValues).forEach(function (key) {
+      var value = newValues[key];
+      if (isAnimated(value)) {
+        prepareAnimation(value, animations[key], oldValues[key]);
+        animations[key] = value;
+        hasAnimations = true;
+      }
+    });
+
+    function frame(timestamp) {var
+      animations = state.animations,last = state.last,isAnimationCancelled = state.isAnimationCancelled;
+      if (isAnimationCancelled) {
+        state.isAnimationRunning = false;
+        return;
+      }
+
+      var updates = {};
+      var allFinished = true;
+      Object.keys(animations).forEach(function (propName) {
+        var finished = runAnimations(
+        animations[propName],
+        timestamp,
+        propName,
+        updates,
+        animationsActive);
+
+        if (finished) {
+          last[propName] = updates[propName];
+          delete animations[propName];
+        } else {
+          allFinished = false;
+        }
+      });
+
+      if (Object.keys(updates).length) {
+        (0, _UpdateProps.default)(viewDescriptor, updates, maybeViewRef, adapters);
+      }
+
+      if (!allFinished) {
+        (0, _core.requestFrame)(frame);
+      } else {
+        state.isAnimationRunning = false;
+      }
+    }
+
+    if (hasAnimations) {
+      state.animations = animations;
+      if (!state.isAnimationRunning) {
+        state.isAnimationCancelled = false;
+        state.isAnimationRunning = true;
+        if (_frameTimestamp) {
+          frame(_frameTimestamp);
+        } else {
+          (0, _core.requestFrame)(frame);
+        }
+      }
+    } else {
+      state.isAnimationCancelled = true;
+      state.animations = {};
+    }
+
+
+    var diff = styleDiff(oldValues, newValues);
+    state.last = (0, _extends2.default)({}, oldValues, newValues);
+
+    if (Object.keys(diff).length !== 0) {
+      (0, _UpdateProps.default)(viewDescriptor, diff, maybeViewRef, adapters);
+    }
+  };_f._closure = { isAnimated: isAnimated, prepareAnimation: prepareAnimation, runAnimations: runAnimations, updateProps: _UpdateProps.default, requestFrame: _core.requestFrame, styleDiff: styleDiff, _extends: _extends2.default };_f.asString = "function styleUpdater(viewDescriptor,updater,state,maybeViewRef,adapters,animationsActive){const{isAnimated,prepareAnimation,runAnimations,updateProps,requestFrame,styleDiff,_extends}=jsThis._closure;{var animations=state.animations||{};var newValues=updater()||{};var oldValues=state.last;var hasAnimations=false;Object.keys(animations).forEach(function(key){var value=newValues[key];if(!isAnimated(value)){delete animations[key];}});Object.keys(newValues).forEach(function(key){var value=newValues[key];if(isAnimated(value)){prepareAnimation(value,animations[key],oldValues[key]);animations[key]=value;hasAnimations=true;}});function frame(timestamp){var animations=state.animations,last=state.last,isAnimationCancelled=state.isAnimationCancelled;if(isAnimationCancelled){state.isAnimationRunning=false;return;}var updates={};var allFinished=true;Object.keys(animations).forEach(function(propName){var finished=runAnimations(animations[propName],timestamp,propName,updates,animationsActive);if(finished){last[propName]=updates[propName];delete animations[propName];}else{allFinished=false;}});if(Object.keys(updates).length){updateProps(viewDescriptor,updates,maybeViewRef,adapters);}if(!allFinished){requestFrame(frame);}else{state.isAnimationRunning=false;}}if(hasAnimations){state.animations=animations;if(!state.isAnimationRunning){state.isAnimationCancelled=false;state.isAnimationRunning=true;if(_frameTimestamp){frame(_frameTimestamp);}else{requestFrame(frame);}}}else{state.isAnimationCancelled=true;state.animations={};}var diff=styleDiff(oldValues,newValues);state.last=_extends({},oldValues,newValues);if(Object.keys(diff).length!==0){updateProps(viewDescriptor,diff,maybeViewRef,adapters);}}}";_f.__workletHash = 15614002845270;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/Hooks.js (216:0)";global.__reanimatedWorkletInit(_f);return _f;}();
+
+function useAnimatedStyle(updater, dependencies, adapters) {
+  var viewDescriptor = useSharedValue({ tag: -1, name: null }, false);
+  var initRef = (0, _react.useRef)(null);
+  var inputs = Object.values(updater._closure);
+  var viewRef = (0, _react.useRef)(null);
+  adapters = !adapters || Array.isArray(adapters) ? adapters : [adapters];
+  var adaptersHash = adapters ? buildWorkletsHash(adapters) : null;
+  var animationsActive = useSharedValue(true);
+
+
+  if (!dependencies) {
+    dependencies = [].concat((0, _toConsumableArray2.default)(inputs), [updater.__workletHash]);
+  } else {
+    dependencies.push(updater.__workletHash);
+  }
+  adaptersHash && dependencies.push(adaptersHash);
+
+  if (initRef.current === null) {
+    var _initial = (0, _animations.initialUpdaterRun)(updater);
+    initRef.current = {
+      initial: _initial,
+      remoteState: (0, _core.makeRemote)({ last: _initial }) };
+
+  }var _initRef$current =
+
+  initRef.current,remoteState = _initRef$current.remoteState,initial = _initRef$current.initial;
+  var maybeViewRef = _NativeReanimated.default.native ? undefined : viewRef;
+
+  (0, _react.useEffect)(function () {
+    var fun = function () {var _f = function _f() {
+
+        styleUpdater(
+        viewDescriptor,
+        updater,
+        remoteState,
+        maybeViewRef,
+        adapters,
+        animationsActive);
+
+      };_f._closure = { styleUpdater: styleUpdater, viewDescriptor: viewDescriptor, updater: updater, remoteState: remoteState, maybeViewRef: maybeViewRef, adapters: adapters, animationsActive: animationsActive };_f.asString = "function _f(){const{styleUpdater,viewDescriptor,updater,remoteState,maybeViewRef,adapters,animationsActive}=jsThis._closure;{styleUpdater(viewDescriptor,updater,remoteState,maybeViewRef,adapters,animationsActive);}}";_f.__workletHash = 3563529919281;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/Hooks.js (336:16)";global.__reanimatedWorkletInit(_f);return _f;}();
+    var mapperId = (0, _core.startMapper)(fun, inputs, []);
+    return function () {
+      (0, _core.stopMapper)(mapperId);
+    };
+  }, dependencies);
+
+  (0, _react.useEffect)(function () {
+    animationsActive.value = true;
+    return function () {
+      initRef.current = null;
+      viewRef.current = null;
+      animationsActive.value = false;
+    };
+  }, []);
+
+
+  var wrongKey;
+  var isError = Object.keys(initial).some(function (key) {
+    var element = initial[key];
+    var result = typeof element === 'object' && element.value !== undefined;
+    if (result) {
+      wrongKey = key;
+    }
+    return result;
+  });
+  if (isError && wrongKey !== undefined) {
+    throw new Error("invalid value passed to `" +
+    wrongKey + "`, maybe you forgot to use `.value`?");
+
+  }
+
+  return {
+    viewDescriptor: viewDescriptor,
+    initial: initial,
+    viewRef: viewRef };
+
+}
+
+
+
+var useAnimatedProps = useAnimatedStyle;exports.useAnimatedProps = useAnimatedProps;
+
+function useDerivedValue(processor, dependencies) {
+  var initRef = (0, _react.useRef)(null);
+  var inputs = Object.values(processor._closure);
+
+
+  if (dependencies === undefined) {
+    dependencies = [].concat((0, _toConsumableArray2.default)(inputs), [processor.__workletHash]);
+  } else {
+    dependencies.push(processor.__workletHash);
+  }
+
+  if (initRef.current === null) {
+    initRef.current = (0, _core.makeMutable)((0, _animations.initialUpdaterRun)(processor));
+  }
+
+  var sharedValue = initRef.current;
+
+  (0, _react.useEffect)(function () {
+    var fun = function () {var _f = function _f() {
+
+        sharedValue.value = processor();
+      };_f._closure = { sharedValue: sharedValue, processor: processor };_f.asString = "function _f(){const{sharedValue,processor}=jsThis._closure;{sharedValue.value=processor();}}";_f.__workletHash = 12308083001289;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/Hooks.js (407:16)";global.__reanimatedWorkletInit(_f);return _f;}();
+    var mapperId = (0, _core.startMapper)(fun, inputs, [sharedValue]);
+    return function () {
+      (0, _core.stopMapper)(mapperId);
+    };
+  }, dependencies);
+
+  (0, _react.useEffect)(function () {
+    return function () {
+      initRef.current = null;
+    };
+  }, []);
+
+  return sharedValue;
+}
+
+
+function buildWorkletsHash(handlers) {
+  return Object.keys(handlers).reduce(
+  function (previousValue, key) {return (
+      previousValue === null ?
+      handlers[key].__workletHash :
+      previousValue.toString() + handlers[key].__workletHash.toString());},
+  null);
+
+}
+
+
+function buildDependencies(dependencies, handlers) {
+  if (!dependencies) {
+    dependencies = Object.keys(handlers).map(function (handlerKey) {
+      var handler = handlers[handlerKey];
+      return {
+        workletHash: handler.__workletHash,
+        closure: handler._closure };
+
+    });
+  } else {
+    dependencies.push(buildWorkletsHash(handlers));
+  }
+  return dependencies;
+}
+
+
+function areDependenciesEqual(nextDeps, prevDeps) {
+  function is(x, y) {
+
+    return x === y && (x !== 0 || 1 / x === 1 / y) || x !== x && y !== y;
+
+  }
+  var objectIs = typeof Object.is === 'function' ? Object.is : is;
+
+  function areHookInputsEqual(nextDeps, prevDeps) {
+    if (!nextDeps || !prevDeps || prevDeps.length !== nextDeps.length) {
+      return false;
+    }
+    for (var i = 0; i < prevDeps.length; ++i) {
+      if (!objectIs(nextDeps[i], prevDeps[i])) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  return areHookInputsEqual(nextDeps, prevDeps);
+}
+
+function useAnimatedGestureHandler(handlers, dependencies) {
+  var initRef = (0, _react.useRef)(null);
+  if (initRef.current === null) {
+    initRef.current = {
+      context: (0, _core.makeRemote)({}),
+      savedDependencies: [] };
+
+  }
+
+  (0, _react.useEffect)(function () {
+    return function () {
+      initRef.current = null;
+    };
+  }, []);var _initRef$current2 =
+
+  initRef.current,context = _initRef$current2.context,savedDependencies = _initRef$current2.savedDependencies;
+
+  dependencies = buildDependencies(dependencies, handlers);
+
+  var dependenciesDiffer = !areDependenciesEqual(
+  dependencies,
+  savedDependencies);
+
+  initRef.current.savedDependencies = dependencies;
+
+  var handler = function () {var _f = function _f(event) {
+
+      event = _reactNative.Platform.OS === 'web' ? event.nativeEvent : event;
+
+      var FAILED = 1;
+      var BEGAN = 2;
+      var CANCELLED = 3;
+      var ACTIVE = 4;
+      var END = 5;
+
+      if (event.state === BEGAN && handlers.onStart) {
+        handlers.onStart(event, context);
+      }
+      if (event.state === ACTIVE && handlers.onActive) {
+        handlers.onActive(event, context);
+      }
+      if (event.oldState === ACTIVE && event.state === END && handlers.onEnd) {
+        handlers.onEnd(event, context);
+      }
+      if (event.oldState === BEGAN && event.state === FAILED && handlers.onFail) {
+        handlers.onFail(event, context);
+      }
+      if (
+      event.oldState === ACTIVE &&
+      event.state === CANCELLED &&
+      handlers.onCancel)
+      {
+        handlers.onCancel(event, context);
+      }
+      if (
+      (event.oldState === BEGAN || event.oldState === ACTIVE) &&
+      event.state !== BEGAN &&
+      event.state !== ACTIVE &&
+      handlers.onFinish)
+      {
+        handlers.onFinish(
+        event,
+        context,
+        event.state === CANCELLED || event.state === FAILED);
+
+      }
+    };_f._closure = { Platform: { OS: _reactNative.Platform.OS }, handlers: { onStart: handlers.onStart, onActive: handlers.onActive, onEnd: handlers.onEnd, onFail: handlers.onFail, onCancel: handlers.onCancel, onFinish: handlers.onFinish }, context: context };_f.asString = "function _f(event){const{Platform,handlers,context}=jsThis._closure;{event=Platform.OS==='web'?event.nativeEvent:event;var FAILED=1;var BEGAN=2;var CANCELLED=3;var ACTIVE=4;var END=5;if(event.state===BEGAN&&handlers.onStart){handlers.onStart(event,context);}if(event.state===ACTIVE&&handlers.onActive){handlers.onActive(event,context);}if(event.oldState===ACTIVE&&event.state===END&&handlers.onEnd){handlers.onEnd(event,context);}if(event.oldState===BEGAN&&event.state===FAILED&&handlers.onFail){handlers.onFail(event,context);}if(event.oldState===ACTIVE&&event.state===CANCELLED&&handlers.onCancel){handlers.onCancel(event,context);}if((event.oldState===BEGAN||event.oldState===ACTIVE)&&event.state!==BEGAN&&event.state!==ACTIVE&&handlers.onFinish){handlers.onFinish(event,context,event.state===CANCELLED||event.state===FAILED);}}}";_f.__workletHash = 11359316426451;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/Hooks.js (502:18)";global.__reanimatedWorkletInit(_f);return _f;}();
+
+  if (_reactNative.Platform.OS === 'web') {
+    return handler;
+  }
+
+  return useEvent(
+  handler,
+  ['onGestureHandlerStateChange', 'onGestureHandlerEvent'],
+  dependenciesDiffer);
+
+}
+
+function useAnimatedScrollHandler(handlers, dependencies) {
+  var initRef = (0, _react.useRef)(null);
+  if (initRef.current === null) {
+    initRef.current = {
+      context: (0, _core.makeRemote)({}),
+      savedDependencies: [] };
+
+  }
+
+  (0, _react.useEffect)(function () {
+    return function () {
+      initRef.current = null;
+    };
+  }, []);var _initRef$current3 =
+
+  initRef.current,context = _initRef$current3.context,savedDependencies = _initRef$current3.savedDependencies;
+
+  dependencies = buildDependencies(dependencies, handlers);
+
+  var dependenciesDiffer = !areDependenciesEqual(
+  dependencies,
+  savedDependencies);
+
+  initRef.current.savedDependencies = dependencies;
+
+
+  var subscribeForEvents = ['onScroll'];
+  if (handlers.onBeginDrag !== undefined) {
+    subscribeForEvents.push('onScrollBeginDrag');
+  }
+  if (handlers.onEndDrag !== undefined) {
+    subscribeForEvents.push('onScrollEndDrag');
+  }
+  if (handlers.onMomentumBegin !== undefined) {
+    subscribeForEvents.push('onMomentumScrollBegin');
+  }
+  if (handlers.onMomentumEnd !== undefined) {
+    subscribeForEvents.push('onMomentumScrollEnd');
+  }
+
+  return useEvent(function () {var _f = function _f(
+    event) {var
+
+
+      onScroll =
+
+
+
+
+      handlers.onScroll,onBeginDrag = handlers.onBeginDrag,onEndDrag = handlers.onEndDrag,onMomentumBegin = handlers.onMomentumBegin,onMomentumEnd = handlers.onMomentumEnd;
+      if (event.eventName.endsWith('onScroll')) {
+        if (onScroll) {
+          onScroll(event, context);
+        } else if (typeof handlers === 'function') {
+          handlers(event, context);
+        }
+      } else if (onBeginDrag && event.eventName.endsWith('onScrollBeginDrag')) {
+        onBeginDrag(event, context);
+      } else if (onEndDrag && event.eventName.endsWith('onScrollEndDrag')) {
+        onEndDrag(event, context);
+      } else if (
+      onMomentumBegin &&
+      event.eventName.endsWith('onMomentumScrollBegin'))
+      {
+        onMomentumBegin(event, context);
+      } else if (
+      onMomentumEnd &&
+      event.eventName.endsWith('onMomentumScrollEnd'))
+      {
+        onMomentumEnd(event, context);
+      }
+    };_f._closure = { handlers: handlers, context: context };_f.asString = "function _f(event){const{handlers,context}=jsThis._closure;{var onScroll=handlers.onScroll,onBeginDrag=handlers.onBeginDrag,onEndDrag=handlers.onEndDrag,onMomentumBegin=handlers.onMomentumBegin,onMomentumEnd=handlers.onMomentumEnd;if(event.eventName.endsWith('onScroll')){if(onScroll){onScroll(event,context);}else if(typeof handlers==='function'){handlers(event,context);}}else if(onBeginDrag&&event.eventName.endsWith('onScrollBeginDrag')){onBeginDrag(event,context);}else if(onEndDrag&&event.eventName.endsWith('onScrollEndDrag')){onEndDrag(event,context);}else if(onMomentumBegin&&event.eventName.endsWith('onMomentumScrollBegin')){onMomentumBegin(event,context);}else if(onMomentumEnd&&event.eventName.endsWith('onMomentumScrollEnd')){onMomentumEnd(event,context);}}}";_f.__workletHash = 8464190533272;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/Hooks.js (597:4)";global.__reanimatedWorkletInit(_f);return _f;}(),
+  subscribeForEvents,
+  dependenciesDiffer);
+
+}
+
+function useAnimatedRef() {
+  var tag = useSharedValue(-1);
+  var ref = (0, _react.useRef)(null);
+
+  if (!ref.current) {
+    var fun = function () {var _f = function _f(component) {
+
+
+        if (component) {
+          tag.value = (0, _NativeMethods.getTag)(component);
+          fun.current = component;
+        }
+        return tag.value;
+      };_f._closure = { tag: tag, getTag: _NativeMethods.getTag, fun: fun };_f.asString = "function _f(component){const{tag,getTag,fun}=jsThis._closure;{if(component){tag.value=getTag(component);fun.current=component;}return tag.value;}}";_f.__workletHash = 2837072662922;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/Hooks.js (638:16)";global.__reanimatedWorkletInit(_f);return _f;}();
+
+    Object.defineProperty(fun, 'current', {
+      value: null,
+      writable: true,
+      enumerable: false });
+
+    ref.current = fun;
+  }
+
+  return ref.current;
+}
+
+
+
+
+
+
+
+function useAnimatedReaction(prepare, react, dependencies) {
+  if (dependencies === undefined) {
+    dependencies = [
+    Object.values(prepare._closure),
+    Object.values(react._closure),
+    prepare.__workletHash,
+    react.__workletHash];
+
+  } else {
+    dependencies.push(prepare.__workletHash, react.__workletHash);
+  }
+
+  (0, _react.useEffect)(function () {
+    var fun = function () {var _f = function _f() {
+
+        var input = prepare();
+        react(input);
+      };_f._closure = { prepare: prepare, react: react };_f.asString = "function _f(){const{prepare,react}=jsThis._closure;{var input=prepare();react(input);}}";_f.__workletHash = 2173531216083;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/Hooks.js (678:16)";global.__reanimatedWorkletInit(_f);return _f;}();
+    var mapperId = (0, _core.startMapper)(fun, Object.values(prepare._closure), []);
+    return function () {
+      (0, _core.stopMapper)(mapperId);
+    };
+  }, dependencies);
+}
+
+function useWorkletCallback(fun, deps) {
+  return (0, _react.useCallback)(fun, deps);
+}
+
+function createWorklet(fun) {
+  return fun;
+}

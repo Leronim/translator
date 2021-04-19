@@ -1,0 +1,69 @@
+ed4ddd154950e2070d6d82e8d20c8175
+"use strict";var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports, "__esModule", { value: true });exports.createAnimatedCallFunc = createAnimatedCallFunc;var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime/helpers/possibleConstructorReturn"));var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/getPrototypeOf"));var _AnimatedNode2 = _interopRequireWildcard(require("./AnimatedNode"));
+var _AnimatedBlock = require("./AnimatedBlock");
+var _val = require("../val");
+var _invariant = _interopRequireDefault(require("fbjs/lib/invariant"));function _createSuper(Derived) {var hasNativeReflectConstruct = _isNativeReflectConstruct();return function _createSuperInternal() {var Super = (0, _getPrototypeOf2.default)(Derived),result;if (hasNativeReflectConstruct) {var NewTarget = (0, _getPrototypeOf2.default)(this).constructor;result = Reflect.construct(Super, arguments, NewTarget);} else {result = Super.apply(this, arguments);}return (0, _possibleConstructorReturn2.default)(this, result);};}function _isNativeReflectConstruct() {if (typeof Reflect === "undefined" || !Reflect.construct) return false;if (Reflect.construct.sham) return false;if (typeof Proxy === "function") return true;try {Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));return true;} catch (e) {return false;}}var
+
+AnimatedCallFunc = function (_AnimatedNode) {(0, _inherits2.default)(AnimatedCallFunc, _AnimatedNode);var _super = _createSuper(AnimatedCallFunc);
+
+
+
+
+  function AnimatedCallFunc(what, args, params) {var _this;(0, _classCallCheck2.default)(this, AnimatedCallFunc);
+    (0, _invariant.default)(
+    what instanceof _AnimatedNode2.default, "Reanimated: AnimatedCallFunc 'what' argument should be of type AnimatedNode but got " +
+    what);
+
+    (0, _invariant.default)(
+    args.every(function (el) {return el instanceof _AnimatedNode2.default;}), "Reanimated: every AnimatedCallFunc 'args' argument should be of type AnimatedNode but got " +
+    args);
+
+    (0, _invariant.default)(
+    params.every(function (el) {return el instanceof _AnimatedNode2.default;}), "Reanimated: every AnimatedCallFunc 'params' argument should be of type AnimatedNode but got " +
+    params);
+
+    _this = _super.call(this,
+    {
+      type: 'callfunc',
+      what: what,
+      args: args,
+      params: params }, (0, _toConsumableArray2.default)(
+
+    args));
+
+    _this._what = what;
+    _this._args = args;
+    _this._params = params;return _this;
+  }(0, _createClass2.default)(AnimatedCallFunc, [{ key: "toString", value: function toString()
+
+    {
+      return "AnimatedCallFunc, id: " + this.__nodeID;
+    } }, { key: "beginContext", value: function beginContext()
+
+    {var _this2 = this;
+      this._previousCallID = (0, _AnimatedNode2.getCallID)();
+      (0, _AnimatedNode2.setCallID)((0, _AnimatedNode2.getCallID)() + '/' + this.__nodeID);
+
+      this._params.forEach(function (param, index) {
+        param.beginContext(_this2._args[index], _this2._previousCallID);
+      });
+    } }, { key: "endContext", value: function endContext()
+
+    {
+      this._params.forEach(function (param, index) {
+        param.endContext();
+      });
+      (0, _AnimatedNode2.setCallID)(this._previousCallID);
+    } }, { key: "__onEvaluate", value: function __onEvaluate()
+
+    {
+      this.beginContext();
+      var value = (0, _val.val)(this._what);
+      this.endContext();
+      return value;
+    } }]);return AnimatedCallFunc;}(_AnimatedNode2.default);
+
+
+function createAnimatedCallFunc(proc, args, params) {
+  return new AnimatedCallFunc(proc, args.map(function (p) {return (0, _AnimatedBlock.adapt)(p);}), params);
+}

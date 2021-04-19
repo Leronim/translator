@@ -1,0 +1,33 @@
+4f33f7ee04175beb8cb9889039f82cb3
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports, "__esModule", { value: true });exports.createAnimatedConcat = createAnimatedConcat;var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime/helpers/possibleConstructorReturn"));var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/getPrototypeOf"));var _invariant = _interopRequireDefault(require("fbjs/lib/invariant"));
+var _AnimatedBlock = require("../core/AnimatedBlock");
+var _AnimatedNode2 = _interopRequireDefault(require("./AnimatedNode"));
+var _val = require("../val");function _createSuper(Derived) {var hasNativeReflectConstruct = _isNativeReflectConstruct();return function _createSuperInternal() {var Super = (0, _getPrototypeOf2.default)(Derived),result;if (hasNativeReflectConstruct) {var NewTarget = (0, _getPrototypeOf2.default)(this).constructor;result = Reflect.construct(Super, arguments, NewTarget);} else {result = Super.apply(this, arguments);}return (0, _possibleConstructorReturn2.default)(this, result);};}function _isNativeReflectConstruct() {if (typeof Reflect === "undefined" || !Reflect.construct) return false;if (Reflect.construct.sham) return false;if (typeof Proxy === "function") return true;try {Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));return true;} catch (e) {return false;}}var
+
+AnimatedConcat = function (_AnimatedNode) {(0, _inherits2.default)(AnimatedConcat, _AnimatedNode);var _super = _createSuper(AnimatedConcat);
+  function AnimatedConcat(input) {var _this;(0, _classCallCheck2.default)(this, AnimatedConcat);
+    (0, _invariant.default)(
+    input.every(
+    function (el) {return (
+        el instanceof _AnimatedNode2.default ||
+        typeof el === 'number' ||
+        typeof el === 'string');}), "Reanimated: Animated.concat node arguments should be of type AnimatedNode or String or Number. One or more of them are not of that type. Node: " +
+
+    input);
+
+    _this = _super.call(this, { type: 'concat', input: input }, input);
+    _this._input = input;return _this;
+  }(0, _createClass2.default)(AnimatedConcat, [{ key: "__onEvaluate", value: function __onEvaluate()
+
+    {
+      return this._input.reduce(function (prev, current) {return prev + (0, _val.val)(current);}, '');
+    } }, { key: "toString", value: function toString()
+
+    {
+      return "AnimatedConcat, id: " + this.__nodeID;
+    } }]);return AnimatedConcat;}(_AnimatedNode2.default);
+
+
+function createAnimatedConcat() {for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {args[_key] = arguments[_key];}
+  return new AnimatedConcat(args.map(_AnimatedBlock.adapt));
+}

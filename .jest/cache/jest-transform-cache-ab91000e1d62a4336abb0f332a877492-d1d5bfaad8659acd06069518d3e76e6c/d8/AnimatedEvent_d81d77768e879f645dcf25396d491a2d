@@ -1,0 +1,127 @@
+a614b27ae307e6c54d6751e387a7b829
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports, "__esModule", { value: true });exports.createAnimatedEvent = createAnimatedEvent;exports.default = void 0;var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime/helpers/possibleConstructorReturn"));var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/getPrototypeOf"));var _reactNative = require("react-native");
+var _ReanimatedModule = _interopRequireDefault(require("../ReanimatedModule"));
+
+var _AnimatedNode2 = _interopRequireDefault(require("./AnimatedNode"));
+var _AnimatedValue = _interopRequireDefault(require("./AnimatedValue"));
+var _AnimatedAlways = require("./AnimatedAlways");
+
+var _invariant = _interopRequireDefault(require("fbjs/lib/invariant"));
+var _createEventObjectProxyPolyfill = _interopRequireDefault(require("./createEventObjectProxyPolyfill"));function _createSuper(Derived) {var hasNativeReflectConstruct = _isNativeReflectConstruct();return function _createSuperInternal() {var Super = (0, _getPrototypeOf2.default)(Derived),result;if (hasNativeReflectConstruct) {var NewTarget = (0, _getPrototypeOf2.default)(this).constructor;result = Reflect.construct(Super, arguments, NewTarget);} else {result = Super.apply(this, arguments);}return (0, _possibleConstructorReturn2.default)(this, result);};}function _isNativeReflectConstruct() {if (typeof Reflect === "undefined" || !Reflect.construct) return false;if (Reflect.construct.sham) return false;if (typeof Proxy === "function") return true;try {Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));return true;} catch (e) {return false;}}
+
+function sanitizeArgMapping(argMapping) {
+
+
+  var eventMappings = [];
+  var alwaysNodes = [];
+
+  var getNode = function getNode(node) {
+    if (
+    _reactNative.Platform.OS === 'web' ||
+    _reactNative.Platform.OS === 'windows' ||
+    _reactNative.Platform.OS === 'macos')
+    {
+      return node;
+    }
+    return node.__nodeID;
+  };
+
+  var traverse = function traverse(value, path) {
+    if (value instanceof _AnimatedValue.default) {
+      eventMappings.push(path.concat(getNode(value)));
+    } else if (typeof value === 'object' && value.__val) {
+      eventMappings.push(path.concat(getNode(value.__val)));
+    } else if (typeof value === 'function') {
+      var node = new _AnimatedValue.default(0);
+      alwaysNodes.push((0, _AnimatedAlways.createAnimatedAlways)(value(node)));
+      eventMappings.push(path.concat(getNode(node)));
+    } else if (typeof value === 'object') {
+      for (var key in value) {
+        traverse(value[key], path.concat(key));
+      }
+    }
+  };
+
+  (0, _invariant.default)(
+  argMapping[0] && argMapping[0].nativeEvent,
+  'Native driven events only support animated values contained inside `nativeEvent`.');
+
+
+
+  var ev = argMapping[0].nativeEvent;
+  if (typeof ev === 'object') {
+    traverse(ev, []);
+  } else if (typeof ev === 'function') {
+    var proxyHandler = {
+      get: function get(target, name) {
+        if (name === '__isProxy') {
+          return true;
+        }
+        if (!target[name] && name !== '__val') {
+          target[name] = new Proxy({}, proxyHandler);
+        }
+        return target[name];
+      },
+      set: function set(target, prop, value) {
+        if (prop === '__val') {
+          target[prop] = value;
+          return true;
+        }
+        return false;
+      } };
+
+
+    var proxy =
+    typeof Proxy === 'function' ?
+    new Proxy({}, proxyHandler) :
+    (0, _createEventObjectProxyPolyfill.default)();
+    alwaysNodes.push((0, _AnimatedAlways.createAnimatedAlways)(ev(proxy)));
+    traverse(proxy, []);
+  }
+
+  return { eventMappings: eventMappings, alwaysNodes: alwaysNodes };
+}var
+
+AnimatedEvent = function (_AnimatedNode) {(0, _inherits2.default)(AnimatedEvent, _AnimatedNode);var _super = _createSuper(AnimatedEvent);
+  function AnimatedEvent(argMapping) {var _this;var config = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};(0, _classCallCheck2.default)(this, AnimatedEvent);var _sanitizeArgMapping =
+    sanitizeArgMapping(argMapping),eventMappings = _sanitizeArgMapping.eventMappings,alwaysNodes = _sanitizeArgMapping.alwaysNodes;
+    _this = _super.call(this, { type: 'event', argMapping: eventMappings });_this.
+
+
+
+
+
+
+
+
+
+
+    __isNative = true;_this._alwaysNodes = alwaysNodes;return _this;}(0, _createClass2.default)(AnimatedEvent, [{ key: "toString", value: function toString() {return "AnimatedEvent, id: " + this.__nodeID;} }, { key: "attachEvent", value: function attachEvent(
+
+    viewRef, eventName) {
+      for (var i = 0; i < this._alwaysNodes.length; i++) {
+        this._alwaysNodes[i].__attach();
+      }
+      this.__attach();
+      var viewTag = (0, _reactNative.findNodeHandle)(viewRef);
+      _ReanimatedModule.default.attachEvent(viewTag, eventName, this.__nodeID);
+    } }, { key: "__onEvaluate", value: function __onEvaluate()
+
+    {
+      return 0;
+    } }, { key: "detachEvent", value: function detachEvent(
+
+    viewRef, eventName) {
+      for (var i = 0; i < this._alwaysNodes.length; i++) {
+        this._alwaysNodes[i].isNativelyInitialized() &&
+        this._alwaysNodes[i].__detach();
+      }
+      var viewTag = (0, _reactNative.findNodeHandle)(viewRef);
+      _ReanimatedModule.default.detachEvent(viewTag, eventName, this.__nodeID);
+      this.__detach();
+    } }]);return AnimatedEvent;}(_AnimatedNode2.default);exports.default = AnimatedEvent;
+
+
+function createAnimatedEvent(argMapping, config) {
+  return new AnimatedEvent(argMapping, config);
+}

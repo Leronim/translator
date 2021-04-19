@@ -1,0 +1,25 @@
+0f5356c4bfe793bd0082c9ce48d5433d
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");var _react = _interopRequireDefault(require("react"));
+var _Background = _interopRequireDefault(require("../../component/atoms/Background"));
+var _reactNativeTestingLibrary = require("react-native-testing-library");var _this = this,_jsxFileName = "/Users/leronim/Project/translator/__tests__/atoms/Background.test.js";
+var currentPosition = {
+  order: {
+    value: -1 },
+
+  width: {
+    value: 100 },
+
+  height: {
+    value: 100 },
+
+  originalX: {
+    value: 100 },
+
+  originalY: {
+    value: 100 } };
+
+
+test('Background render', function () {
+  var tree = (0, _reactNativeTestingLibrary.render)(_react.default.createElement(_Background.default, { position: currentPosition, __self: _this, __self: _this, __source: { fileName: _jsxFileName, lineNumber: 22, columnNumber: 25 } })).toJSON();
+  expect(tree).toMatchSnapshot();
+});

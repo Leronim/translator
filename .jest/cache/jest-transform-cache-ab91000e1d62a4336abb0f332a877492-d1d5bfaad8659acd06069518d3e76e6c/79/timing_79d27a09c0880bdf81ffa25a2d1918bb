@@ -1,0 +1,75 @@
+e035b3b50ea90a69ae149da9aff101fd
+"use strict";Object.defineProperty(exports, "__esModule", { value: true });exports.default = _default;var _base = require("../base");
+
+
+
+
+
+
+
+
+
+
+
+var internalTiming = (0, _base.proc)(function (
+clock,
+time,
+frameTime,
+position,
+finished,
+toValue,
+duration,
+nextProgress,
+progress,
+newFrameTime)
+{
+  var state = {
+    time: time,
+    finished: finished,
+    frameTime: frameTime,
+    position: position };
+
+
+  var config = {
+    duration: duration,
+    toValue: toValue };
+
+
+  var distanceLeft = (0, _base.sub)(config.toValue, state.position);
+  var fullDistance = (0, _base.divide)(distanceLeft, (0, _base.sub)(1, progress));
+  var startPosition = (0, _base.sub)(config.toValue, fullDistance);
+  var nextPosition = (0, _base.add)(startPosition, (0, _base.multiply)(fullDistance, nextProgress));
+
+  return (0, _base.block)([
+  (0, _base.cond)(
+  (0, _base.greaterOrEq)(newFrameTime, config.duration),
+  [(0, _base.set)(state.position, config.toValue), (0, _base.set)(state.finished, 1)],
+  (0, _base.set)(state.position, nextPosition)),
+
+  (0, _base.set)(state.frameTime, newFrameTime),
+  (0, _base.set)(state.time, clock)]);
+
+});
+
+function _default(clock, state, config) {
+  if (config.duration === 0) {
+
+    return (0, _base.block)([(0, _base.set)(state.position, config.toValue), (0, _base.set)(state.finished, 1)]);
+  }
+  var lastTime = (0, _base.cond)(state.time, state.time, clock);
+  var newFrameTime = (0, _base.add)(state.frameTime, (0, _base.sub)(clock, lastTime));
+  var nextProgress = config.easing((0, _base.divide)(newFrameTime, config.duration));
+  var progress = config.easing((0, _base.divide)(state.frameTime, config.duration));
+  return internalTiming(
+  clock,
+  state.time,
+  state.frameTime,
+  state.position,
+  state.finished,
+  config.toValue,
+  config.duration,
+  nextProgress,
+  progress,
+  newFrameTime);
+
+}

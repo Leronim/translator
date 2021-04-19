@@ -1,0 +1,79 @@
+c31f4fac95e347a095fcf05880260621
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));var _MapperRegistry = _interopRequireDefault(require("./MapperRegistry"));
+var _MutableValue = _interopRequireDefault(require("./MutableValue"));
+var _Mapper = _interopRequireDefault(require("./Mapper"));var
+
+JSReanimated = function () {function JSReanimated() {(0, _classCallCheck2.default)(this, JSReanimated);this.
+    native = false;this.
+    _valueSetter = undefined;this.
+    _renderRequested = false;this.
+    _mapperRegistry = new _MapperRegistry.default(this);this.
+    _frames = [];}(0, _createClass2.default)(JSReanimated, [{ key: "pushFrame", value: function pushFrame(
+
+    frame) {
+      this._frames.push(frame);
+
+      this.maybeRequestRender();
+    } }, { key: "getTimestamp", value: function getTimestamp()
+
+    {
+      return window.performance.now();
+    } }, { key: "maybeRequestRender", value: function maybeRequestRender()
+
+    {var _this = this;
+      if (!this._renderRequested) {
+        this._renderRequested = true;
+
+        requestAnimationFrame(function (timestampMs) {
+          _this._renderRequested = false;
+
+          _this._onRender(_this.getTimestamp());
+        });
+      }
+    } }, { key: "_onRender", value: function _onRender(
+
+    timestampMs) {
+      this._mapperRegistry.execute();
+
+      var frames = (0, _toConsumableArray2.default)(this._frames);
+      this._frames = [];
+
+      for (var i = 0, len = frames.length; i < len; ++i) {
+        frames[i](timestampMs);
+      }
+
+      if (this._mapperRegistry.needRunOnRender) {
+        this._mapperRegistry.execute();
+      }
+    } }, { key: "installCoreFunctions", value: function installCoreFunctions(
+
+    valueSetter) {
+      this._valueSetter = valueSetter;
+    } }, { key: "makeShareable", value: function makeShareable(
+
+    value) {
+      return value;
+    } }, { key: "makeMutable", value: function makeMutable(
+
+    value) {
+      return new _MutableValue.default(value, this._valueSetter);
+    } }, { key: "makeRemote", value: function makeRemote(
+
+    object) {
+      return object;
+    } }, { key: "startMapper", value: function startMapper(
+
+    mapper) {var inputs = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];var outputs = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
+      var instance = new _Mapper.default(this, mapper, inputs, outputs);
+      var mapperId = this._mapperRegistry.startMapper(instance);
+      this.maybeRequestRender();
+      return mapperId;
+    } }, { key: "stopMapper", value: function stopMapper(
+
+    mapperId) {
+      this._mapperRegistry.stopMapper(mapperId);
+    } }, { key: "registerEventHandler", value: function registerEventHandler(
+
+    eventHash, eventHandler) {} }, { key: "unregisterEventHandler", value: function unregisterEventHandler(
+
+    registrationId) {} }]);return JSReanimated;}();exports.default = JSReanimated;

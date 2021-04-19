@@ -23,7 +23,7 @@ const Error: React.FC<Props> = ({ message, color }) => {
 
     return (
         <View style={style.container}>
-            <Text style={style.text}>{message}</Text>
+            <Text style={style.text} testID="errorMessage">{message}</Text>
         </View>
     )
 }

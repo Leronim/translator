@@ -1,0 +1,50 @@
+68e060b687dab4f201fc2ce1987b6b4e
+"use strict";Object.defineProperty(exports, "__esModule", { value: true });exports.default = RadialGradient;
+
+
+
+
+
+
+
+
+var _helpers = require("./helpers");
+
+
+var RADIAL_GRADIENT = 2;
+
+function RadialGradient(
+stops,
+fx,
+fy,
+rx,
+ry,
+cx,
+cy)
+{
+  if (ry == null) {
+    ry = rx;
+  }
+  if (cx == null) {
+    cx = fx;
+  }
+  if (cy == null) {
+    cy = fy;
+  }
+  if (fx == null) {
+
+
+    fx = fy = rx = ry = cx = cy = 0.5;
+    this._bb = true;
+  } else {
+    this._bb = false;
+  }
+
+
+
+
+  var brushData = [RADIAL_GRADIENT, +fx, +fy, +rx * 2, +ry * 2, +cx, +cy];
+  (0, _helpers.insertDoubleColorStopsIntoArray)(stops, brushData, 7);
+  this._brush = brushData;
+  return this;
+}

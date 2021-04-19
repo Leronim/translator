@@ -1,0 +1,36 @@
+9e2808632adf37d42f0a04875be12bfc
+
+
+
+
+
+
+
+
+
+
+
+
+'use strict';var _jsxFileName = "/Users/leronim/Project/translator/node_modules/react-native/jest/mockScrollView.js";function _createSuper(Derived) {var hasNativeReflectConstruct = _isNativeReflectConstruct();return function _createSuperInternal() {var Super = require("@babel/runtime/helpers/getPrototypeOf")(Derived),result;if (hasNativeReflectConstruct) {var NewTarget = require("@babel/runtime/helpers/getPrototypeOf")(this).constructor;result = Reflect.construct(Super, arguments, NewTarget);} else {result = Super.apply(this, arguments);}return require("@babel/runtime/helpers/possibleConstructorReturn")(this, result);};}function _isNativeReflectConstruct() {if (typeof Reflect === "undefined" || !Reflect.construct) return false;if (Reflect.construct.sham) return false;if (typeof Proxy === "function") return true;try {Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));return true;} catch (e) {return false;}}
+
+
+
+
+
+var RCTScrollView = require('../Libraries/ReactNative/requireNativeComponent')('RCTScrollView');
+
+function mockScrollView(BaseComponent) {var
+  ScrollViewMock = function (_BaseComponent) {require("@babel/runtime/helpers/inherits")(ScrollViewMock, _BaseComponent);var _super = _createSuper(ScrollViewMock);function ScrollViewMock() {require("@babel/runtime/helpers/classCallCheck")(this, ScrollViewMock);return _super.apply(this, arguments);}require("@babel/runtime/helpers/createClass")(ScrollViewMock, [{ key: "render", value: function render()
+      {
+        return (
+          require('react').createElement(RCTScrollView, require("@babel/runtime/helpers/extends")({}, this.props, { __self: this, __self: this, __source: { fileName: _jsxFileName, lineNumber: 25, columnNumber: 9 } }),
+          this.props.refreshControl,
+          require('react').createElement(require('../Libraries/Components/View/View'), { __self: this, __self: this, __source: { fileName: _jsxFileName, lineNumber: 27, columnNumber: 11 } }, this.props.children)));
+
+
+      } }]);return ScrollViewMock;}(BaseComponent);
+
+  return ScrollViewMock;
+}
+
+module.exports = mockScrollView;

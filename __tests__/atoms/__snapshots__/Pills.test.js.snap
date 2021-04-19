@@ -1,0 +1,38 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Pills render 1`] = `
+<View
+  style={
+    Object {
+      "height": 30,
+      "marginRight": 10,
+      "marginTop": 15,
+      "width": 70,
+    }
+  }
+>
+  <View
+    style={
+      Object {
+        "alignItems": "center",
+        "backgroundColor": "white",
+        "borderColor": "#C9C9C9",
+        "borderRadius": 13,
+        "borderWidth": 1,
+        "height": 30,
+        "justifyContent": "center",
+        "shadowColor": "#000",
+        "shadowOffset": Object {
+          "height": 4,
+          "width": 0,
+        },
+        "shadowOpacity": 0.25,
+        "shadowRadius": 1,
+        "width": 70,
+      }
+    }
+  >
+    <Text />
+  </View>
+</View>
+`;

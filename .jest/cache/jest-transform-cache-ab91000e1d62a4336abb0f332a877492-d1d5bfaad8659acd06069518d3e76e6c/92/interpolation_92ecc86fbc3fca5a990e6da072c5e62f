@@ -1,0 +1,141 @@
+29bfaa1382b7cc1477d0467c255cc76a
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports, "__esModule", { value: true });exports.interpolate = void 0;var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));var _interpolate = require("../derived/interpolate");function ownKeys(object, enumerableOnly) {var keys = Object.keys(object);if (Object.getOwnPropertySymbols) {var symbols = Object.getOwnPropertySymbols(object);if (enumerableOnly) symbols = symbols.filter(function (sym) {return Object.getOwnPropertyDescriptor(object, sym).enumerable;});keys.push.apply(keys, symbols);}return keys;}function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};if (i % 2) {ownKeys(Object(source), true).forEach(function (key) {(0, _defineProperty2.default)(target, key, source[key]);});} else if (Object.getOwnPropertyDescriptors) {Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));} else {ownKeys(Object(source)).forEach(function (key) {Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));});}}return target;}var
+
+getVal = function () {var _f = function _f(config) {var
+
+
+    type = config.type,coef = config.coef,val = config.val,ll = config.ll,rr = config.rr,x = config.x;
+
+    switch (type) {
+      case _interpolate.Extrapolate.IDENTITY:
+        return x;
+      case _interpolate.Extrapolate.CLAMP:
+        if (coef * val < coef * ll) {
+          return ll;
+        }
+        return rr;
+      case _interpolate.Extrapolate.EXTEND:
+      default:
+        return val;}
+
+  };_f._closure = { Extrapolate: { IDENTITY: _interpolate.Extrapolate.IDENTITY, CLAMP: _interpolate.Extrapolate.CLAMP, EXTEND:
+
+
+      _interpolate.Extrapolate.EXTEND } };_f.asString = "function getVal(config){const{Extrapolate}=jsThis._closure;{var type=config.type,coef=config.coef,val=config.val,ll=config.ll,rr=config.rr,x=config.x;switch(type){case Extrapolate.IDENTITY:return x;case Extrapolate.CLAMP:if(coef*val<coef*ll){return ll;}return rr;case Extrapolate.EXTEND:default:return val;}}}";_f.__workletHash = 14030100394456;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/interpolation.js (3:0)";global.__reanimatedWorkletInit(_f);return _f;}();var isExtrapolate = function () {var _f = function _f(value) {
+
+    return (
+      value === _interpolate.Extrapolate.EXTEND ||
+      value === _interpolate.Extrapolate.CLAMP ||
+      value === _interpolate.Extrapolate.IDENTITY);
+
+  };_f._closure = { Extrapolate: { EXTEND: _interpolate.Extrapolate.EXTEND, CLAMP: _interpolate.Extrapolate.CLAMP, IDENTITY: _interpolate.Extrapolate.IDENTITY } };_f.asString = "function isExtrapolate(value){const{Extrapolate}=jsThis._closure;{return value===Extrapolate.EXTEND||value===Extrapolate.CLAMP||value===Extrapolate.IDENTITY;}}";_f.__workletHash = 14994419438556;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/interpolation.js (22:0)";global.__reanimatedWorkletInit(_f);return _f;}();var
+
+validateType = function () {var _f = function _f(type) {var _type;
+
+
+    var EXTRAPOLATE_ERROR_MSG = "Reanimated: config object is not valid, please provide valid config, for example:\n    interpolate(value, [inputRange], [outputRange], {\n    extrapolateLeft: 'clamp',\n    extrapolateRight: 'extend',\n  })";
+
+
+
+
+
+    var EXTRAPOLATE_ERROR = function EXTRAPOLATE_ERROR(
+    extrapolate) {return "Reanimated: not supported value for \"" +
+      extrapolate + "\" \nSupported values: [\"extend\", \"clamp\", \"identity\"]\n Valid example:\n    interpolate(value, [inputRange], [outputRange], {\n      " +
+
+      extrapolate + ": 'clamp',\n  })";};
+
+
+    type = (_type = type) != null ? _type : 'extend';
+
+
+    var hasExtrapolateLeft = type.hasOwnProperty('extrapolateLeft');
+
+    var hasExtrapolateRight = type.hasOwnProperty('extrapolateRight');
+
+    if (
+    typeof type === 'object' && (
+    Object.keys(type).length === 2 &&
+    !(hasExtrapolateLeft && hasExtrapolateRight) ||
+    Object.keys(type).length === 1 &&
+    !(hasExtrapolateLeft || hasExtrapolateRight) ||
+    Object.keys(type).length > 2))
+    {
+      throw new Error(EXTRAPOLATE_ERROR_MSG);
+    }
+
+    if (typeof type === 'object') {
+      if (hasExtrapolateLeft && !isExtrapolate(type.extrapolateLeft)) {
+        throw new Error(EXTRAPOLATE_ERROR('extrapolateLeft'));
+      }
+
+      if (hasExtrapolateRight && !isExtrapolate(type.extrapolateRight)) {
+        throw new Error(EXTRAPOLATE_ERROR('extrapolateRight'));
+      }
+    }
+
+    if (typeof type === 'string' && !isExtrapolate(type)) {
+      throw new Error("Reanimated: not supported value for \"interpolate\" \nSupported values: [\"extend\", \"clamp\", \"identity\"]\n Valid example:\n       interpolate(value, [inputRange], [outputRange], \"clamp\")");
+
+
+
+    }
+  };_f._closure = { isExtrapolate: isExtrapolate };_f.asString = "function validateType(type){const{isExtrapolate}=jsThis._closure;{var _type;var EXTRAPOLATE_ERROR_MSG=\"Reanimated: config object is not valid, please provide valid config, for example:\\n    interpolate(value, [inputRange], [outputRange], {\\n    extrapolateLeft: 'clamp',\\n    extrapolateRight: 'extend',\\n  })\";var EXTRAPOLATE_ERROR=function EXTRAPOLATE_ERROR(extrapolate){return\"Reanimated: not supported value for \\\"\"+extrapolate+\"\\\" \\nSupported values: [\\\"extend\\\", \\\"clamp\\\", \\\"identity\\\"]\\n Valid example:\\n    interpolate(value, [inputRange], [outputRange], {\\n      \"+extrapolate+\": 'clamp',\\n  })\";};type=(_type=type)!=null?_type:'extend';var hasExtrapolateLeft=type.hasOwnProperty('extrapolateLeft');var hasExtrapolateRight=type.hasOwnProperty('extrapolateRight');if(typeof type==='object'&&(Object.keys(type).length===2&&!(hasExtrapolateLeft&&hasExtrapolateRight)||Object.keys(type).length===1&&!(hasExtrapolateLeft||hasExtrapolateRight)||Object.keys(type).length>2)){throw new Error(EXTRAPOLATE_ERROR_MSG);}if(typeof type==='object'){if(hasExtrapolateLeft&&!isExtrapolate(type.extrapolateLeft)){throw new Error(EXTRAPOLATE_ERROR('extrapolateLeft'));}if(hasExtrapolateRight&&!isExtrapolate(type.extrapolateRight)){throw new Error(EXTRAPOLATE_ERROR('extrapolateRight'));}}if(typeof type==='string'&&!isExtrapolate(type)){throw new Error(\"Reanimated: not supported value for \\\"interpolate\\\" \\nSupported values: [\\\"extend\\\", \\\"clamp\\\", \\\"identity\\\"]\\n Valid example:\\n       interpolate(value, [inputRange], [outputRange], \\\"clamp\\\")\");}}}";_f.__workletHash = 3797456715625;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/interpolation.js (32:0)";global.__reanimatedWorkletInit(_f);return _f;}();var
+
+
+
+internalInterpolate = function () {var _f = function _f(x, l, r, ll, rr, type) {
+
+    if (r - l === 0) return ll;
+    var progress = (x - l) / (r - l);
+    var val = ll + progress * (rr - ll);
+    var coef = rr >= ll ? 1 : -1;
+
+    var config = { type: type, coef: coef, val: val, ll: ll, rr: rr, x: x };
+
+    validateType(type);
+
+    if (typeof type === 'object') {
+      if (coef * val < coef * ll) {
+        return getVal(_objectSpread(_objectSpread({}, config), {}, { type: type.extrapolateLeft }));
+      } else if (coef * val > coef * ll) {
+        return getVal(_objectSpread(_objectSpread({}, config), {}, { type: type.extrapolateRight }));
+      }
+    }
+
+    if (coef * val < coef * ll || coef * val > coef * rr) {
+      return getVal(config);
+    }
+
+    return val;
+  };_f._closure = { validateType: validateType, getVal: getVal, _objectSpread: _objectSpread };_f.asString = "function internalInterpolate(x,l,r,ll,rr,type){const{validateType,getVal,_objectSpread}=jsThis._closure;{if(r-l===0)return ll;var progress=(x-l)/(r-l);var val=ll+progress*(rr-ll);var coef=rr>=ll?1:-1;var config={type:type,coef:coef,val:val,ll:ll,rr:rr,x:x};validateType(type);if(typeof type==='object'){if(coef*val<coef*ll){return getVal(_objectSpread(_objectSpread({},config),{},{type:type.extrapolateLeft}));}else if(coef*val>coef*ll){return getVal(_objectSpread(_objectSpread({},config),{},{type:type.extrapolateRight}));}}if(coef*val<coef*ll||coef*val>coef*rr){return getVal(config);}return val;}}";_f.__workletHash = 13070200852726;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/interpolation.js (86:0)";global.__reanimatedWorkletInit(_f);return _f;}();var
+
+interpolate = function () {var _f = function _f(x, input, output, type) {
+
+    if (x && x.__nodeID) {
+      throw new Error(
+      'Reanimated: interpolate from V1 has been renamed to interpolateNode.');
+
+    }
+
+    var length = input.length;
+    var narrowedInput = [];
+    if (x < input[0]) {
+      narrowedInput = [input[0], input[1], output[0], output[1]];
+    } else if (x > input[length - 1]) {
+      narrowedInput = [
+      input[length - 2],
+      input[length - 1],
+      output[length - 2],
+      output[length - 1]];
+
+    } else {
+      for (var i = 1; i < length; ++i) {
+        if (x <= input[i]) {
+          narrowedInput = [input[i - 1], input[i], output[i - 1], output[i]];
+          break;
+        }
+      }
+    }
+    return internalInterpolate.apply({}, [x].concat(narrowedInput).concat(type));
+  };_f._closure = { internalInterpolate: internalInterpolate };_f.asString = "function interpolate(x,input,output,type){const{internalInterpolate}=jsThis._closure;{if(x&&x.__nodeID){throw new Error('Reanimated: interpolate from V1 has been renamed to interpolateNode.');}var length=input.length;var narrowedInput=[];if(x<input[0]){narrowedInput=[input[0],input[1],output[0],output[1]];}else if(x>input[length-1]){narrowedInput=[input[length-2],input[length-1],output[length-2],output[length-1]];}else{for(var i=1;i<length;++i){if(x<=input[i]){narrowedInput=[input[i-1],input[i],output[i-1],output[i]];break;}}}return internalInterpolate.apply({},[x].concat(narrowedInput).concat(type));}}";_f.__workletHash = 13867398897915;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/interpolation.js (112:7)";global.__reanimatedWorkletInit(_f);return _f;}();exports.interpolate = interpolate;

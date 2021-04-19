@@ -1,0 +1,42 @@
+8679d0ff3e785c5968023ff88c36112d
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports, "__esModule", { value: true });exports.default = useCode;var _react = _interopRequireDefault(require("react"));
+var _base = require("../base");
+
+
+
+
+
+
+
+
+
+
+
+
+function useCode(nodeFactory, dependencies) {
+  if (!(_react.default.useEffect instanceof Function)) return;
+
+  _react.default.useEffect(function () {
+
+    if (!(nodeFactory instanceof Function)) {
+      console.warn(
+      'useCode() first argument should be a function that returns an animation node.');
+
+
+      var _node = nodeFactory;
+      nodeFactory = function nodeFactory() {return _node;};
+    }
+
+    var node = nodeFactory();
+    if (node) {
+
+      if (node instanceof Array) node = (0, _base.block)(node);
+
+      var animatedAlways = (0, _base.always)(node);
+      animatedAlways.__attach();
+
+
+      return function () {return animatedAlways.__detach();};
+    }
+  }, dependencies);
+}

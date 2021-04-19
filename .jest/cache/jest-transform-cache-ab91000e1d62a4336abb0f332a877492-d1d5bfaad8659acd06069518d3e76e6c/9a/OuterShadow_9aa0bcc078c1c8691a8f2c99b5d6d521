@@ -1,0 +1,54 @@
+1611023a8ffbab6abe9adbb484818f6d
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime/helpers/possibleConstructorReturn"));var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/getPrototypeOf"));var _react = _interopRequireDefault(require("react"));
+var _types = require("./types");
+var _reactNative = require("react-native");
+var _OuterShadowART = _interopRequireDefault(require("./OuterShadowART"));
+var _helpers = require("./helpers");var _jsxFileName = "/Users/leronim/Project/translator/node_modules/react-native-neomorph-shadows/src/OuterShadow.js";function ownKeys(object, enumerableOnly) {var keys = Object.keys(object);if (Object.getOwnPropertySymbols) {var symbols = Object.getOwnPropertySymbols(object);if (enumerableOnly) symbols = symbols.filter(function (sym) {return Object.getOwnPropertyDescriptor(object, sym).enumerable;});keys.push.apply(keys, symbols);}return keys;}function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};if (i % 2) {ownKeys(Object(source), true).forEach(function (key) {(0, _defineProperty2.default)(target, key, source[key]);});} else if (Object.getOwnPropertyDescriptors) {Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));} else {ownKeys(Object(source)).forEach(function (key) {Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));});}}return target;}function _createSuper(Derived) {var hasNativeReflectConstruct = _isNativeReflectConstruct();return function _createSuperInternal() {var Super = (0, _getPrototypeOf2.default)(Derived),result;if (hasNativeReflectConstruct) {var NewTarget = (0, _getPrototypeOf2.default)(this).constructor;result = Reflect.construct(Super, arguments, NewTarget);} else {result = Super.apply(this, arguments);}return (0, _possibleConstructorReturn2.default)(this, result);};}function _isNativeReflectConstruct() {if (typeof Reflect === "undefined" || !Reflect.construct) return false;if (Reflect.construct.sham) return false;if (typeof Proxy === "function") return true;try {Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));return true;} catch (e) {return false;}}var
+
+OuterShadow = function (_React$PureComponent) {(0, _inherits2.default)(OuterShadow, _React$PureComponent);var _super = _createSuper(OuterShadow);function OuterShadow() {(0, _classCallCheck2.default)(this, OuterShadow);return _super.apply(this, arguments);}(0, _createClass2.default)(OuterShadow, [{ key: "renderNativeIOS", value: function renderNativeIOS()
+
+    {var _this$props =
+
+
+
+
+      this.props,children = _this$props.children,_this$props$style = _this$props.style,_this$props$style$sha = _this$props$style.shadowOffset,shadowOffset = _this$props$style$sha === void 0 ? { width: 0, height: 0 } : _this$props$style$sha,otherStyle = (0, _objectWithoutProperties2.default)(_this$props$style, ["shadowOffset"]),otherProps = (0, _objectWithoutProperties2.default)(_this$props, ["children", "style"]);
+      return (
+        _react.default.createElement(_reactNative.View, (0, _extends2.default)({ style: _objectSpread({ shadowOffset: shadowOffset }, otherStyle) }, otherProps, { __self: this, __source: { fileName: _jsxFileName, lineNumber: 16, columnNumber: 7 } }),
+        children));
+
+
+    } }, { key: "renderArt", value: function renderArt()
+
+    {var _this$props2 =
+      this.props,style = _this$props2.style,children = _this$props2.children,containerProps = (0, _objectWithoutProperties2.default)(_this$props2, ["style", "children"]);var _transformStyleProps =
+
+
+
+
+      (0, _helpers.transformStyleProps)(style),outsideViewStyle = _transformStyleProps.outsideViewStyle,insideViewStyle = _transformStyleProps.insideViewStyle,allShadowProps = _transformStyleProps.allShadowProps;var
+      width = allShadowProps.width,height = allShadowProps.height,borderRadius = allShadowProps.borderRadius;
+      var viewStyle = { borderRadius: borderRadius, width: width, height: height };
+
+      return (
+        _react.default.createElement(_reactNative.View, (0, _extends2.default)({ style: _objectSpread(_objectSpread({}, viewStyle), outsideViewStyle) }, containerProps, { __self: this, __source: { fileName: _jsxFileName, lineNumber: 33, columnNumber: 7 } }),
+        _react.default.createElement(_reactNative.View, { pointerEvents: 'none', __self: this, __source: { fileName: _jsxFileName, lineNumber: 34, columnNumber: 9 } },
+        _react.default.createElement(_OuterShadowART.default, (0, _extends2.default)({}, allShadowProps, { __self: this, __source: { fileName: _jsxFileName, lineNumber: 35, columnNumber: 11 } }))),
+
+        _react.default.createElement(_reactNative.View, { style: _objectSpread(_objectSpread({}, viewStyle), insideViewStyle), __self: this, __source: { fileName: _jsxFileName, lineNumber: 37, columnNumber: 9 } }, children)));
+
+
+    } }, { key: "render", value: function render()
+
+    {
+      return !this.props.useArt && _reactNative.Platform.OS === 'ios' ?
+      this.renderNativeIOS() :
+      this.renderArt();
+    } }]);return OuterShadow;}(_react.default.PureComponent);exports.default = OuterShadow;
+
+
+OuterShadow.defaultProps = {
+  inner: false,
+  useArt: false };
+
+OuterShadow.propTypes = _types.OuterShadowType;

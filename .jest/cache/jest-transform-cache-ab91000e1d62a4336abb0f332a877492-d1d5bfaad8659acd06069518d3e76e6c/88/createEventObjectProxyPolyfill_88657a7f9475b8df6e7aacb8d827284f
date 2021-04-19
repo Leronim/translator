@@ -1,0 +1,45 @@
+c5c3c15c4e118ad3df3779b433b22bc6
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports, "__esModule", { value: true });exports.default = createEventObjectProxyPolyfill;var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
+
+
+
+
+function createEventObjectProxyPolyfill() {
+  var nodesMap = {
+
+    translationX: {},
+    translationY: {},
+    state: {},
+    oldState: {},
+    absoluteX: {},
+    absoluteY: {},
+    x: {},
+    y: {},
+    velocityX: {},
+    velocityY: {},
+    scale: {},
+    focalX: {},
+    focalY: {},
+    rotation: {},
+    anchorX: {},
+    anchorY: {},
+    velocity: {},
+    numberOfPointers: {},
+
+    layout: { x: {}, y: {}, width: {}, height: {} },
+
+    contentOffset: { y: {}, x: {} },
+    layoutMeasurement: { width: {}, height: {} },
+    contentSize: { width: {}, height: {} },
+    zoomScale: {},
+    contentInset: { right: {}, top: {}, left: {}, bottom: {} } };
+
+  var traverse = function traverse(obj) {
+    for (var key in obj) {
+      traverse(obj[key]);
+      (0, _extends2.default)(obj[key], { __isProxy: true });
+    }
+  };
+  traverse(nodesMap);
+  return nodesMap;
+}

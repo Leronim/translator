@@ -1,0 +1,205 @@
+705f0e294b88cbaf4baefac363d8bc09
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _base = require("../base");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var _InternalAnimatedValue = _interopRequireDefault(require("../core/InternalAnimatedValue"));
+
+var MAX_STEPS_MS = 64;
+
+function spring(clock, state, config) {
+  var lastTime = (0, _base.cond)(state.time, state.time, clock);
+
+  var deltaTime = (0, _base.min)((0, _base.sub)(clock, lastTime), MAX_STEPS_MS);
+
+  var c = config.damping;
+  var m = config.mass;
+  var k = config.stiffness;
+
+  var v0 = (0, _base.multiply)(-1, state.velocity);
+  var x0 = (0, _base.sub)(config.toValue, state.position);
+
+  var zeta = (0, _base.divide)(c, (0, _base.multiply)(2, (0, _base.sqrt)((0, _base.multiply)(k, m))));
+  var omega0 = (0, _base.sqrt)((0, _base.divide)(k, m));
+  var omega1 = (0, _base.multiply)(omega0, (0, _base.sqrt)((0, _base.sub)(1, (0, _base.multiply)(zeta, zeta))));
+
+  var t = (0, _base.divide)(deltaTime, 1000);
+
+  var sin1 = (0, _base.sin)((0, _base.multiply)(omega1, t));
+  var cos1 = (0, _base.cos)((0, _base.multiply)(omega1, t));
+
+
+  var underDampedEnvelope = (0, _base.exp)((0, _base.multiply)(-1, zeta, omega0, t));
+  var underDampedFrag1 = (0, _base.multiply)(
+  underDampedEnvelope,
+  (0, _base.add)(
+  (0, _base.multiply)(sin1, (0, _base.divide)((0, _base.add)(v0, (0, _base.multiply)(zeta, omega0, x0)), omega1)),
+  (0, _base.multiply)(x0, cos1)));
+
+
+  var underDampedPosition = (0, _base.sub)(config.toValue, underDampedFrag1);
+
+  var underDampedVelocity = (0, _base.sub)(
+  (0, _base.multiply)(zeta, omega0, underDampedFrag1),
+  (0, _base.multiply)(
+  underDampedEnvelope,
+  (0, _base.sub)(
+  (0, _base.multiply)(cos1, (0, _base.add)(v0, (0, _base.multiply)(zeta, omega0, x0))),
+  (0, _base.multiply)(omega1, x0, sin1))));
+
+
+
+
+
+  var criticallyDampedEnvelope = (0, _base.exp)((0, _base.multiply)(-1, omega0, t));
+  var criticallyDampedPosition = (0, _base.sub)(
+  config.toValue,
+  (0, _base.multiply)(
+  criticallyDampedEnvelope,
+  (0, _base.add)(x0, (0, _base.multiply)((0, _base.add)(v0, (0, _base.multiply)(omega0, x0)), t))));
+
+
+  var criticallyDampedVelocity = (0, _base.multiply)(
+  criticallyDampedEnvelope,
+  (0, _base.add)(
+  (0, _base.multiply)(v0, (0, _base.sub)((0, _base.multiply)(t, omega0), 1)),
+  (0, _base.multiply)(t, x0, omega0, omega0)));
+
+
+
+
+  var prevPosition = state.prevPosition ?
+  state.prevPosition :
+  new _InternalAnimatedValue.default(0);
+
+  var isOvershooting = (0, _base.cond)(
+  (0, _base.and)(config.overshootClamping, (0, _base.neq)(config.stiffness, 0)),
+  (0, _base.cond)(
+  (0, _base.lessThan)(prevPosition, config.toValue),
+  (0, _base.greaterThan)(state.position, config.toValue),
+  (0, _base.lessThan)(state.position, config.toValue)));
+
+
+  var isVelocity = (0, _base.lessThan)((0, _base.abs)(state.velocity), config.restSpeedThreshold);
+  var isDisplacement = (0, _base.or)(
+  (0, _base.eq)(config.stiffness, 0),
+  (0, _base.lessThan)(
+  (0, _base.abs)((0, _base.sub)(config.toValue, state.position)),
+  config.restDisplacementThreshold));
+
+
+
+  return (0, _base.block)([
+  (0, _base.set)(prevPosition, state.position),
+  (0, _base.cond)(
+  (0, _base.lessThan)(zeta, 1),
+  [
+  (0, _base.set)(state.position, underDampedPosition),
+  (0, _base.set)(state.velocity, underDampedVelocity)],
+
+  [
+  (0, _base.set)(state.position, criticallyDampedPosition),
+  (0, _base.set)(state.velocity, criticallyDampedVelocity)]),
+
+
+  (0, _base.set)(state.time, clock),
+  (0, _base.cond)((0, _base.or)(isOvershooting, (0, _base.and)(isVelocity, isDisplacement)), [
+  (0, _base.cond)((0, _base.neq)(config.stiffness, 0), [
+  (0, _base.set)(state.velocity, 0),
+  (0, _base.set)(state.position, config.toValue)]),
+
+  (0, _base.set)(state.finished, 1)])]);
+
+
+}
+
+var procSpring = (0, _base.proc)(
+function (
+finished,
+velocity,
+position,
+time,
+prevPosition,
+toValue,
+damping,
+mass,
+stiffness,
+overshootClamping,
+restSpeedThreshold,
+restDisplacementThreshold,
+clock) {return (
+
+    spring(
+    clock,
+    {
+      finished: finished,
+      velocity: velocity,
+      position: position,
+      time: time,
+
+      prevPosition: prevPosition },
+
+    {
+      toValue: toValue,
+      damping: damping,
+      mass: mass,
+      stiffness: stiffness,
+      overshootClamping: overshootClamping,
+      restDisplacementThreshold: restDisplacementThreshold,
+      restSpeedThreshold: restSpeedThreshold }));});var _default =
+
+
+
+
+function _default(
+clock, _ref, _ref2) {var
+
+  finished = _ref.finished,
+  velocity = _ref.velocity,
+  position = _ref.position,
+  time = _ref.time,
+
+  prevPosition = _ref.prevPosition;var
+
+
+  toValue = _ref2.toValue,
+  damping = _ref2.damping,
+  mass = _ref2.mass,
+  stiffness = _ref2.stiffness,
+  overshootClamping = _ref2.overshootClamping,
+  restDisplacementThreshold = _ref2.restDisplacementThreshold,
+  restSpeedThreshold = _ref2.restSpeedThreshold;return (
+
+
+    procSpring(
+    finished,
+    velocity,
+    position,
+    time,
+    prevPosition,
+    toValue,
+    damping,
+    mass,
+    stiffness,
+    overshootClamping,
+    restSpeedThreshold,
+    restDisplacementThreshold,
+    clock));};exports.default = _default;

@@ -1,0 +1,38 @@
+4b99f4c83447c7bf417fbcd40e2437e8
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime/helpers/possibleConstructorReturn"));var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/getPrototypeOf"));var _AnimatedSet = require("../core/AnimatedSet");
+var _interpolate2 = _interopRequireDefault(require("../derived/interpolate"));
+var _InternalAnimatedValue = _interopRequireDefault(require("./InternalAnimatedValue"));
+var _reactNative = require("react-native");
+var _evaluateOnce = require("../derived/evaluateOnce");
+var _ReanimatedModule = _interopRequireDefault(require("../ReanimatedModule"));
+var _val = require("../val");function _createSuper(Derived) {var hasNativeReflectConstruct = _isNativeReflectConstruct();return function _createSuperInternal() {var Super = (0, _getPrototypeOf2.default)(Derived),result;if (hasNativeReflectConstruct) {var NewTarget = (0, _getPrototypeOf2.default)(this).constructor;result = Reflect.construct(Super, arguments, NewTarget);} else {result = Super.apply(this, arguments);}return (0, _possibleConstructorReturn2.default)(this, result);};}function _isNativeReflectConstruct() {if (typeof Reflect === "undefined" || !Reflect.construct) return false;if (Reflect.construct.sham) return false;if (typeof Proxy === "function") return true;try {Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));return true;} catch (e) {return false;}}var
+
+
+AnimatedValue = function (_InternalAnimatedValu) {(0, _inherits2.default)(AnimatedValue, _InternalAnimatedValu);var _super = _createSuper(AnimatedValue);function AnimatedValue() {(0, _classCallCheck2.default)(this, AnimatedValue);return _super.apply(this, arguments);}(0, _createClass2.default)(AnimatedValue, [{ key: "setValue", value: function setValue(
+    value) {
+      this.__detachAnimation(this._animation);
+      if (
+      _reactNative.Platform.OS === 'web' ||
+      _reactNative.Platform.OS === 'windows' ||
+      _reactNative.Platform.OS === 'macos')
+      {
+        this._updateValue((0, _val.val)(value));
+      } else {
+        if (_ReanimatedModule.default.setValue && typeof value === 'number') {
+
+
+
+          _ReanimatedModule.default.setValue(this.__nodeID, value);
+        } else {
+          (0, _evaluateOnce.evaluateOnce)((0, _AnimatedSet.createAnimatedSet)(this, value), this);
+        }
+      }
+    } }, { key: "toString", value: function toString()
+
+    {
+      return "AnimatedValue, id: " + this.__nodeID;
+    } }, { key: "interpolate", value: function interpolate(
+
+    config) {
+      return (0, _interpolate2.default)(this, config);
+    } }]);return AnimatedValue;}(_InternalAnimatedValue.default);exports.default = AnimatedValue;

@@ -1,0 +1,12 @@
+fcf20d21db90405adda966c5af39757f
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports, "__esModule", { value: true });exports.default = diffClamp;var _base = require("../base");
+var _InternalAnimatedValue = _interopRequireDefault(require("../core/InternalAnimatedValue"));
+var _diff = _interopRequireDefault(require("./diff"));
+
+function diffClamp(a, minVal, maxVal) {
+  var value = new _InternalAnimatedValue.default();
+  return (0, _base.set)(
+  value,
+  (0, _base.min)((0, _base.max)((0, _base.add)((0, _base.cond)((0, _base.defined)(value), value, a), (0, _diff.default)(a)), minVal), maxVal));
+
+}

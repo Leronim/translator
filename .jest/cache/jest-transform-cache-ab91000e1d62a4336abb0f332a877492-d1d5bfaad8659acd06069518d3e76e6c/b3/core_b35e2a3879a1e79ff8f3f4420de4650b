@@ -1,0 +1,260 @@
+f3ebbdd9d8f25cdfaef2da5de9457dd2
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports, "__esModule", { value: true });exports.runOnUI = runOnUI;exports.makeShareable = makeShareable;exports.getViewProp = getViewProp;exports.makeMutable = makeMutable;exports.makeRemote = makeRemote;exports.startMapper = startMapper;exports.stopMapper = stopMapper;exports.createAnimatedPropAdapter = createAnimatedPropAdapter;exports.runOnJS = exports.getTimestamp = exports.requestFrame = void 0;
+
+var _NativeReanimated = _interopRequireDefault(require("./NativeReanimated"));
+var _reactNative = require("react-native");
+var _ConfigHelper = require("../ConfigHelper");
+
+global.__reanimatedWorkletInit = function (worklet) {
+  worklet.__worklet = true;
+};var
+
+_toArrayReanimated = function () {var _f = function _f(object) {
+
+    if (Array.isArray(object)) {
+      return object;
+    }
+    if (
+    typeof Symbol !== 'undefined' &&
+    (typeof Symbol === 'function' ? Symbol.iterator : '@@iterator') in
+    Object(object))
+
+    return Array.from(object);
+    throw new 'Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.'();
+  };_f._closure = {};_f.asString = "function _toArrayReanimated(object){if(Array.isArray(object)){return object;}if(typeof Symbol!=='undefined'&&(typeof Symbol==='function'?Symbol.iterator:'@@iterator')in Object(object))return Array.from(object);throw new'Invalid attempt to spread non-iterable instance.\\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.'();}";_f.__workletHash = 16403017325095;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/core.js (11:0)";global.__reanimatedWorkletInit(_f);return _f;}();var
+
+_mergeObjectsReanimated = function () {var _f = function _f() {
+
+    return Object.assign.apply(null, arguments);
+  };_f._closure = {};_f.asString = "function _mergeObjectsReanimated(){return Object.assign.apply(null,arguments);}";_f.__workletHash = 8313911569708;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/core.js (25:0)";global.__reanimatedWorkletInit(_f);return _f;}();
+
+global.__reanimatedWorkletInit = function (worklet) {
+  worklet.__worklet = true;
+
+  if (worklet._closure) {
+    var closure = worklet._closure;
+    Object.keys(closure).forEach(function (key) {
+      if (key === '_toConsumableArray') {
+        closure[key] = _toArrayReanimated;
+      }
+
+      if (key === '_objectSpread') {
+        closure[key] = _mergeObjectsReanimated;
+      }
+    });
+  }
+};
+
+function pushFrame(frame) {
+  _NativeReanimated.default.pushFrame(frame);
+}var
+
+requestFrame = function () {var _f = function _f(frame) {
+
+    if (_NativeReanimated.default.native) {
+      requestAnimationFrame(frame);
+    } else {
+      pushFrame(frame);
+    }
+  };_f._closure = { NativeReanimated: { native: _NativeReanimated.default.native }, pushFrame: pushFrame };_f.asString = "function requestFrame(frame){const{NativeReanimated,pushFrame}=jsThis._closure;{if(NativeReanimated.native){requestAnimationFrame(frame);}else{pushFrame(frame);}}}";_f.__workletHash = 14837003045671;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/core.js (51:7)";global.__reanimatedWorkletInit(_f);return _f;}();exports.requestFrame = requestFrame;
+
+global._WORKLET = false;
+global._log = function (s) {
+  console.log(s);
+};
+
+function runOnUI(worklet) {
+  return makeShareable(worklet);
+}
+
+function makeShareable(value) {
+  return _NativeReanimated.default.makeShareable(value);
+}
+
+function getViewProp(viewTag, propName) {
+  return new Promise(function (resolve, reject) {
+    return _NativeReanimated.default.getViewProp(viewTag, propName, function (result) {
+      if (result.substr(0, 6) === 'error:') {
+        reject(result);
+      } else {
+        resolve(result);
+      }
+    });
+  });
+}var
+
+_getTimestamp = function () {var _f = function _f() {
+
+    if (_frameTimestamp) {
+      return _frameTimestamp;
+    }
+    if (_eventTimestamp) {
+      return _eventTimestamp;
+    }
+    return _getCurrentTime();
+  };_f._closure = {};_f.asString = "function _getTimestamp(){if(_frameTimestamp){return _frameTimestamp;}if(_eventTimestamp){return _eventTimestamp;}return _getCurrentTime();}";_f.__workletHash = 5665547999072;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/core.js (85:0)";global.__reanimatedWorkletInit(_f);return _f;}();var
+
+getTimestamp = function () {var _f = function _f() {
+
+    if (_reactNative.Platform.OS === 'web') {
+      return _NativeReanimated.default.getTimestamp();
+    }
+    return _getTimestamp();
+  };_f._closure = { Platform: { OS: _reactNative.Platform.OS }, NativeReanimated: { getTimestamp: _NativeReanimated.default.getTimestamp }, _getTimestamp: _getTimestamp };_f.asString = "function getTimestamp(){const{Platform,NativeReanimated,_getTimestamp}=jsThis._closure;{if(Platform.OS==='web'){return NativeReanimated.getTimestamp();}return _getTimestamp();}}";_f.__workletHash = 11220513957287;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/core.js (96:7)";global.__reanimatedWorkletInit(_f);return _f;}();exports.getTimestamp = getTimestamp;var
+
+workletValueSetter = function () {var _f = function _f(value) {var _this = this;
+
+    var previousAnimation = this._animation;
+    if (previousAnimation) {
+      previousAnimation.cancelled = true;
+      this._animation = null;
+    }
+    if (
+    typeof value === 'function' ||
+    value !== null && typeof value === 'object' && value.onFrame)
+    {
+      var animation = typeof value === 'function' ? value() : value;
+
+
+
+
+      if (this._value === animation.current && !animation.isHigherOrder) {
+        return;
+      }
+
+      var initializeAnimation = function initializeAnimation(timestamp) {
+        animation.onStart(animation, _this.value, timestamp, previousAnimation);
+      };
+      initializeAnimation(getTimestamp());
+      var step = function step(timestamp) {
+        if (animation.cancelled) {
+          animation.callback && animation.callback(false);
+          return;
+        }
+        var finished = animation.onFrame(animation, timestamp);
+        animation.timestamp = timestamp;
+        _this._value = animation.current;
+        if (finished) {
+          animation.callback && animation.callback(true);
+        } else {
+          requestAnimationFrame(step);
+        }
+      };
+
+      this._animation = animation;
+
+      if (_frameTimestamp) {
+
+        step(_frameTimestamp);
+      } else {
+        requestAnimationFrame(step);
+      }
+    } else {
+
+
+      if (this._value === value) {
+        return;
+      }
+      this._value = value;
+    }
+  };_f._closure = { getTimestamp: getTimestamp };_f.asString = "function workletValueSetter(value){const{getTimestamp}=jsThis._closure;{var _this=this;var previousAnimation=this._animation;if(previousAnimation){previousAnimation.cancelled=true;this._animation=null;}if(typeof value==='function'||value!==null&&typeof value==='object'&&value.onFrame){var animation=typeof value==='function'?value():value;if(this._value===animation.current&&!animation.isHigherOrder){return;}var initializeAnimation=function initializeAnimation(timestamp){animation.onStart(animation,_this.value,timestamp,previousAnimation);};initializeAnimation(getTimestamp());var step=function step(timestamp){if(animation.cancelled){animation.callback&&animation.callback(false);return;}var finished=animation.onFrame(animation,timestamp);animation.timestamp=timestamp;_this._value=animation.current;if(finished){animation.callback&&animation.callback(true);}else{requestAnimationFrame(step);}};this._animation=animation;if(_frameTimestamp){step(_frameTimestamp);}else{requestAnimationFrame(step);}}else{if(this._value===value){return;}this._value=value;}}}";_f.__workletHash = 6968593807191;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/core.js (104:0)";global.__reanimatedWorkletInit(_f);return _f;}();
+
+
+
+function workletValueSetterJS(value) {var _this2 = this;
+  var previousAnimation = this._animation;
+  if (previousAnimation) {
+    previousAnimation.cancelled = true;
+    this._animation = null;
+  }
+  if (
+  typeof value === 'function' ||
+  value !== null && typeof value === 'object' && value.onFrame)
+  {
+
+    var animation = typeof value === 'function' ? value() : value;
+    var initializeAnimation = function initializeAnimation(timestamp) {
+      animation.onStart(animation, _this2.value, timestamp, previousAnimation);
+    };
+    var step = function step(timestamp) {
+      if (animation.cancelled) {
+        animation.callback && animation.callback(false);
+        return;
+      }
+      if (initializeAnimation) {
+        initializeAnimation(timestamp);
+        initializeAnimation = null;
+      }
+      var finished = animation.onFrame(animation, timestamp);
+      animation.timestamp = timestamp;
+      _this2._setValue(animation.current);
+      if (finished) {
+        animation.callback && animation.callback(true);
+      } else {
+        requestFrame(step);
+      }
+    };
+
+    this._animation = animation;
+
+    requestFrame(step);
+  } else {
+    this._setValue(value);
+  }
+}
+
+_NativeReanimated.default.installCoreFunctions(
+_NativeReanimated.default.native ? workletValueSetter : workletValueSetterJS);
+
+
+function makeMutable(value) {
+  return _NativeReanimated.default.makeMutable(value);
+}
+
+function makeRemote() {var object = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  return _NativeReanimated.default.makeRemote(object);
+}
+
+function startMapper(mapper) {var inputs = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];var outputs = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
+  return _NativeReanimated.default.startMapper(mapper, inputs, outputs);
+}
+
+function stopMapper(mapperId) {
+  _NativeReanimated.default.stopMapper(mapperId);
+}
+
+var runOnJS = function () {var _f = function _f(fun) {
+
+    if (!_WORKLET) {
+      return fun;
+    }
+    if (!fun.__callAsync) {
+      throw new Error(
+      "Attempting to call runOnJS with an object that is not a host function. Using runOnJS is only possible with methods that are defined on the main React-Native Javascript thread and that aren't marked as worklets");
+
+    } else {
+      return fun.__callAsync;
+    }
+  };_f._closure = {};_f.asString = "function _f(fun){if(!_WORKLET){return fun;}if(!fun.__callAsync){throw new Error(\"Attempting to call runOnJS with an object that is not a host function. Using runOnJS is only possible with methods that are defined on the main React-Native Javascript thread and that aren't marked as worklets\");}else{return fun.__callAsync;}}";_f.__workletHash = 2756565016360;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/core.js (225:23)";global.__reanimatedWorkletInit(_f);return _f;}();exports.runOnJS = runOnJS;
+
+function createAnimatedPropAdapter(adapter, nativeProps) {
+  var nativePropsToAdd = {};
+
+  nativeProps == null ? void 0 : nativeProps.forEach(function (prop) {
+    nativePropsToAdd[prop] = true;
+  });
+  (0, _ConfigHelper.addWhitelistedNativeProps)(nativePropsToAdd);
+  return adapter;
+}
+
+var capturableConsole = console;
+runOnUI(function () {var _f = function _f() {
+
+    var console = {
+      log: runOnJS(capturableConsole.log),
+      warn: runOnJS(capturableConsole.warn),
+      error: runOnJS(capturableConsole.error),
+      info: runOnJS(capturableConsole.info) };
+
+    _setGlobalConsole(console);
+  };_f._closure = { runOnJS: runOnJS, capturableConsole: { log: capturableConsole.log, warn: capturableConsole.warn, error: capturableConsole.error, info: capturableConsole.info } };_f.asString = "function _f(){const{runOnJS,capturableConsole}=jsThis._closure;{var console={log:runOnJS(capturableConsole.log),warn:runOnJS(capturableConsole.warn),error:runOnJS(capturableConsole.error),info:runOnJS(capturableConsole.info)};_setGlobalConsole(console);}}";_f.__workletHash = 11044875669716;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/core.js (250:8)";global.__reanimatedWorkletInit(_f);return _f;}())();

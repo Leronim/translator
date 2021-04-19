@@ -14,7 +14,7 @@ const message = [
 
 const Message = () => {
     return(
-        <View style={style.container}>
+        <View style={style.container} testID="view">
             {message.map((item: string, index: number) => {
                 return(
                     <View key={index} style={style.text}>

@@ -1,0 +1,47 @@
+47dcc390f7d6c5893cff6ac46a73f0ff
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));var _MutableValue = _interopRequireDefault(require("./MutableValue"));var
+
+Mapper = function () {
+
+
+
+
+  function Mapper(module, mapper) {var _this = this;var inputs = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];var outputs = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : [];(0, _classCallCheck2.default)(this, Mapper);this.dirty = true;
+    this.id = Mapper.MAPPER_ID++;
+    this.inputs = this.extractMutablesFromArray(inputs);
+    this.outputs = this.extractMutablesFromArray(outputs);
+    this.mapper = mapper;
+
+    var markDirty = function markDirty() {
+      _this.dirty = true;
+      module.maybeRequestRender();
+    };
+
+    this.inputs.forEach(function (input) {
+      input.addListener(markDirty);
+    });
+  }(0, _createClass2.default)(Mapper, [{ key: "execute", value: function execute()
+
+    {
+      this.dirty = false;
+      this.mapper();
+    } }, { key: "extractMutablesFromArray", value: function extractMutablesFromArray(
+
+    array) {
+      var res = [];
+
+      function extractMutables(value) {
+        if (value instanceof _MutableValue.default) {
+          res.push(value);
+        } else if (Array.isArray(value)) {
+          value.forEach(function (v) {return extractMutables(v);});
+        } else if (typeof value === 'object') {
+          Object.keys(value).forEach(function (key) {
+            extractMutables(value[key]);
+          });
+        }
+      }
+
+      extractMutables(array);
+      return res;
+    } }]);return Mapper;}();exports.default = Mapper;Mapper.MAPPER_ID = 1;

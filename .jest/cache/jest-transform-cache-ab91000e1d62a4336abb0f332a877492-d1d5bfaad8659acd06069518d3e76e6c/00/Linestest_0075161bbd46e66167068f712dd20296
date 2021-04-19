@@ -1,0 +1,9 @@
+f625f0dddb0ebdbfad4a836d421075f0
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");var _react = _interopRequireDefault(require("react"));
+var _Lines = _interopRequireDefault(require("../../component/atoms/Lines"));
+var _reactNative = require("@testing-library/react-native");var _this = this,_jsxFileName = "/Users/leronim/Project/translator/__tests__/atoms/Lines.test.js";
+
+test('Lines render', function () {
+  var tree = (0, _reactNative.render)(_react.default.createElement(_Lines.default, { __self: _this, __self: _this, __source: { fileName: _jsxFileName, lineNumber: 6, columnNumber: 25 } })).toJSON();
+  expect(tree).toMatchSnapshot();
+});

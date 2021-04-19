@@ -1,0 +1,22 @@
+11c5788cf17bf3f8fcc32cf1f4c36fb7
+"use strict";var _animationUtils = require("../../utils/animationUtils");
+
+test('between pills', function () {
+  expect((0, _animationUtils.isBetweenPills)(100, 90, 110)).toBeTruthy();
+  expect((0, _animationUtils.isBetweenPills)(100, 0, 1000)).toBeTruthy();
+  expect((0, _animationUtils.isBetweenPills)(80, 90, 110)).not.toBeTruthy();
+  expect((0, _animationUtils.isBetweenPills)(120, 90, 110)).not.toBeTruthy();
+  expect((0, _animationUtils.isBetweenPills)(0, 0, 0)).toBeTruthy();
+  expect((0, _animationUtils.isBetweenPills)(10, 20, 0)).not.toBeTruthy();
+});
+
+test('check order', function () {
+  expect((0, _animationUtils.checkOrder)({ order: { value: 0 } })).toBeTruthy();
+  expect((0, _animationUtils.checkOrder)({ order: { value: -1 } })).not.toBeTruthy();
+  expect((0, _animationUtils.checkOrder)({ order: { value: 100 } })).toBeTruthy();
+  expect((0, _animationUtils.checkOrder)({ order: { value: -100 } })).toBeTruthy();
+});
+
+test('remove pills', function () {
+
+});

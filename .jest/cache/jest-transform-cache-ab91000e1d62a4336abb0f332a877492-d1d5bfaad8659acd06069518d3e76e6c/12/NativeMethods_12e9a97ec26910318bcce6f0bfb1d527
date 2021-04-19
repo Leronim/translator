@@ -1,0 +1,38 @@
+a16c8e14022531327eee63e13b77204c
+"use strict";Object.defineProperty(exports, "__esModule", { value: true });exports.getTag = getTag;exports.scrollTo = exports.measure = void 0;
+var _reactNative = require("react-native");
+
+function getTag(view) {
+  return (0, _reactNative.findNodeHandle)(view);
+}var
+
+
+
+
+
+
+
+
+
+
+measure = function () {var _f = function _f(animatedRef) {
+
+    if (!_WORKLET) {
+      throw new Error('(measure) method cannot be used on RN side!');
+    }
+    var viewTag = animatedRef();
+    var result = _measure(viewTag);
+    if (result.x === -1234567) {
+      throw new Error("The view with tag " + viewTag + " could not be measured");
+    }
+    return result;
+  };_f._closure = {};_f.asString = "function measure(animatedRef){if(!_WORKLET){throw new Error('(measure) method cannot be used on RN side!');}var viewTag=animatedRef();var result=_measure(viewTag);if(result.x===-1234567){throw new Error(\"The view with tag \"+viewTag+\" could not be measured\");}return result;}";_f.__workletHash = 14288603284845;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/NativeMethods.js (17:7)";global.__reanimatedWorkletInit(_f);return _f;}();exports.measure = measure;var
+
+scrollTo = function () {var _f = function _f(animatedRef, x, y, animated) {
+
+    if (!_WORKLET) {
+      return;
+    }
+    var viewTag = animatedRef();
+    _scrollTo(viewTag, x, y, animated);
+  };_f._closure = {};_f.asString = "function scrollTo(animatedRef,x,y,animated){if(!_WORKLET){return;}var viewTag=animatedRef();_scrollTo(viewTag,x,y,animated);}";_f.__workletHash = 7559237824030;_f.__location = "/Users/leronim/Project/translator/node_modules/react-native-reanimated/src/reanimated2/NativeMethods.js (30:7)";global.__reanimatedWorkletInit(_f);return _f;}();exports.scrollTo = scrollTo;

@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Erorr render 1`] = `
+<View
+  style={
+    Object {
+      "alignItems": "center",
+      "flex": 1,
+      "justifyContent": "center",
+    }
+  }
+>
+  <Text
+    style={
+      Object {
+        "color": "#FF0000",
+        "fontSize": 24,
+        "fontWeight": "400",
+      }
+    }
+    testID="errorMessage"
+  >
+    Something wrong!
+  </Text>
+</View>
+`;

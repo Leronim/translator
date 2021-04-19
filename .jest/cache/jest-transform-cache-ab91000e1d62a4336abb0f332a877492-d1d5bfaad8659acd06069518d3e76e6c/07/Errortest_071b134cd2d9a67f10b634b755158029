@@ -1,0 +1,19 @@
+38b2e862fb866f02d23259601e9cc311
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");var _react = _interopRequireDefault(require("react"));
+var _Error = _interopRequireDefault(require("../../component/atoms/Error"));
+var _reactNative = require("@testing-library/react-native");var _this = this,_jsxFileName = "/Users/leronim/Project/translator/__tests__/atoms/Error.test.js";
+
+test('Erorr render', function () {
+  var tree = (0, _reactNative.render)(_react.default.createElement(_Error.default, { message: "Something wrong!", color: "#FF0000", __self: _this, __self: _this, __source: { fileName: _jsxFileName, lineNumber: 6, columnNumber: 25 } })).toJSON();
+  expect(tree).toMatchSnapshot();
+});
+
+test('Error props', function () {
+  var message = "Something wrong!";
+  var color = "#FF0000";var _render =
+
+  (0, _reactNative.render)(_react.default.createElement(_Error.default, { message: message, color: color, __self: _this, __self: _this, __source: { fileName: _jsxFileName, lineNumber: 14, columnNumber: 36 } })),getByTestId = _render.getByTestId;
+
+  expect(getByTestId('errorMessage').children[0]).toEqual(message);
+  expect(getByTestId('errorMessage').props.style.color).toEqual(color);
+});

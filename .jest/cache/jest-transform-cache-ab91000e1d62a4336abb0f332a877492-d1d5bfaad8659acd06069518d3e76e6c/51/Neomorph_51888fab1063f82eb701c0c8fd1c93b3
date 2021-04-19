@@ -1,0 +1,188 @@
+3a5e3f89b61cb8339ff1e51d8d2b1d1b
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime/helpers/possibleConstructorReturn"));var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/getPrototypeOf"));
+var _react = _interopRequireDefault(require("react"));
+var _types = require("./types");
+var _reactNative = require("react-native");
+var _helpers = require("./helpers");
+
+
+
+
+
+var _InnerShadowART = _interopRequireDefault(require("./InnerShadowART"));
+var _OuterShadowART = _interopRequireDefault(require("./OuterShadowART"));var _jsxFileName = "/Users/leronim/Project/translator/node_modules/react-native-neomorph-shadows/src/Neomorph.js";function ownKeys(object, enumerableOnly) {var keys = Object.keys(object);if (Object.getOwnPropertySymbols) {var symbols = Object.getOwnPropertySymbols(object);if (enumerableOnly) symbols = symbols.filter(function (sym) {return Object.getOwnPropertyDescriptor(object, sym).enumerable;});keys.push.apply(keys, symbols);}return keys;}function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};if (i % 2) {ownKeys(Object(source), true).forEach(function (key) {(0, _defineProperty2.default)(target, key, source[key]);});} else if (Object.getOwnPropertyDescriptors) {Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));} else {ownKeys(Object(source)).forEach(function (key) {Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));});}}return target;}function _createSuper(Derived) {var hasNativeReflectConstruct = _isNativeReflectConstruct();return function _createSuperInternal() {var Super = (0, _getPrototypeOf2.default)(Derived),result;if (hasNativeReflectConstruct) {var NewTarget = (0, _getPrototypeOf2.default)(this).constructor;result = Reflect.construct(Super, arguments, NewTarget);} else {result = Super.apply(this, arguments);}return (0, _possibleConstructorReturn2.default)(this, result);};}function _isNativeReflectConstruct() {if (typeof Reflect === "undefined" || !Reflect.construct) return false;if (Reflect.construct.sham) return false;if (typeof Proxy === "function") return true;try {Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));return true;} catch (e) {return false;}}var
+
+Neomorph = function (_React$PureComponent) {(0, _inherits2.default)(Neomorph, _React$PureComponent);var _super = _createSuper(Neomorph);function Neomorph() {(0, _classCallCheck2.default)(this, Neomorph);return _super.apply(this, arguments);}(0, _createClass2.default)(Neomorph, [{ key: "render", value: function render()
+    {var _this = this;var _this$props =
+
+
+
+
+
+
+
+
+
+      this.props,style = _this$props.style,inner = _this$props.inner,useArt = _this$props.useArt,children = _this$props.children,darkShadowColor = _this$props.darkShadowColor,lightShadowColor = _this$props.lightShadowColor,swapShadows = _this$props.swapShadows,otherProps = (0, _objectWithoutProperties2.default)(_this$props, ["style", "inner", "useArt", "children", "darkShadowColor", "lightShadowColor", "swapShadows"]);var _transformStyleProps =
+
+
+
+
+
+
+
+
+
+
+
+
+      (0, _helpers.transformStyleProps)(style, true),outsideViewStyle = _transformStyleProps.outsideViewStyle,insideViewStyle = _transformStyleProps.insideViewStyle,_transformStyleProps$ = _transformStyleProps.allShadowProps,width = _transformStyleProps$.width,height = _transformStyleProps$.height,borderRadius = _transformStyleProps$.borderRadius,backgroundColor = _transformStyleProps$.backgroundColor,shadowOpacity = _transformStyleProps$.shadowOpacity,shadowOffset = _transformStyleProps$.shadowOffset,shadowRadius = _transformStyleProps$.shadowRadius;
+
+      var opacity, shOpacityLight, shOpacityDark;
+      if (shadowOpacity) {
+        shOpacityLight = shadowOpacity;
+        shOpacityDark = shadowOpacity;
+      } else {
+        opacity = (0, _helpers.brightnessToOpacity)((0, _helpers.brightness)(backgroundColor));
+        shOpacityLight = (0, _helpers.calcOpacityFromRange)(opacity, 0.025, 1);
+        shOpacityDark = (0, _helpers.calcOpacityFromRange)(1 - opacity, 0, 0.35);
+      }
+      var styleAll = {
+        backgroundColor: backgroundColor,
+        shadowRadius: shadowRadius,
+        borderRadius: borderRadius,
+        width: width,
+        height: height };
+
+
+      var viewStyle = {
+        borderRadius: borderRadius,
+        width: width,
+        height: height };
+
+
+      var _shadowOffset = { x: shadowRadius / 2, y: shadowRadius / 2 };
+      if (shadowOffset.x !== 0 || shadowOffset.y !== 0) {
+        _shadowOffset = {
+          x: shadowOffset.x || 0,
+          y: shadowOffset.y || 0 };
+
+      }
+
+      var styleDark = _objectSpread(_objectSpread({},
+      styleAll), {}, {
+        shadowOffset: _shadowOffset,
+        shadowOpacity: shadowRadius ? shOpacityDark : 0,
+        shadowColor: darkShadowColor || 'black' });
+
+
+      var styleLight = _objectSpread(_objectSpread({},
+      styleAll), {}, {
+        shadowOffset: {
+          x: -_shadowOffset.x,
+          y: -_shadowOffset.y },
+
+        shadowOpacity: shadowRadius ? shOpacityLight : 0,
+        shadowColor: lightShadowColor || 'white' });
+
+
+      if (swapShadows) {
+        var bubble = _objectSpread({}, styleLight);
+        styleLight = _objectSpread({}, styleDark);
+        styleDark = bubble;
+      }
+
+      var renderOuter = function renderOuter() {
+        if (useArt || _reactNative.Platform.OS !== 'ios') {
+          return (
+            _react.default.createElement(_reactNative.View, { pointerEvents: 'none', __self: _this, __source: { fileName: _jsxFileName, lineNumber: 97, columnNumber: 11 } },
+            _react.default.createElement(_OuterShadowART.default, (0, _extends2.default)({}, styleDark, { __self: _this, __source: { fileName: _jsxFileName, lineNumber: 98, columnNumber: 13 } })),
+            _react.default.createElement(_OuterShadowART.default, (0, _extends2.default)({}, styleLight, { __self: _this, __source: { fileName: _jsxFileName, lineNumber: 99, columnNumber: 13 } }))));
+
+
+        } else {var _this$props$style;
+          var shadowOffsetDark = {
+            width: styleDark.shadowOffset.x,
+            height: styleDark.shadowOffset.y };
+
+          var shadowOffsetLight = {
+            width: styleLight.shadowOffset.x,
+            height: styleLight.shadowOffset.y };
+
+          var shadowRadiusOuter = (_this$props$style = _this.props.style) == null ? void 0 : _this$props$style.shadowRadius;
+          return (
+            _react.default.createElement(_react.default.Fragment, null,
+            _react.default.createElement(_reactNative.View, {
+              style: [
+              styleDark,
+              {
+                position: 'absolute',
+                shadowRadius: shadowRadiusOuter,
+                shadowOffset: shadowOffsetDark }], __self: _this, __source: { fileName: _jsxFileName, lineNumber: 114, columnNumber: 13 } }),
+
+
+
+            _react.default.createElement(_reactNative.View, {
+              style: [
+              styleLight,
+              {
+                position: 'absolute',
+                shadowRadius: shadowRadiusOuter,
+                shadowOffset: shadowOffsetLight }], __self: _this, __source: { fileName: _jsxFileName, lineNumber: 124, columnNumber: 13 } })));
+
+
+
+
+
+        }
+      };
+
+      if (inner) {
+        return (
+          _react.default.createElement(_reactNative.View, (0, _extends2.default)({
+            style: _objectSpread(_objectSpread({
+              backgroundColor: backgroundColor },
+            viewStyle),
+            outsideViewStyle) },
+
+          otherProps, { __self: this, __source: { fileName: _jsxFileName, lineNumber: 141, columnNumber: 9 } }),
+          _react.default.createElement(_reactNative.View, { style: [styles.containerInnerLayers, viewStyle], __self: this, __source: { fileName: _jsxFileName, lineNumber: 148, columnNumber: 11 } },
+          _react.default.createElement(_InnerShadowART.default, (0, _extends2.default)({}, styleDark, { __self: this, __source: { fileName: _jsxFileName, lineNumber: 149, columnNumber: 13 } })),
+          _react.default.createElement(_InnerShadowART.default, (0, _extends2.default)({}, styleLight, { __self: this, __source: { fileName: _jsxFileName, lineNumber: 150, columnNumber: 13 } }))),
+
+          _react.default.createElement(_reactNative.View, { style: _objectSpread(_objectSpread({}, viewStyle), insideViewStyle), __self: this, __source: { fileName: _jsxFileName, lineNumber: 152, columnNumber: 11 } }, children)));
+
+
+      } else {
+        return (
+          _react.default.createElement(_reactNative.View, (0, _extends2.default)({ style: _objectSpread(_objectSpread({}, viewStyle), outsideViewStyle) }, otherProps, { __self: this, __source: { fileName: _jsxFileName, lineNumber: 157, columnNumber: 9 } }),
+          renderOuter(),
+          _react.default.createElement(_reactNative.View, {
+            style: _objectSpread(_objectSpread({
+              backgroundColor: backgroundColor },
+            viewStyle),
+            insideViewStyle), __self: this, __source: { fileName: _jsxFileName, lineNumber: 159, columnNumber: 11 } },
+
+          children)));
+
+
+
+      }
+    } }]);return Neomorph;}(_react.default.PureComponent);exports.default = Neomorph;
+
+
+var styles = _reactNative.StyleSheet.create({
+  containerInnerLayers: {
+    overflow: 'hidden',
+    position: 'absolute' } });
+
+
+
+Neomorph.defaultProps = {
+  inner: false,
+  useArt: false,
+  darkShadowColor: 'black',
+  lightShadowColor: 'white',
+  swapShadows: false };
+
+Neomorph.propTypes = _types.NeomorphType;

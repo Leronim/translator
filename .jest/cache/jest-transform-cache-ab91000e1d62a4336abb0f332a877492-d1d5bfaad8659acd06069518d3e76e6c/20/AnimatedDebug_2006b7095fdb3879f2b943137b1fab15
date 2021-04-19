@@ -1,0 +1,59 @@
+dd89c053f38f199b8a048bb207440ab2
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports, "__esModule", { value: true });exports.createAnimatedDebug = createAnimatedDebug;var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime/helpers/possibleConstructorReturn"));var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/getPrototypeOf"));var _invariant = _interopRequireDefault(require("fbjs/lib/invariant"));
+var _val = require("../val");
+var _AnimatedBlock = require("./AnimatedBlock");
+var _AnimatedCall = require("./AnimatedCall");
+var _AnimatedNode2 = _interopRequireDefault(require("./AnimatedNode"));function _createSuper(Derived) {var hasNativeReflectConstruct = _isNativeReflectConstruct();return function _createSuperInternal() {var Super = (0, _getPrototypeOf2.default)(Derived),result;if (hasNativeReflectConstruct) {var NewTarget = (0, _getPrototypeOf2.default)(this).constructor;result = Reflect.construct(Super, arguments, NewTarget);} else {result = Super.apply(this, arguments);}return (0, _possibleConstructorReturn2.default)(this, result);};}function _isNativeReflectConstruct() {if (typeof Reflect === "undefined" || !Reflect.construct) return false;if (Reflect.construct.sham) return false;if (typeof Proxy === "function") return true;try {Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));return true;} catch (e) {return false;}}var
+
+AnimatedDebug = function (_AnimatedNode) {(0, _inherits2.default)(AnimatedDebug, _AnimatedNode);var _super = _createSuper(AnimatedDebug);
+
+
+
+  function AnimatedDebug(message, value) {var _this;(0, _classCallCheck2.default)(this, AnimatedDebug);
+    (0, _invariant.default)(
+    typeof message === 'string', "Reanimated: Animated.debug node first argument should be of type string but got " +
+    message);
+
+    (0, _invariant.default)(
+    value instanceof _AnimatedNode2.default, "Reanimated: Animated.debug node second argument should be of type AnimatedNode but got " +
+    value);
+
+    _this = _super.call(this, { type: 'debug', message: message, value: value }, [value]);
+    _this._message = message;
+    _this._value = value;return _this;
+  }(0, _createClass2.default)(AnimatedDebug, [{ key: "toString", value: function toString()
+
+    {
+      return "AnimatedDebug, id: " + this.__nodeID;
+    } }, { key: "__onEvaluate", value: function __onEvaluate()
+
+    {
+      var value = (0, _val.val)(this._value);
+      console.log(this._message, value);
+      return value;
+    } }]);return AnimatedDebug;}(_AnimatedNode2.default);
+
+
+function createAnimatedDebug(message, value) {
+  if (__DEV__) {
+    var runningInRemoteDebugger = typeof atob !== 'undefined';
+
+
+
+    var runningInExpoShell =
+    global.Expo && global.Expo.Constants.appOwnership !== 'standalone';
+
+    if (runningInRemoteDebugger || runningInExpoShell) {
+
+
+      return (0, _AnimatedBlock.createAnimatedBlock)([
+      (0, _AnimatedCall.createAnimatedCall)([value], function (_ref) {var _ref2 = (0, _slicedToArray2.default)(_ref, 1),a = _ref2[0];return console.log(message + " " + a);}),
+      value]);
+
+    } else {
+      return new AnimatedDebug(message, (0, _AnimatedBlock.adapt)(value));
+    }
+  }
+
+  return value;
+}

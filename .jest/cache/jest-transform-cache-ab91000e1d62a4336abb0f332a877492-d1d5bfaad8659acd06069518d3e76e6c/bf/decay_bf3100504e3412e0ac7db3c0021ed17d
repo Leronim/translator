@@ -1,0 +1,53 @@
+f26455446b21d5e2426b3eae94ca7bfa
+"use strict";Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _base = require("../base");
+
+
+
+
+
+
+
+
+
+
+
+
+
+var VELOCITY_EPS = 5;
+
+function decay(clock, state, config) {
+  var lastTime = (0, _base.cond)(state.time, state.time, clock);
+  var deltaTime = (0, _base.sub)(clock, lastTime);
+
+
+
+
+
+
+
+  var kv = (0, _base.pow)(config.deceleration, deltaTime);
+  var kx = (0, _base.divide)(
+  (0, _base.multiply)(config.deceleration, (0, _base.sub)(1, kv)),
+  (0, _base.sub)(1, config.deceleration));
+
+  var v0 = (0, _base.divide)(state.velocity, 1000);
+  var v = (0, _base.multiply)(v0, kv, 1000);
+  var x = (0, _base.add)(state.position, (0, _base.multiply)(v0, kx));
+  return (0, _base.block)([
+  (0, _base.set)(state.position, x),
+  (0, _base.set)(state.velocity, v),
+  (0, _base.set)(state.time, clock),
+  (0, _base.cond)((0, _base.lessThan)((0, _base.abs)(v), VELOCITY_EPS), (0, _base.set)(state.finished, 1))]);
+
+}
+
+var procDecay = (0, _base.proc)(
+function (clock, time, velocity, position, finished, deceleration) {return (
+    decay(clock, { time: time, velocity: velocity, position: position, finished: finished }, { deceleration: deceleration }));});var _default =
+
+
+function _default(
+clock, _ref, _ref2) {var
+  time = _ref.time,velocity = _ref.velocity,position = _ref.position,finished = _ref.finished;var
+  deceleration = _ref2.deceleration;return (
+    procDecay(clock, time, velocity, position, finished, deceleration));};exports.default = _default;

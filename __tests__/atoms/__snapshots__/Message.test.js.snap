@@ -1,0 +1,116 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Message render 1`] = `
+<View
+  style={
+    Object {
+      "borderColor": "#252525",
+      "borderRadius": 40,
+      "borderWidth": 2,
+      "flexDirection": "row",
+      "flexWrap": "wrap",
+      "justifyContent": "center",
+      "padding": 17,
+      "width": 250,
+    }
+  }
+  testID="view"
+>
+  <View
+    style={
+      Object {
+        "marginRight": 10,
+      }
+    }
+  >
+    <Text>
+      Реакт
+       
+    </Text>
+  </View>
+  <View
+    style={
+      Object {
+        "marginRight": 10,
+      }
+    }
+  >
+    <Text>
+      Нейтив
+       
+    </Text>
+  </View>
+  <View
+    style={
+      Object {
+        "marginRight": 10,
+      }
+    }
+  >
+    <Text>
+      доставляет
+       
+    </Text>
+  </View>
+  <View
+    style={
+      Object {
+        "marginRight": 10,
+      }
+    }
+  >
+    <Text>
+      проблем
+       
+    </Text>
+  </View>
+  <View
+    style={
+      Object {
+        "marginRight": 10,
+      }
+    }
+  >
+    <Text>
+      моей
+       
+    </Text>
+  </View>
+  <View
+    style={
+      Object {
+        "marginRight": 10,
+      }
+    }
+  >
+    <Text>
+      заднице
+       
+    </Text>
+  </View>
+  <View
+    style={
+      Object {
+        "marginRight": 10,
+      }
+    }
+  >
+    <Text>
+      зато
+       
+    </Text>
+  </View>
+  <View
+    style={
+      Object {
+        "marginRight": 10,
+      }
+    }
+  >
+    <Text>
+      весело
+       
+    </Text>
+  </View>
+</View>
+`;

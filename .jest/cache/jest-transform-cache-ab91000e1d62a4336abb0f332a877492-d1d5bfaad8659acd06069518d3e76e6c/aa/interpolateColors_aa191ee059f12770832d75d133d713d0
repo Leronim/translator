@@ -1,0 +1,63 @@
+66aa3d2a5f381eb90211faf800304dc3
+"use strict";var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports, "__esModule", { value: true });exports.default = interpolateColors;var _reactNative = require("react-native");
+var _base = require("../base");
+var _color = _interopRequireDefault(require("./color"));
+var _interpolate = _interopRequireWildcard(require("./interpolate"));
+
+function red(c) {
+  return c >> 16 & 255;
+}
+function green(c) {
+  return c >> 8 & 255;
+}
+function blue(c) {
+  return c & 255;
+}
+function opacity(c) {
+  return (c >> 24 & 255) / 255;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+function interpolateColors(animationValue, options) {var
+  inputRange = options.inputRange,outputColorRange = options.outputColorRange;
+  var colors = outputColorRange.map(_reactNative.processColor);
+
+  var r = (0, _base.round)(
+  (0, _interpolate.default)(animationValue, {
+    inputRange: inputRange,
+    outputRange: colors.map(red),
+    extrapolate: _interpolate.Extrapolate.CLAMP }));
+
+
+  var g = (0, _base.round)(
+  (0, _interpolate.default)(animationValue, {
+    inputRange: inputRange,
+    outputRange: colors.map(green),
+    extrapolate: _interpolate.Extrapolate.CLAMP }));
+
+
+  var b = (0, _base.round)(
+  (0, _interpolate.default)(animationValue, {
+    inputRange: inputRange,
+    outputRange: colors.map(blue),
+    extrapolate: _interpolate.Extrapolate.CLAMP }));
+
+
+  var a = (0, _interpolate.default)(animationValue, {
+    inputRange: inputRange,
+    outputRange: colors.map(opacity),
+    extrapolate: _interpolate.Extrapolate.CLAMP });
+
+
+  return (0, _color.default)(r, g, b, a);
+}

@@ -1,0 +1,11 @@
+7b0e789b8a1aa5e6ddb30fc9e33c4d8d
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports, "__esModule", { value: true });exports.default = useValue;var _react = _interopRequireDefault(require("react"));
+var _AnimatedValue = _interopRequireDefault(require("./core/AnimatedValue"));
+
+function useValue(initialValue) {
+  var ref = _react.default.useRef(null);
+  if (ref.current === null) {
+    ref.current = new _AnimatedValue.default(initialValue);
+  }
+  return ref.current;
+}

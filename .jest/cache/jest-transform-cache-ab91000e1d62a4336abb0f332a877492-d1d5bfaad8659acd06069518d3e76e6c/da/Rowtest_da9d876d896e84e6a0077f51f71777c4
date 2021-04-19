@@ -1,0 +1,23 @@
+638d5977e233754f58023befcc3a87af
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));var _react = _interopRequireDefault(require("react"));
+var _reactNative = require("react-native");
+var _Row = _interopRequireDefault(require("../../component/atoms/Row"));
+var _reactNative2 = require("@testing-library/react-native");var _this = this,_jsxFileName = "/Users/leronim/Project/translator/__tests__/atoms/Row.test.js";
+
+test('Row render', function () {
+  var tree = (0, _reactNative2.render)(_react.default.createElement(_Row.default, { __self: _this, __self: _this, __source: { fileName: _jsxFileName, lineNumber: 7, columnNumber: 25 } })).toJSON();
+  expect(tree).toMatchSnapshot();
+});
+
+test('Row render children', function () {
+  var messageChildren = "Hello";var _render =
+
+  (0, _reactNative2.render)(
+  _react.default.createElement(_Row.default, { __self: _this, __self: _this, __source: { fileName: _jsxFileName, lineNumber: 15, columnNumber: 9 } },
+  _react.default.createElement(_reactNative.Text, { __self: _this, __self: _this, __source: { fileName: _jsxFileName, lineNumber: 16, columnNumber: 13 } }, messageChildren))),UNSAFE_getAllByType = _render.UNSAFE_getAllByType;var _UNSAFE_getAllByType =
+
+
+  UNSAFE_getAllByType(_reactNative.Text),_UNSAFE_getAllByType2 = (0, _slicedToArray2.default)(_UNSAFE_getAllByType, 1),text = _UNSAFE_getAllByType2[0];
+
+  expect(text.props.children).toEqual(messageChildren);
+});
